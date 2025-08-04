@@ -3,38 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Giáo án Tương tác - Tin học 7</title>
+    <title>Cổng Giáo án Tương tác - Viet Anh School</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Liên kết đến tệp CSS -->
+    <!-- Đã sửa: Liên kết đến tệp style.css bên ngoài -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="p-4 sm:p-6 md:p-8">
-    <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg p-6 sm:p-8">
-        <!-- Chế độ xem danh sách bài học -->
-        <div id="lesson-list-view">
-            <div class="text-center mb-10">
-                <!-- Thay thế bằng đường dẫn logo cục bộ -->
-                <img src="logo.jpg" alt="Viet Anh School Logo" class="h-24 w-auto mx-auto mb-4" onerror="this.style.display='none'">
-                <h1 class="text-3xl sm:text-4xl font-bold text-theme-blue">Giáo án Tương tác Tin học 7</h1>
-                <p class="text-lg text-gray-500 mt-2">Bộ sách Cánh Diều</p>
-            </div>
-            <div id="chapters-container" class="space-y-10">
-                <!-- Danh sách bài học sẽ được app.js chèn vào đây -->
-            </div>
-        </div>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="max-w-4xl mx-auto text-center p-8">
+        <img src="logo.jpg" alt="Viet Anh School Logo" class="h-28 w-auto mx-auto mb-6" onerror="this.style.display='none'">
+        <h1 class="text-4xl sm:text-5xl font-bold text-theme-blue">Cổng Giáo án Tương tác</h1>
+        <p class="text-xl text-gray-500 mt-3 mb-10">Môn Tin học - Bộ sách Cánh Diều</p>
 
-        <!-- Chế độ xem chi tiết bài học (sẽ được JS điền nội dung) -->
-        <div id="lesson-detail-view">
-            <!-- Nội dung chi tiết bài học sẽ được app.js chèn vào đây -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Lớp 3 -->
+            <a href="khoi3/index.html" class="grade-card block p-8 rounded-2xl shadow-md border border-gray-200">
+                <i class="fas fa-child text-5xl text-theme-red mb-4"></i>
+                <h2 class="text-2xl font-bold text-theme-blue">Lớp 3</h2>
+            </a>
+
+            <!-- Lớp 7 -->
+            <a href="khoi7/index.html" class="grade-card block p-8 rounded-2xl shadow-md border border-gray-200">
+                <i class="fas fa-user-graduate text-5xl text-theme-red mb-4"></i>
+                <h2 class="text-2xl font-bold text-theme-blue">Lớp 7</h2>
+            </a>
+
+            <!-- Thêm các khối lớp khác ở đây -->
+            <div class="grade-card block p-8 rounded-2xl shadow-md border border-gray-200 bg-gray-100 opacity-60">
+                <i class="fas fa-plus-circle text-5xl text-gray-400 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-500">Sắp có</h2>
+            </div>
+             <div class="grade-card block p-8 rounded-2xl shadow-md border border-gray-200 bg-gray-100 opacity-60">
+                <i class="fas fa-plus-circle text-5xl text-gray-400 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-500">Sắp có</h2>
+            </div>
         </div>
     </div>
-
-    <!-- Liên kết đến các tệp JavaScript -->
-    <!-- Tệp dữ liệu phải được tải trước tệp logic -->
-    <script src="data.js"></script>
-    <script src="app.js"></script>
 </body>
 </html>
