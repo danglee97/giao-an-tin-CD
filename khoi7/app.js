@@ -73,7 +73,9 @@ function renderLessonDetail(chapterKey, lessonId) {
             <i class="fas fa-arrow-left mr-2"></i>Quay lại Danh sách bài học
         </button>
         <div class="text-center mb-8">
-            <img src="../logo.jpg" alt="Viet Anh School Logo" class="h-20 w-auto mx-auto mb-4" onerror="this.src='https://placehold.co/150x150/002060/FFFFFF?text=VA'; this.onerror=null;">
+            <a href="../index.html">
+                <img src="../logo.jpg" alt="Viet Anh School Logo" class="h-20 w-auto mx-auto mb-4" onerror="this.src='https://placehold.co/150x150/002060/FFFFFF?text=VA'; this.onerror=null;">
+            </a>
             <h1 class="text-3xl sm:text-4xl font-bold text-theme-blue">${lesson.title}</h1>
             <p class="text-lg text-gray-500 mt-2">${lessonsData[chapterKey].title}</p>
         </div>
