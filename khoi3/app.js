@@ -2,16 +2,51 @@
 const chaptersContainer = document.getElementById('chapters-container');
 const lessonListView = document.getElementById('lesson-list-view');
 const lessonDetailView = document.getElementById('lesson-detail-view');
+const resourceLinksContainer = document.getElementById('resource-links-container');
 
 // Biến toàn cục để theo dõi trạng thái
 let currentActivities = [];
 let activityStatus = {};
 
 /**
+ * [MỚI] Hiển thị các nút link đến tài liệu PDF
+ */
+function renderResourceLinks() {
+    if (!resourceLinksContainer || typeof gradeInfo === 'undefined') return;
+
+    let linksHtml = '<div class="flex justify-center items-center gap-4 flex-wrap">';
+    
+    if (gradeInfo.sgk_pdf) {
+        linksHtml += `
+            <a href="${gradeInfo.sgk_pdf}" target="_blank" class="bg-theme-blue text-white font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors flex items-center gap-2">
+                <i class="fas fa-book-open"></i>
+                <span>Xem Sách Giáo Khoa</span>
+            </a>
+        `;
+    }
+
+    if (gradeInfo.sgv_pdf) {
+        linksHtml += `
+            <a href="${gradeInfo.sgv_pdf}" target="_blank" class="bg-theme-red text-white font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors flex items-center gap-2">
+                <i class="fas fa-user-tie"></i>
+                <span>Xem Sách Giáo Viên</span>
+            </a>
+        `;
+    }
+
+    linksHtml += '</div>';
+    resourceLinksContainer.innerHTML = linksHtml;
+}
+
+/**
  * Hiển thị danh sách các chủ đề và bài học
  */
 function renderLessonList() {
     if (!chaptersContainer) return;
+    
+    // [MỚI] Gọi hàm để hiển thị link sách
+    renderResourceLinks();
+
     chaptersContainer.innerHTML = '';
     for (const chapterKey in lessonsData) {
         const chapter = lessonsData[chapterKey];
@@ -40,7 +75,6 @@ function renderLessonList() {
         chaptersContainer.innerHTML += chapterHtml;
     }
 }
-
 /**
  * Hiển thị chi tiết một bài học cụ thể
  * @param {string} chapterKey - Khóa của chủ đề (ví dụ: 'A')

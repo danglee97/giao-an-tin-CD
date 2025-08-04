@@ -1,3 +1,9 @@
+// [THAY ĐỔI] Thêm thông tin về các tệp PDF của khối lớp
+const gradeInfo = {
+    sgk_pdf: "Sách giáo khoa Tin học 3 - Cánh diều.pdf",
+    sgv_pdf: "SGV-Tinhoc3-CanhDieu.pdf"
+};
+
 // Dữ liệu cho tất cả các bài học Lớp 3
 const lessonsData = {
     "A": {
@@ -266,7 +272,7 @@ function getLessonDetails(lessonId) {
             "answer_keys": { "luyen_tap": ["Bước 1: Trên dải lệnh Insert, nháy chuột chọn lệnh Pictures.", "Bước 2: Mở thư mục chứa ảnh.", "Bước 3: Chọn ảnh muốn thêm.", "Bước 4: Nháy chuột chọn Insert."], "van_dung": ["HS nêu các bước gấp giấy thành hình con cá."] }
         },
         "F1-2": {
-            "objectives": ["Sử dụng được cách nói 'Nếu... thì...' để thể hiện quyết định thực hiện một việc tuỳ thuộc vào một điều kiện."],
+            "objectives": ["Sử dụng được cách nói 'Nếu... thì...' để thể hiện quyết định thực hiện một việc hay không thực hiện tuỳ thuộc vào một điều kiện."],
             "core_content": ["Trong cuộc sống, nhiều hành động của chúng ta phụ thuộc vào một điều kiện cụ thể.", "Có thể dùng cấu trúc 'Nếu [điều kiện] thì [hành động]' để diễn tả việc này."],
             "activities": [
                 { "name": "Hoạt động 1: Tùy vào điều kiện để thực hiện", "duration": 20, "teacher_tasks": ["Nêu các ví dụ về hành động phụ thuộc điều kiện.", "Yêu cầu HS ghép cặp điều kiện và hành động hợp lý."], "student_tasks": ["Thảo luận và ghép cặp."] },
