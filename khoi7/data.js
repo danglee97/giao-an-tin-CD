@@ -7,7 +7,7 @@ const lessonsData = {
             { "id": "A1", "title": "Bài 1: Thiết bị vào - ra cơ bản", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=Thi%E1%BA%BFt+b%E1%BB%8B+V%C3%A0o+-+Ra", "gdrive_embed": "" },
             { "id": "A2", "title": "Bài 2: Các thiết bị vào - ra", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=M%C3%A1y+in,+M%C3%A1y+qu%C3%A9t,+Webcam", "gdrive_embed": "" },
             { "id": "A3", "title": "Bài 3: Thực hành với các thiết bị vào - ra", "image": "https://placehold.co/1200x400/e5e7eb/1f2937?text=Th%E1%BB%B1c+h%C3%A0nh+k%E1%BA%BFt+n%E1%BB%91i", "gdrive_embed": "" },
-            { "id": "A4", "title": "Bài 4: Một số chức năng của hệ điều hành", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=H%E1%BB%87+%C4%9Đi%E1%BB%81u+H%C3%A0nh", "gdrive_embed": "" },
+            { "id": "A4", "title": "Bài 4: Một số chức năng của hệ điều hành", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=Ch%E1%BB%A9c+N%C4%83ng+H%E1%BB%87+%C4%90i%E1%BB%81u+H%C3%A0nh", "gdrive_embed": "" },
             { "id": "A5", "title": "Bài 5: Thực hành khám phá trình quản lí hệ thống tệp", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=File+Explorer", "gdrive_embed": "" },
             { "id": "A6", "title": "Bài 6: Thực hành thao tác với tệp và thư mục", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=T%E1%BB%87p+v%C3%A0+Th%C6%B0+m%E1%BB%A5c", "gdrive_embed": "" }
         ]
