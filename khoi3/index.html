@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giáo án Tương tác - Tin học 3</title>
+    <!-- ../favicon.png vì tệp icon nằm ở thư mục cha -->
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- ../style.css vì tệp CSS chung nằm ở thư mục cha -->
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+        <!-- Chế độ xem danh sách bài học -->
+        <div id="lesson-list-view">
+            <div class="text-center mb-10">
+                <!-- ../logo.jpg vì tệp logo nằm ở thư mục cha -->
+                <img src="../logo.jpg" alt="Viet Anh School Logo" class="h-24 w-auto mx-auto mb-4" onerror="this.style.display='none'">
+                <h1 class="text-3xl sm:text-4xl font-bold text-theme-blue">Giáo án Tương tác Tin học 3</h1>
+                <p class="text-lg text-gray-500 mt-2">Bộ sách Cánh Diều</p>
+            </div>
+            <div id="chapters-container" class="space-y-10">
+                <!-- Danh sách bài học sẽ được app.js chèn vào đây -->
+            </div>
+        </div>
+
+        <!-- Chế độ xem chi tiết bài học (sẽ được JS điền nội dung) -->
+        <div id="lesson-detail-view">
+            <!-- Nội dung chi tiết bài học sẽ được app.js chèn vào đây -->
+        </div>
+    </div>
+
+    <!-- Liên kết đến các tệp JavaScript của Khối 3 -->
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
