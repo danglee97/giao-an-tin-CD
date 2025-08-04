@@ -8,36 +8,55 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Đã sửa: Liên kết đến tệp style.css bên ngoài -->
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="flex items-center justify-center min-h-screen">
-    <div class="max-w-4xl mx-auto text-center p-8">
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="max-w-6xl mx-auto text-center p-8">
         <img src="logo.jpg" alt="Viet Anh School Logo" class="h-28 w-auto mx-auto mb-6" onerror="this.style.display='none'">
         <h1 class="text-4xl sm:text-5xl font-bold text-theme-blue">Cổng Giáo án Tương tác</h1>
-        <p class="text-xl text-gray-500 mt-3 mb-10">Môn Tin học - Bộ sách Cánh Diều</p>
+        <p class="text-xl text-gray-500 mt-3 mb-12">Môn Tin học - Bộ sách Cánh Diều</p>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-6">
             <!-- Lớp 3 -->
-            <a href="khoi3/index.html" class="grade-card block p-8 rounded-2xl shadow-md border border-gray-200">
+            <a href="khoi3/index.html" class="grade-card block p-6 rounded-2xl shadow-md border border-gray-200">
                 <i class="fas fa-child text-5xl text-theme-red mb-4"></i>
                 <h2 class="text-2xl font-bold text-theme-blue">Lớp 3</h2>
             </a>
 
+            <!-- Lớp 4 (Sắp có) -->
+            <div class="grade-card block p-6 rounded-2xl shadow-md border border-gray-200 bg-gray-100 opacity-70 cursor-not-allowed">
+                <i class="fas fa-child text-5xl text-gray-400 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-500">Lớp 4</h2>
+            </div>
+
+            <!-- Lớp 5 (Sắp có) -->
+            <div class="grade-card block p-6 rounded-2xl shadow-md border border-gray-200 bg-gray-100 opacity-70 cursor-not-allowed">
+                <i class="fas fa-child text-5xl text-gray-400 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-500">Lớp 5</h2>
+            </div>
+
+            <!-- Lớp 6 (Sắp có) -->
+            <div class="grade-card block p-6 rounded-2xl shadow-md border border-gray-200 bg-gray-100 opacity-70 cursor-not-allowed">
+                <i class="fas fa-user-graduate text-5xl text-gray-400 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-500">Lớp 6</h2>
+            </div>
+
             <!-- Lớp 7 -->
-            <a href="khoi7/index.html" class="grade-card block p-8 rounded-2xl shadow-md border border-gray-200">
+            <a href="khoi7/index.html" class="grade-card block p-6 rounded-2xl shadow-md border border-gray-200">
                 <i class="fas fa-user-graduate text-5xl text-theme-red mb-4"></i>
                 <h2 class="text-2xl font-bold text-theme-blue">Lớp 7</h2>
             </a>
-
-            <!-- Thêm các khối lớp khác ở đây -->
-            <div class="grade-card block p-8 rounded-2xl shadow-md border border-gray-200 bg-gray-100 opacity-60">
-                <i class="fas fa-plus-circle text-5xl text-gray-400 mb-4"></i>
-                <h2 class="text-2xl font-bold text-gray-500">Sắp có</h2>
+            
+            <!-- Lớp 8 (Sắp có) -->
+            <div class="grade-card block p-6 rounded-2xl shadow-md border border-gray-200 bg-gray-100 opacity-70 cursor-not-allowed">
+                <i class="fas fa-user-graduate text-5xl text-gray-400 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-500">Lớp 8</h2>
             </div>
-             <div class="grade-card block p-8 rounded-2xl shadow-md border border-gray-200 bg-gray-100 opacity-60">
-                <i class="fas fa-plus-circle text-5xl text-gray-400 mb-4"></i>
-                <h2 class="text-2xl font-bold text-gray-500">Sắp có</h2>
+
+            <!-- Lớp 9 (Sắp có) -->
+            <div class="grade-card block p-6 rounded-2xl shadow-md border border-gray-200 bg-gray-100 opacity-70 cursor-not-allowed">
+                <i class="fas fa-user-graduate text-5xl text-gray-400 mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-500">Lớp 9</h2>
             </div>
         </div>
     </div>
