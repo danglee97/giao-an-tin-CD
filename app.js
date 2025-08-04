@@ -21,9 +21,12 @@ function renderLessonList() {
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         `;
         chapter.lessons.forEach(lesson => {
+            // Lấy icon của chương, nếu không có thì dùng icon mặc định
+            const iconClass = chapter.icon || 'fas fa-book-open';
+
             chapterHtml += `
                 <div onclick="renderLessonDetail('${chapterKey}', '${lesson.id}')" class="lesson-link cursor-pointer bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col items-center text-center">
-                    <i class="fas fa-book-open text-3xl text-theme-red mb-3"></i>
+                    <i class="${iconClass} text-3xl text-theme-red mb-3"></i>
                     <h4 class="font-semibold text-theme-blue">${lesson.title}</h4>
             `;
             if (lesson.gdrive_embed) {

@@ -2,6 +2,7 @@
 const lessonsData = {
     "A": {
         "title": "Chủ đề A: Máy tính và Cộng đồng",
+        "icon": "fas fa-desktop", // Biểu tượng Máy tính
         "lessons": [
             { "id": "A1", "title": "Bài 1: Thiết bị vào - ra cơ bản", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=Thi%E1%BA%BFt+b%E1%BB%8B+V%C3%A0o+-+Ra", "gdrive_embed": "" },
             { "id": "A2", "title": "Bài 2: Các thiết bị vào - ra", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=M%C3%A1y+in,+M%C3%A1y+qu%C3%A9t,+Webcam", "gdrive_embed": "" },
@@ -13,6 +14,7 @@ const lessonsData = {
     },
     "C": {
         "title": "Chủ đề C: Tổ chức lưu trữ, tìm kiếm và trao đổi thông tin",
+        "icon": "fas fa-sitemap", // Biểu tượng Mạng lưới
         "lessons": [
             { "id": "C1", "title": "Bài 1: Giới thiệu mạng xã hội", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=M%E1%BA%A1ng+X%C3%A3+H%E1%BB%99i", "gdrive_embed": "" },
             { "id": "C2", "title": "Bài 2: Thực hành sử dụng mạng xã hội", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=Th%E1%BB%B1c+h%C3%A0nh+Facebook", "gdrive_embed": "" },
@@ -21,6 +23,7 @@ const lessonsData = {
     },
     "D": {
         "title": "Chủ đề D: Đạo đức, pháp luật và văn hoá trong môi trường số",
+        "icon": "fas fa-balance-scale-right", // Biểu tượng Cán cân
         "lessons": [
             { "id": "D1", "title": "Bài 1: Ứng xử có văn hoá khi giao tiếp qua mạng", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=V%C4%83n+ho%C3%A1+%E1%BB%A9ng+x%E1%BB%AD", "gdrive_embed": "" },
             { "id": "D2", "title": "Bài 2: Ứng xử tránh rủi ro trên mạng", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=R%E1%BB%A7i+ro+tr%C3%AAn+m%E1%BA%A1ng", "gdrive_embed": "" }
@@ -28,6 +31,7 @@ const lessonsData = {
     },
     "E": {
         "title": "Chủ đề E: Ứng dụng tin học",
+        "icon": "fas fa-th-large", // Biểu tượng Ứng dụng
         "lessons": [
             { "id": "E1", "title": "Bài 1: Làm quen với bảng tính điện tử", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=B%E1%BA%A3ng+t%C3%ADnh+%C4%91i%E1%BB%87n+t%E1%BB%AD", "gdrive_embed": "" },
             { "id": "E2", "title": "Bài 2: Làm quen với trang tính", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=Trang+t%C3%ADnh+(Sheet)", "gdrive_embed": "" },
@@ -48,6 +52,7 @@ const lessonsData = {
     },
     "F": {
         "title": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính",
+        "icon": "fas fa-brain", // Biểu tượng Tư duy
         "lessons": [
             { "id": "F1", "title": "Bài 1: Tìm kiếm tuần tự", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=T%C3%ACm+ki%E1%BA%BFm+tu%E1%BA%A7n+t%E1%BB%B1", "gdrive_embed": "" },
             { "id": "F2", "title": "Bài 2: Tìm kiếm nhị phân", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=T%C3%ACm+ki%E1%BA%BFm+nh%E1%BB%8B+ph%C3%A2n", "gdrive_embed": "" },
@@ -186,7 +191,187 @@ function getLessonDetails(lessonId) {
             ],
             "answer_keys": { "tu_kiem_tra": ["Câu 1: Tính toán tự động, phân tích dữ liệu, tạo biểu đồ.", "Câu 2: Khi sửa một số liệu trong cột cân nặng, tổng cân nặng sẽ tự động cập nhật theo giá trị mới."] }
         },
-        // ... (Nội dung chi tiết cho các bài học khác)
+        "E2": {
+            "objectives": ["Biết được sổ tính, trang tính là gì.", "Biết được ô, hàng, cột, tên hàng, tên cột, địa chỉ ô là gì.", "Thực hiện được các thao tác đơn giản với ô, hàng, cột.", "Gõ nhập được dữ liệu vào đúng ô đích."],
+            "core_content": ["Một tệp Excel là một sổ tính (workbook), gồm nhiều trang tính (sheet).", "Trang tính là một lưới gồm các cột (đặt tên bằng chữ cái A, B, C...) và các hàng (đặt tên bằng số 1, 2, 3...).", "Giao của một hàng và một cột là một ô (cell). Địa chỉ ô là ghép tên cột và tên hàng (ví dụ: A1, B5).", "Các thao tác cơ bản: điều chỉnh độ rộng cột/độ cao hàng, chèn/xoá hàng/cột, nhập/sửa/xoá dữ liệu trong ô."],
+            "activities": [
+                { "name": "Hoạt động 1: Hình thành kiến thức", "duration": 20, "teacher_tasks": ["Giới thiệu các khái niệm: sổ tính, trang tính, hàng, cột, ô, địa chỉ ô.", "Hướng dẫn các thao tác với hàng, cột và cách nhập, sửa, xóa dữ liệu."], "student_tasks": ["Lắng nghe, ghi chép.", "Phân biệt các thành phần của trang tính."] },
+                { "name": "Hoạt động 2: Thực hành", "duration": 25, "teacher_tasks": ["Hướng dẫn HS thực hành thêm cột, chèn hàng, nhập dữ liệu và đổi tên trang tính."], "student_tasks": ["Thực hành theo các bài tập trong SGK."] }
+            ],
+            "answer_keys": { "tu_kiem_tra": ["Câu 1: Theo chữ cái A, B, C...", "Câu 2: Theo số 1, 2, 3...", "Câu 3: Ghép tên cột và tên hàng, ví dụ C5.", "Câu 4: Gõ nhập mới sẽ ghi đè dữ liệu cũ. Sửa chữa (nháy đúp hoặc nhấn F2) cho phép chỉnh sửa dữ liệu đang có."] }
+        },
+        "E3": {
+            "objectives": ["Biết được hộp tên là gì, thanh công thức là gì và mối liên quan đến ô dữ liệu.", "Biết được khối ô là gì.", "Thực hiện được các thao tác sao chép, di chuyển khối ô."],
+            "core_content": ["Hộp tên (Name Box) hiển thị địa chỉ của ô hoặc khối ô đang được chọn.", "Thanh công thức (Formula Bar) hiển thị nội dung thực của ô đang được chọn (dữ liệu hoặc công thức).", "Khối ô là một nhóm các ô liền kề tạo thành hình chữ nhật. Địa chỉ khối ô là địa chỉ ô góc trên bên trái và ô góc dưới bên phải, cách nhau bởi dấu hai chấm (ví dụ: B2:E5).", "Các thao tác với khối ô: chọn, sao chép, di chuyển, xóa dữ liệu."],
+            "activities": [
+                { "name": "Hoạt động 1: Hình thành kiến thức", "duration": 20, "teacher_tasks": ["Giới thiệu Hộp tên, Thanh công thức và Khối ô.", "Hướng dẫn cách chọn, sao chép, di chuyển khối ô."], "student_tasks": ["Lắng nghe, ghi chép.", "Thực hành chọn khối ô và quan sát thông tin trên thanh trạng thái."] },
+                { "name": "Hoạt động 2: Thực hành", "duration": 25, "teacher_tasks": ["Hướng dẫn HS thực hành di chuyển, sao chép khối ô và di chuyển cột."], "student_tasks": ["Thực hành theo các bài tập trong SGK."] }
+            ],
+            "answer_keys": { "tu_kiem_tra": ["Câu 1: Để hiển thị địa chỉ ô đang chọn và cho phép di chuyển nhanh đến một ô bằng cách gõ địa chỉ vào đó.", "Câu 2: Là một nhóm ô liền kề hình chữ nhật. Địa chỉ là cặp địa chỉ ô góc trên trái và góc dưới phải, cách nhau bởi dấu hai chấm."] }
+        },
+        "E4": {
+            "objectives": ["Biết được Excel đã làm sẵn nhiều định dạng hiển thị số liệu.", "Thực hiện được thao tác áp dụng một số định dạng số thông dụng."],
+            "core_content": ["Định dạng hiển thị dữ liệu giúp thông tin dễ đọc và dễ hiểu hơn (ví dụ: số tiền, phần trăm).", "Các lệnh định dạng số nằm trong nhóm Number của dải lệnh Home.", "Các định dạng thông dụng: General (chung), Number (số), Currency (tiền tệ), Percentage (phần trăm).", "Các nút lệnh thao tác nhanh: tăng/giảm số chữ số thập phân, định dạng kiểu có dấu phẩy, định dạng tiền tệ ($), định dạng phần trăm (%)."],
+            "activities": [
+                { "name": "Hoạt động 1: Hình thành kiến thức", "duration": 15, "teacher_tasks": ["Giới thiệu sự cần thiết của việc định dạng số.", "Giới thiệu các định dạng và các nút lệnh trong nhóm Number."], "student_tasks": ["Lắng nghe, ghi chép."] },
+                { "name": "Hoạt động 2: Thực hành", "duration": 30, "teacher_tasks": ["Hướng dẫn HS thực hành áp dụng các định dạng số khác nhau cho các cột dữ liệu trong bảng tính."], "student_tasks": ["Thực hành theo nhiệm vụ trong SGK."] }
+            ],
+            "answer_keys": { "tu_kiem_tra": ["Câu 1: Là định dạng mặc định, không có định dạng cụ thể nào.", "Câu 2: Lệnh '$' (tiền tệ), '%' (phần trăm), ',' (kiểu có dấu phẩy ngăn cách hàng nghìn)."] }
+        },
+        "E5": {
+            "objectives": ["Biết được Excel có sẵn các định dạng số tiền và ngày tháng cho nhiều quốc gia.", "Thực hiện được thao tác áp dụng định dạng số tiền và ngày tháng kiểu Việt Nam."],
+            "core_content": ["Excel hỗ trợ nhiều đơn vị tiền tệ và kiểu ngày tháng của các quốc gia khác nhau, bao gồm Việt Nam.", "Để định dạng tiền tệ Việt Nam (VND) hoặc ngày tháng kiểu Việt Nam, cần mở hộp thoại Format Cells.", "Các bước: Chọn ô/khối ô -> Chuột phải -> Format Cells -> thẻ Number.", "Trong Format Cells: chọn Currency và tìm 'VND' trong mục Symbol; hoặc chọn Date và tìm 'Vietnamese' trong mục Locale."],
+            "activities": [
+                { "name": "Hoạt động 1: Hình thành kiến thức", "duration": 15, "teacher_tasks": ["Giới thiệu cách định dạng tiền tệ và ngày tháng.", "Hướng dẫn chi tiết các bước mở hộp thoại Format Cells và chọn định dạng kiểu Việt Nam."], "student_tasks": ["Lắng nghe, ghi chép các bước thực hiện."] },
+                { "name": "Hoạt động 2: Thực hành", "duration": 30, "teacher_tasks": ["Hướng dẫn HS thực hành thêm cột ngày sinh và định dạng ngày tháng kiểu Việt Nam."], "student_tasks": ["Thực hành theo nhiệm vụ trong SGK."] }
+            ],
+            "answer_keys": { "tu_kiem_tra": ["Câu 1: Nút lệnh '$'.", "Câu 2: Long Date hiển thị đầy đủ (ví dụ: Monday, August 04, 2025), Short Date hiển thị rút gọn (ví dụ: 8/4/2025).", "Câu 3: Chọn ô, chuột phải, chọn Format Cells (hoặc nhấn Ctrl+1).", "Câu 4: Mở Format Cells, chọn thẻ Number, chọn Currency/Date và tìm đến tùy chọn của Việt Nam."] }
+        },
+        "E6": {
+            "objectives": ["Phác thảo được thiết kế sơ bộ một sổ theo dõi thu chi cá nhân.", "Thực hiện được việc tạo lập sổ tính Excel theo thiết kế.", "Nhập được một số ô dữ liệu vào sổ và định dạng phù hợp."],
+            "core_content": ["Ứng dụng Excel để tạo một công cụ quản lý tài chính cá nhân.", "Thiết kế bảng gồm các cột cần thiết: Ngày tháng, Hạng mục, Khoản chi, Số tiền...", "Tạo bảng tổng hợp thu-chi theo tuần với các cột: Kế hoạch, Thực tế, Sai lệch.", "Áp dụng các định dạng đã học (ngày tháng, tiền tệ) để bảng tính chuyên nghiệp và dễ đọc."],
+            "activities": [
+                { "name": "Hoạt động 1: Phác thảo thiết kế", "duration": 15, "teacher_tasks": ["Cùng HS phân tích yêu cầu và phác thảo cấu trúc của 2 bảng: Bảng theo dõi chi tiết và Bảng tổng hợp."], "student_tasks": ["Tham gia thảo luận, đóng góp ý kiến cho thiết kế."] },
+                { "name": "Hoạt động 2: Thực hành tạo lập", "duration": 30, "teacher_tasks": ["Hướng dẫn HS tạo lập các bảng theo thiết kế, nhập dữ liệu giả định và áp dụng các định dạng phù hợp."], "student_tasks": ["Thực hành trên máy tính theo hướng dẫn."] }
+            ],
+            "answer_keys": {}
+        },
+        "E7": {
+            "objectives": ["Biết được cách dùng địa chỉ ô trong công thức.", "Thực hiện được thao tác nhập công thức với một số phép toán thông dụng trong Excel.", "Tạo được bảng tính đơn giản có các ô là kết quả tính toán theo công thức từ các ô khác.", "Biết được Excel có thể tự động điền công thức theo mẫu."],
+            "core_content": ["Công thức trong Excel luôn bắt đầu bằng dấu '='.", "Sử dụng địa chỉ ô (ví dụ: B2, C2) trong công thức thay vì số liệu trực tiếp giúp kết quả tự động cập nhật khi dữ liệu thay đổi.", "Các phép toán: + (cộng), - (trừ), * (nhân), / (chia), ^ (luỹ thừa).", "Tính năng tự động điền công thức (AutoFill): dùng tay nắm (fill handle) ở góc dưới bên phải ô để kéo và sao chép công thức cho các ô liền kề."],
+            "activities": [
+                { "name": "Hoạt động 1: Hình thành kiến thức", "duration": 20, "teacher_tasks": ["Giới thiệu cách viết công thức và các phép toán.", "So sánh việc dùng số liệu trực tiếp và địa chỉ ô.", "Hướng dẫn cách sử dụng AutoFill để điền công thức tự động."], "student_tasks": ["Lắng nghe, ghi chép.", "Thực hiện các ví dụ nhỏ theo hướng dẫn."] },
+                { "name": "Hoạt động 2: Thực hành", "duration": 25, "teacher_tasks": ["Hướng dẫn HS thực hành điền công thức tính chỉ số BMI trong tệp ThucHanh.xlsx."], "student_tasks": ["Thực hành trên máy tính."] }
+            ],
+            "answer_keys": { "tu_kiem_tra": ["Câu 1: Không có dấu '=', Excel coi là văn bản. Có dấu '=', Excel thực hiện tính toán.", "Câu 2: Kết quả sẽ tự động cập nhật khi dữ liệu ở các ô được tham chiếu thay đổi.", "Câu 3: Khi kéo tay nắm của một ô chứa công thức, Excel sẽ tự động điều chỉnh địa chỉ ô trong công thức cho phù hợp với vị trí mới."] }
+        },
+        "E8": {
+            "objectives": ["Biết được Excel có sẵn nhiều hàm xử lí dữ liệu.", "Biết cách thức chung để nhập đầu vào, sử dụng hàm số trong công thức.", "Sử dụng được các hàm SUM, AVERAGE, MAX, MIN, COUNT."],
+            "core_content": ["Hàm là công thức được xây dựng sẵn để thực hiện các tính toán phức tạp.", "Cú pháp chung: =TÊN_HÀM(đối_số_1, đối_số_2,...).", "Các hàm gộp thông dụng: SUM (tính tổng), AVERAGE (tính trung bình cộng), MAX (tìm giá trị lớn nhất), MIN (tìm giá trị nhỏ nhất), COUNT (đếm số lượng ô chứa số).", "Đối số của hàm có thể là số, địa chỉ ô, hoặc địa chỉ khối ô (ví dụ: C3:C7)."],
+            "activities": [
+                { "name": "Hoạt động 1: Hình thành kiến thức", "duration": 20, "teacher_tasks": ["Giới thiệu khái niệm hàm và cú pháp chung.", "Giới thiệu chức năng và cách sử dụng 5 hàm gộp thông dụng.", "Hướng dẫn cách dùng nút lệnh AutoSum để chèn hàm nhanh."], "student_tasks": ["Lắng nghe, ghi chép.", "Phân biệt chức năng của các hàm."] },
+                { "name": "Hoạt động 2: Thực hành", "duration": 25, "teacher_tasks": ["Hướng dẫn HS thực hành sử dụng các hàm để tính giá trị nhỏ nhất cho các cột trong tệp ThucHanh.xlsx."], "student_tasks": ["Thực hành trên máy tính."] }
+            ],
+            "answer_keys": { "tu_kiem_tra": ["Câu 1: =TÊN_HÀM(danh_sách_đầu_vào).", "Câu 2: Dãy các số, địa chỉ ô, hoặc địa chỉ khối ô.", "Câu 3: Chọn khối ô cần tính và ô trống bên dưới/bên phải, sau đó nháy nút lệnh AutoSum (Σ) hoặc mũi tên bên cạnh để chọn hàm khác."] }
+        },
+        "E9": {
+            "objectives": ["Thực hiện được các thao tác định dạng cơ bản cho trang tính, bao gồm định dạng chữ, căn chỉnh dữ liệu trong ô tính.", "Biết cách in trang tính."],
+            "core_content": ["Định dạng trang tính giúp bảng dữ liệu đẹp và dễ đọc hơn.", "Các công cụ định dạng nằm trong nhóm Font và Alignment của dải lệnh Home, tương tự như trong Word.", "Trước khi in, cần xem trước (Print Preview) để kiểm tra cách ngắt trang.", "Các tùy chọn in: in vùng đã chọn (Print Selection), in trang tính hiện hoạt (Print Active Sheets), in toàn bộ sổ tính (Print Entire Workbook).", "Có thể điều chỉnh ngắt trang thủ công trong chế độ Page Break Preview."],
+            "activities": [
+                { "name": "Hoạt động 1: Thực hành định dạng", "duration": 20, "teacher_tasks": ["Hướng dẫn HS sử dụng các công cụ định dạng phông chữ, màu sắc, căn lề để làm đẹp bảng tính."], "student_tasks": ["Thực hành định dạng bảng tính theo các bước trong SGK."] },
+                { "name": "Hoạt động 2: Tìm hiểu cách in", "duration": 25, "teacher_tasks": ["Giới thiệu chức năng Print Preview.", "Hướng dẫn các tùy chọn in và cách điều chỉnh ngắt trang."], "student_tasks": ["Thực hành xem trước khi in và điều chỉnh ngắt trang (nếu cần)."] }
+            ],
+            "answer_keys": { "tu_kiem_tra": ["Câu 1 và 3 đúng. Câu 2 và 4 sai."] }
+        },
+        "E10": {
+            "objectives": ["Sử dụng được một số chức năng cơ bản của bảng tính.", "Tạo được bảng tính để giải quyết một vài công việc cụ thể, đơn giản, thiết thực."],
+            "core_content": ["Bài thực hành tổng hợp các kỹ năng đã học: tạo bảng, nhập và định dạng dữ liệu, sử dụng công thức và hàm, căn chỉnh tiêu đề.", "Các kỹ năng mới: Gộp ô và căn giữa (Merge & Center), Tự động ngắt dòng trong ô (Wrap Text), điền dữ liệu tự động theo chuỗi (kéo tay nắm của 2 ô số liên tiếp).", "Công thức tính điểm trung bình môn học kỳ, áp dụng các phép toán và hàm COUNT."],
+            "activities": [
+                { "name": "Hoạt động 1: Hướng dẫn", "duration": 15, "teacher_tasks": ["Phân tích mẫu phiếu điểm và các yêu cầu.", "Hướng dẫn các kỹ năng mới: Merge & Center, Wrap Text, điền STT tự động.", "Giải thích công thức tính điểm trung bình môn."], "student_tasks": ["Lắng nghe, quan sát và ghi nhớ các bước."] },
+                { "name": "Hoạt động 2: Thực hành", "duration": 30, "teacher_tasks": ["Yêu cầu HS thực hành tạo phiếu điểm cá nhân theo các bước trong SGK.", "Quan sát, hỗ trợ HS khi cần."], "student_tasks": ["Thực hành trên máy tính, áp dụng tổng hợp các kỹ năng đã học."] }
+            ],
+            "answer_keys": {}
+        },
+        "E11": {
+            "objectives": ["Luyện tập, củng cố các kỹ năng sử dụng phần mềm bảng tính thông qua các bài tập nhóm."],
+            "core_content": ["Vận dụng tổng hợp kiến thức để thực hiện các dự án nhỏ theo nhóm.", "Bài 1: Lập Bảng điểm tổng kết, sử dụng các hàm MAX, MIN, AVERAGE.", "Bài 2: Lập Bảng số liệu xuất khẩu gạo, sử dụng hàm SUM.", "Bài 3: Lập Bảng thông tin các nước ASEAN, sử dụng công thức để tính mật độ dân số và các hàm thống kê."],
+            "activities": [
+                { "name": "Hoạt động 1: Giao nhiệm vụ", "duration": 5, "teacher_tasks": ["Chia nhóm, giao một trong ba bài tập cho mỗi nhóm.", "Nêu rõ yêu cầu về sản phẩm (tệp Excel) và báo cáo."], "student_tasks": ["Nhận nhiệm vụ, hình thành nhóm."] },
+                { "name": "Hoạt động 2: Thực hành nhóm", "duration": 35, "teacher_tasks": ["Quan sát các nhóm làm việc, hỗ trợ khi cần thiết."], "student_tasks": ["Các nhóm cùng nhau thảo luận, phân công công việc và thực hiện bài tập trên máy tính."] },
+                { "name": "Hoạt động 3: Báo cáo (có thể ở tiết sau)", "duration": 5, "teacher_tasks": ["Yêu cầu các nhóm nộp sản phẩm và chuẩn bị báo cáo."], "student_tasks": ["Hoàn thành và nộp sản phẩm."] }
+            ],
+            "answer_keys": {}
+        },
+        "E12": {
+            "objectives": ["Nhận biết được một số lợi ích cơ bản của phần mềm trình chiếu.", "Biết tạo bài trình chiếu có tiêu đề, theo cấu trúc phân cấp."],
+            "core_content": ["Phần mềm trình chiếu (như PowerPoint) giúp tạo bài trình bày sinh động, kết hợp văn bản, hình ảnh, video...", "Một bài trình chiếu gồm nhiều trang chiếu (slide).", "Cấu trúc thường gồm: trang tiêu đề, các trang nội dung, và trang kết thúc.", "Nội dung trên trang chiếu cần ngắn gọn, súc tích, trình bày dưới dạng gạch đầu dòng và phân cấp."],
+            "activities": [
+                { "name": "Hoạt động 1: Khởi động", "duration": 5, "teacher_tasks": ["Hỏi HS về các phần mềm trình chiếu đã biết và cho xem một bài trình chiếu mẫu."], "student_tasks": ["Chia sẻ kinh nghiệm, xem và nhận xét bài mẫu."] },
+                { "name": "Hoạt động 2: Hình thành kiến thức", "duration": 20, "teacher_tasks": ["Giới thiệu giao diện PowerPoint.", "Giải thích các khái niệm: bài trình chiếu, trang chiếu, cấu trúc phân cấp."], "student_tasks": ["Làm quen giao diện, ghi nhớ các khái niệm."] },
+                { "name": "Hoạt động 3: Luyện tập", "duration": 20, "teacher_tasks": ["Hướng dẫn HS tạo bài trình chiếu 'Giới thiệu bản thân' với trang tiêu đề và các trang nội dung."], "student_tasks": ["Thực hành tạo bài trình chiếu đơn giản."] }
+            ],
+            "answer_keys": { "tu_kiem_tra": ["Câu 1 và 2 đúng. Câu 3 và 4 sai."] }
+        },
+        "E13": {
+            "objectives": ["Thực hiện được chọn màu nền cho trang chiếu.", "Thực hiện được định dạng văn bản cho trang chiếu."],
+            "core_content": ["Màu nền giúp bài trình chiếu đẹp và hấp dẫn hơn. Có thể chọn màu đơn sắc (Solid fill), màu chuyển (Gradient fill), hoặc ảnh nền (Picture fill).", "Định dạng văn bản trong PowerPoint tương tự trong Word, sử dụng các công cụ trong nhóm Font và Paragraph của dải lệnh Home.", "PowerPoint cung cấp các mẫu thiết kế (Themes) có sẵn trong dải lệnh Design để áp dụng nhanh cho toàn bộ bài trình chiếu."],
+            "activities": [
+                { "name": "Hoạt động 1: Thực hành chọn màu nền", "duration": 15, "teacher_tasks": ["Hướng dẫn các bước chọn màu nền cho trang chiếu (chuột phải -> Format Background)."], "student_tasks": ["Thực hành chọn các loại màu nền khác nhau."] },
+                { "name": "Hoạt động 2: Thực hành định dạng văn bản", "duration": 20, "teacher_tasks": ["Hướng dẫn HS sử dụng các công cụ định dạng phông chữ, cỡ chữ, màu chữ, căn lề..."], "student_tasks": ["Thực hành định dạng văn bản trên trang chiếu."] },
+                { "name": "Hoạt động 3: Giới thiệu Themes", "duration": 10, "teacher_tasks": ["Giới thiệu cách sử dụng các mẫu thiết kế có sẵn trong dải lệnh Design."], "student_tasks": ["Thử áp dụng các mẫu khác nhau cho bài trình chiếu của mình."] }
+            ],
+            "answer_keys": {}
+        },
+        "E14": {
+            "objectives": ["Tạo được hiệu ứng xuất hiện cho các trang chiếu và các đối tượng trên trang chiếu một cách phù hợp."],
+            "core_content": ["Hiệu ứng giúp bài trình bày sinh động và thu hút hơn.", "Hiệu ứng chuyển trang chiếu (Transitions): là cách xuất hiện của cả trang chiếu, thiết lập trong dải lệnh Transitions.", "Hiệu ứng cho đối tượng (Animations): là cách xuất hiện, biến mất, nhấn mạnh của từng đối tượng (văn bản, hình ảnh) trên trang chiếu, thiết lập trong dải lệnh Animations.", "Lưu ý: Không nên lạm dụng quá nhiều hiệu ứng."],
+            "activities": [
+                { "name": "Hoạt động 1: Tạo hiệu ứng cho đối tượng", "duration": 20, "teacher_tasks": ["Hướng dẫn các bước tạo hiệu ứng Animations cho văn bản và hình ảnh.", "Giải thích về thứ tự xuất hiện và các tùy chọn hiệu ứng."], "student_tasks": ["Thực hành tạo hiệu ứng cho các đối tượng trên trang chiếu."] },
+                { "name": "Hoạt động 2: Tạo hiệu ứng chuyển trang", "duration": 20, "teacher_tasks": ["Hướng dẫn các bước tạo hiệu ứng Transitions cho trang chiếu.", "Giải thích cách áp dụng cho một hoặc tất cả các trang."], "student_tasks": ["Thực hành tạo hiệu ứng chuyển tiếp giữa các trang chiếu."] },
+                { "name": "Hoạt động 3: Củng cố", "duration": 5, "teacher_tasks": ["Nhắc nhở về việc sử dụng hiệu ứng hợp lý."], "student_tasks": ["Trình chiếu thử để xem kết quả."] }
+            ],
+            "answer_keys": { "tu_kiem_tra": ["Cả 4 câu đều là những việc HS có thể làm được sau bài học."] }
+        },
+        "E15": {
+            "objectives": ["Nêu được các chức năng cơ bản của phần mềm trình chiếu.", "Tạo được bài trình chiếu phục vụ học tập và công việc trên phần mềm PowerPoint.", "Sao chép được dữ liệu từ tệp văn bản sang tệp trình chiếu."],
+            "core_content": ["Bài thực hành tổng hợp các kỹ năng về PowerPoint: tạo bài trình chiếu hoàn chỉnh theo chủ đề, có cấu trúc, định dạng, hình ảnh và hiệu ứng.", "Sao chép nội dung (đặc biệt là các đề mục) từ Word sang PowerPoint để tiết kiệm thời gian.", "Nội dung trên slide cần được chọn lọc, tóm tắt dưới dạng gạch đầu dòng, không sao chép nguyên văn các đoạn văn dài."],
+            "activities": [
+                { "name": "Hoạt động 1: Hướng dẫn", "duration": 10, "teacher_tasks": ["Giao nhiệm vụ: tạo bài trình chiếu chia sẻ kinh nghiệm học tập.", "Hướng dẫn các bước thực hiện, từ lập dàn ý đến hoàn thiện sản phẩm.", "Lưu ý cách sao chép nội dung từ Word hiệu quả."], "student_tasks": ["Thảo luận nhóm, lập dàn ý cho bài trình bày."] },
+                { "name": "Hoạt động 2: Thực hành nhóm", "duration": 35, "teacher_tasks": ["Quan sát các nhóm làm việc, hỗ trợ khi cần thiết."], "student_tasks": ["Các nhóm cùng nhau tạo bài trình chiếu theo yêu cầu."] }
+            ],
+            "answer_keys": {}
+        },
+        // CHỦ ĐỀ F
+        "F1": {
+            "objectives": ["Mô phỏng được hoạt động của thuật toán tìm kiếm tuần tự trên một bộ dữ liệu đầu vào có kích thước nhỏ.", "Biết được khi dãy không có thứ tự thì phải tìm kiếm tuần tự.", "Biết được có hai loại bài toán tìm kiếm."],
+            "core_content": ["Bài toán tìm kiếm có 2 loại: tìm trong dãy không sắp thứ tự và tìm trong dãy đã sắp thứ tự.", "Thuật toán tìm kiếm tuần tự: duyệt lần lượt từng phần tử của dãy từ đầu đến cuối.", "Quá trình dừng lại khi tìm thấy phần tử hoặc đã duyệt hết dãy mà không tìm thấy.", "Tìm kiếm tuần tự là bắt buộc khi dãy không được sắp xếp."],
+            "activities": [
+                { "name": "Hoạt động 1: Khởi động", "duration": 5, "teacher_tasks": ["Nêu tình huống tìm một học sinh trong danh sách lớp chưa sắp xếp."], "student_tasks": ["Nêu cách làm là dò từ đầu đến cuối."] },
+                { "name": "Hoạt động 2: Hình thành kiến thức", "duration": 25, "teacher_tasks": ["Mô phỏng các bước tìm kiếm tuần tự trên một dãy số cụ thể.", "Phân tích 2 trường hợp: tìm thấy và không tìm thấy.", "Giới thiệu thuật toán bằng các bước mô tả."], "student_tasks": ["Quan sát, hiểu cách hoạt động của thuật toán."] },
+                { "name": "Hoạt động 3: Luyện tập", "duration": 15, "teacher_tasks": ["Cho một dãy số và yêu cầu HS mô phỏng lại các bước tìm kiếm."], "student_tasks": ["Thực hành mô phỏng thuật toán trên giấy."] }
+            ],
+            "answer_keys": { "tu_kiem_tra": ["Câu 1: Tìm thấy hoặc không tìm thấy.", "Câu 2: Khi tìm thấy phần tử cần tìm trước khi duyệt hết dãy.", "Câu 3: Khi phần tử cần tìm nằm ở cuối dãy hoặc không có trong dãy."] }
+        },
+        "F2": {
+            "objectives": ["Mô phỏng được hoạt động của thuật toán tìm kiếm nhị phân trên một bộ dữ liệu đầu vào có kích thước nhỏ.", "Biết được tìm kiếm nhị phân nhanh hơn tìm kiếm tuần tự.", "Nêu được ý nghĩa của việc chia một bài toán thành những bài toán nhỏ hơn."],
+            "core_content": ["Thuật toán tìm kiếm nhị phân chỉ áp dụng được cho dãy đã sắp xếp.", "Ý tưởng: so sánh phần tử cần tìm với phần tử ở giữa dãy. Nếu không bằng, sẽ loại bỏ một nửa dãy và tiếp tục tìm kiếm trên nửa còn lại.", "Quá trình lặp lại cho đến khi tìm thấy hoặc phạm vi tìm kiếm bằng 0.", "Đây là ví dụ của phương pháp 'chia để trị', giúp giải quyết bài toán nhanh hơn."],
+            "activities": [
+                { "name": "Hoạt động 1: Khởi động", "duration": 5, "teacher_tasks": ["Đặt vấn đề tìm một số trong dãy đã sắp xếp, có cách nào nhanh hơn không?"], "student_tasks": ["Suy nghĩ, đưa ra ý tưởng (ví dụ: tra từ điển)."] },
+                { "name": "Hoạt động 2: Hình thành kiến thức", "duration": 25, "teacher_tasks": ["Mô phỏng các bước tìm kiếm nhị phân trên một dãy số đã sắp xếp.", "Giới thiệu thuật toán và phương pháp 'chia để trị'."], "student_tasks": ["Quan sát, hiểu cách thuật toán loại bỏ một nửa phạm vi tìm kiếm."] },
+                { "name": "Hoạt động 3: Luyện tập", "duration": 15, "teacher_tasks": ["Cho một dãy số và yêu cầu HS mô phỏng lại các bước tìm kiếm nhị phân."], "student_tasks": ["Thực hành mô phỏng thuật toán trên giấy."] }
+            ],
+            "answer_keys": { "van_dung": "Cách tra từ điển tương tự như tìm kiếm nhị phân. Ta mở khoảng giữa, so sánh từ cần tra với các từ ở trang đó để quyết định tìm ở nửa trước hay nửa sau của từ điển.", "tu_kiem_tra": ["Câu 1: Lặp lại việc chia đôi phạm vi tìm kiếm và loại bỏ nửa không chứa phần tử cần tìm.", "Câu 2: Không, chỉ áp dụng được cho dãy đã sắp xếp."] }
+        },
+        "F3": {
+            "objectives": ["Biết được bài toán sắp xếp là gì.", "Biết được ý tưởng sắp xếp chọn.", "Mô phỏng được hoạt động của thuật toán sắp xếp chọn."],
+            "core_content": ["Bài toán sắp xếp: đổi chỗ các phần tử trong dãy để tạo ra một dãy có thứ tự (tăng dần hoặc giảm dần).", "Thuật toán sắp xếp chọn (Selection Sort): Lặp lại n-1 lần. Ở mỗi lần lặp, tìm phần tử lớn nhất (hoặc nhỏ nhất) trong phần dãy chưa được sắp xếp, sau đó đổi chỗ nó với phần tử đầu tiên của phần dãy đó."],
+            "activities": [
+                { "name": "Hoạt động 1: Khởi động", "duration": 5, "teacher_tasks": ["Yêu cầu HS sắp xếp một bó que tính theo thứ tự."], "student_tasks": ["Thực hiện và mô tả cách làm."] },
+                { "name": "Hoạt động 2: Hình thành kiến thức", "duration": 25, "teacher_tasks": ["Mô phỏng thuật toán sắp xếp chọn trên một dãy số cụ thể.", "Giới thiệu các bước của thuật toán."], "student_tasks": ["Quan sát, hiểu cách thuật toán hoạt động qua từng bước."] },
+                { "name": "Hoạt động 3: Luyện tập", "duration": 15, "teacher_tasks": ["Cho một dãy số và yêu cầu HS mô phỏng lại các bước sắp xếp chọn."], "student_tasks": ["Thực hành mô phỏng thuật toán trên giấy."] }
+            ],
+            "answer_keys": { "van_dung": ["1) Khi phần tử lớn nhất đã nằm sẵn ở đầu của phần dãy chưa sắp xếp.", "2) Kết quả sẽ là dãy số có thứ tự tăng dần (không giảm)."], "tu_kiem_tra": ["Câu 1: Sắp xếp danh sách học sinh theo điểm trung bình giảm dần. Tiêu chí: điểm trung bình, thứ tự giảm dần.", "Câu 2: Là thuật toán sắp xếp bằng cách lặp lại việc chọn phần tử lớn nhất/nhỏ nhất đưa về đúng vị trí."] }
+        },
+        "F4": {
+            "objectives": ["Biết được thế nào là sắp xếp nổi bọt.", "Mô phỏng được hoạt động của thuật toán sắp xếp nổi bọt."],
+            "core_content": ["Thuật toán sắp xếp nổi bọt (Bubble Sort): Lặp lại việc duyệt qua dãy nhiều lần. Trong mỗi lần duyệt, so sánh các cặp phần tử liền kề và đổi chỗ nếu chúng sai thứ tự.", "Sau mỗi lần duyệt, phần tử lớn nhất (hoặc nhỏ nhất) sẽ 'nổi' lên vị trí đúng ở cuối phần dãy đang xét.", "Thuật toán kết thúc khi có một lần duyệt mà không có bất kỳ sự đổi chỗ nào xảy ra."],
+            "activities": [
+                { "name": "Hoạt động 1: Khởi động", "duration": 5, "teacher_tasks": ["Nêu tình huống robot chỉ có thể so sánh và đổi chỗ hai hộp kẹo liền kề."], "student_tasks": ["Suy nghĩ cách giúp robot sắp xếp."] },
+                { "name": "Hoạt động 2: Hình thành kiến thức", "duration": 25, "teacher_tasks": ["Mô phỏng thuật toán sắp xếp nổi bọt trên một dãy số cụ thể.", "Giới thiệu các bước của thuật toán."], "student_tasks": ["Quan sát, hiểu cách các phần tử 'nổi bọt' lên vị trí đúng."] },
+                { "name": "Hoạt động 3: Luyện tập", "duration": 15, "teacher_tasks": ["Cho một dãy số và yêu cầu HS mô phỏng lại các bước sắp xếp nổi bọt."], "student_tasks": ["Thực hành mô phỏng thuật toán trên giấy."] }
+            ],
+            "answer_keys": { "tu_kiem_tra": ["Câu 1: Khi chúng sai thứ tự mong muốn (ví dụ: sắp xếp tăng dần mà số đứng trước lớn hơn số đứng sau).", "Câu 2: Khi thực hiện một lượt duyệt mà không có lần đổi chỗ nào.", "Câu 3: Khi dãy ban đầu đã được sắp xếp sẵn."] }
+        },
+        "F5": {
+            "objectives": ["Mô phỏng được hoạt động của một số thuật toán tìm kiếm, sắp xếp bằng các bước thủ công trên một bộ dữ liệu có kích thước nhỏ."],
+            "core_content": ["Bài thực hành tổng hợp, yêu cầu học sinh vận dụng kiến thức về các thuật toán đã học để giải quyết các bài toán cụ thể.", "Các thuật toán cần mô phỏng: tìm kiếm tuần tự, sắp xếp chọn, sắp xếp nổi bọt, và tìm kiếm nhị phân (trên dãy đã được sắp xếp)."],
+            "activities": [
+                { "name": "Hoạt động 1: Giao nhiệm vụ", "duration": 5, "teacher_tasks": ["Giao các bài tập 1, 2, 3, 4 trong SGK.", "Có thể chia nhóm để thực hiện."], "student_tasks": ["Nhận nhiệm vụ."] },
+                { "name": "Hoạt động 2: Thực hành", "duration": 35, "teacher_tasks": ["Quan sát HS làm bài, hỗ trợ khi cần thiết.", "Khuyến khích HS trình bày rõ ràng các bước mô phỏng."], "student_tasks": ["Thực hành mô phỏng các thuật toán trên giấy hoặc bảng con."] },
+                { "name": "Hoạt động 3: Chữa bài và tổng kết", "duration": 5, "teacher_tasks": ["Chữa một vài bài tập mẫu.", "So sánh hiệu quả giữa các thuật toán.", "Tổng kết lại kiến thức của chủ đề F."], "student_tasks": ["Đối chiếu kết quả, đặt câu hỏi nếu có thắc mắc."] }
+            ],
+            "answer_keys": { "van_dung": "Tùy thuộc vào sở thích của học sinh, nhưng có thể gợi ý: Sắp xếp chọn thường có số lần đổi chỗ ít hơn, trong khi sắp xếp nổi bọt dễ hình dung hơn." }
+        }
     };
     return allDetails[lessonId] || { "objectives": ["Nội dung đang được cập nhật."], "core_content": [], "activities": [], "answer_keys": {} };
 }
