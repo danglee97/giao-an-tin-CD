@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công cụ Giáo án Tương tác - Tin học 7</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .activity-card {
+            transition: all 0.3s ease;
+            border-left-width: 4px;
+        }
+        .status-pending { border-color: #6b7280; }
+        .status-in-progress { border-color: #f59e0b; }
+        .status-completed { border-color: #22c55e; }
+        .progress-bar-fill {
+            transition: width 0.5s ease-in-out;
+        }
+        .lesson-link {
+            transition: all 0.2s ease-in-out;
+        }
+        .lesson-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        #lesson-detail-view {
+            display: none;
+        }
+        details > summary {
+            list-style: none;
+            cursor: pointer;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+        details summary .arrow {
+            transition: transform 0.2s;
+        }
+        details[open] summary .arrow {
+            transform: rotate(90deg);
+        }
+        /* Custom Colors from Logo */
+        .bg-theme-blue { background-color: #002060; }
+        .text-theme-blue { color: #002060; }
+        .border-theme-blue { border-color: #002060; }
+        .bg-theme-red { background-color: #C00000; }
+        .text-theme-red { color: #C00000; }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+        <!-- Chế độ xem danh sách bài học -->
+        <div id="lesson-list-view">
+            <div class="text-center mb-10">
+                <img src="https://scontent.fhan3-3.fna.fbcdn.net/v/t39.30808-6/525568601_633257409812092_8475139235726062175_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeEh_s0yXneg85v9J_KMcvvE_-jzYli6LnT_6PNiWLoudC0_-LwMeohVsaxonAudm1J6wLpum06lqkPMPGanB1FC&_nc_ohc=dliWmkdDBDkQ7kNvwF-fs2O&_nc_oc=AdmUDoj13FaxoFqN4gPSx0_UhrZjSworNYZmG47Sf_sYUOnLAOWJVN9odRn63xhWd3k&_nc_zt=23&_nc_ht=scontent.fhan3-3.fna&_nc_gid=CBCvuAYsf0VU50CtiSn9zw&oh=00_AfXHq5t8G5DsNfYURxCwI0evsUJS_rTgqBUk2eLT1uAbyw&oe=6895D6F6" alt="Viet Anh School Logo" class="h-24 w-auto mx-auto mb-4">
+                <h1 class="text-3xl sm:text-4xl font-bold text-theme-blue">Giáo án Tương tác Tin học 7</h1>
+                <p class="text-lg text-gray-500 mt-2">Bộ sách Cánh Diều</p>
+            </div>
+            <div id="chapters-container" class="space-y-10">
+                <!-- Nội dung các chương sẽ được JS chèn vào đây -->
+            </div>
+        </div>
+
+        <!-- Chế độ xem chi tiết bài học -->
+        <div id="lesson-detail-view">
+            <!-- Nội dung chi tiết bài học sẽ được JS chèn vào đây -->
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu cho tất cả các bài học
+        const lessonsData = {
+            "A": {
+                "title": "Chủ đề A: Máy tính và Cộng đồng",
+                "lessons": [
+                    { "id": "A1", "title": "Bài 1: Thiết bị vào - ra cơ bản", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=Thi%E1%BA%BFt+b%E1%BB%8B+V%C3%A0o+-+Ra" },
+                    { "id": "A2", "title": "Bài 2: Các thiết bị vào - ra", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=M%C3%A1y+in,+M%C3%A1y+qu%C3%A9t,+Webcam" },
+                    { "id": "A3", "title": "Bài 3: Thực hành với các thiết bị vào - ra", "image": "https://placehold.co/1200x400/e5e7eb/1f2937?text=Th%E1%BB%B1c+h%C3%A0nh+k%E1%BA%BFt+n%E1%BB%91i" },
+                    { "id": "A4", "title": "Bài 4: Một số chức năng của hệ điều hành", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=H%E1%BB%87+%C4%90i%E1%BB%81u+H%C3%A0nh" },
+                    { "id": "A5", "title": "Bài 5: Thực hành khám phá trình quản lí hệ thống tệp", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=File+Explorer" },
+                    { "id": "A6", "title": "Bài 6: Thực hành thao tác với tệp và thư mục", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=T%E1%BB%87p+v%C3%A0+Th%C6%B0+m%E1%BB%A5c" }
+                ]
+            },
+            "C": {
+                "title": "Chủ đề C: Tổ chức lưu trữ, tìm kiếm và trao đổi thông tin",
+                "lessons": [
+                    { "id": "C1", "title": "Bài 1: Giới thiệu mạng xã hội", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=M%E1%BA%A1ng+X%C3%A3+H%E1%BB%99i" },
+                    { "id": "C2", "title": "Bài 2: Thực hành sử dụng mạng xã hội", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=Th%E1%BB%B1c+h%C3%A0nh+Facebook" },
+                    { "id": "C3", "title": "Bài 3: Trao đổi thông tin trên mạng xã hội", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=Trao+%C4%91%E1%BB%95i+th%C3%B4ng+tin" }
+                ]
+            },
+            "D": {
+                "title": "Chủ đề D: Đạo đức, pháp luật và văn hoá trong môi trường số",
+                "lessons": [
+                    { "id": "D1", "title": "Bài 1: Ứng xử có văn hoá khi giao tiếp qua mạng", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=V%C4%83n+ho%C3%A1+%E1%BB%A9ng+x%E1%BB%AD" },
+                    { "id": "D2", "title": "Bài 2: Ứng xử tránh rủi ro trên mạng", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=R%E1%BB%A7i+ro+tr%C3%AAn+m%E1%BA%A1ng" }
+                ]
+            },
+            "E": {
+                "title": "Chủ đề E: Ứng dụng tin học",
+                "lessons": [
+                    { "id": "E1", "title": "Bài 1: Làm quen với bảng tính điện tử", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=B%E1%BA%A3ng+t%C3%ADnh+%C4%91i%E1%BB%87n+t%E1%BB%AD" },
+                    { "id": "E2", "title": "Bài 2: Làm quen với trang tính", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=Trang+t%C3%ADnh+(Sheet)" },
+                    { "id": "E3", "title": "Bài 3: Làm quen với trang tính (tiếp theo)", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=Thao+t%C3%A1c+v%E1%BB%9Bi+kh%E1%BB%91i+%C3%B4" },
+                    { "id": "E4", "title": "Bài 4: Định dạng hiển thị dữ liệu số", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=%C4%90%E1%BB%8Bnh+d%E1%BA%A1ng+s%E1%BB%91" },
+                    { "id": "E5", "title": "Bài 5: Định dạng số tiền và ngày tháng", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=Ti%E1%BB%81n+t%E1%BB%87+v%C3%A0+Ng%C3%A0y+th%C3%A1ng" },
+                    { "id": "E6", "title": "Bài 6: Thực hành lập sổ theo dõi thu chi cá nhân", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=S%E1%BB%95+thu+chi" },
+                    { "id": "E7", "title": "Bài 7: Công thức tính toán dùng địa chỉ các ô dữ liệu", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=C%C3%B4ng+th%E1%BB%A9c+t%C3%ADnh+to%C3%A1n" },
+                    { "id": "E8", "title": "Bài 8: Sử dụng một số hàm có sẵn", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=H%C3%A0m+SUM,+AVERAGE" },
+                    { "id": "E9", "title": "Bài 9: Định dạng trang tính và in", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=%C4%90%E1%BB%8Bnh+d%E1%BA%A1ng+v%C3%A0+In" },
+                    { "id": "E10", "title": "Bài 10: Thực hành tổng hợp", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=Th%E1%BB%B1c+h%C3%A0nh+t%E1%BB%95ng+h%E1%BB%A3p+Excel" },
+                    { "id": "E11", "title": "Bài 11: Luyện tập sử dụng phần mềm bảng tính", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=B%C3%A0i+t%E1%BA%ADp+nh%C3%B3m" },
+                    { "id": "E12", "title": "Bài 12: Tạo bài trình chiếu", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=Ph%E1%BA%A7n+m%E1%BB%81m+Tr%C3%ACnh+chi%E1%BA%BFu" },
+                    { "id": "E13", "title": "Bài 13: Thực hành định dạng trang chiếu", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=%C4%90%E1%BB%8Bnh+d%E1%BA%A1ng+Trang+chi%E1%BA%BFu" },
+                    { "id": "E14", "title": "Bài 14: Thêm hiệu ứng cho trang chiếu", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=Hi%E1%BB%87u+%E1%BB%A9ng+Animation" },
+                    { "id": "E15", "title": "Bài 15: Thực hành tổng hợp tạo bài trình chiếu", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=Th%E1%BB%B1c+h%C3%A0nh+t%E1%BB%95ng+h%E1%BB%A3p+PowerPoint" }
+                ]
+            },
+            "F": {
+                "title": "Chủ đề F: Giải quyết vấn đề với sự trợ giúp của máy tính",
+                "lessons": [
+                    { "id": "F1", "title": "Bài 1: Tìm kiếm tuần tự", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=T%C3%ACm+ki%E1%BA%BFm+tu%E1%BA%A7n+t%E1%BB%B1" },
+                    { "id": "F2", "title": "Bài 2: Tìm kiếm nhị phân", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=T%C3%ACm+ki%E1%BA%BFm+nh%E1%BB%8B+ph%C3%A2n" },
+                    { "id": "F3", "title": "Bài 3: Sắp xếp chọn", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=S%E1%BA%AFp+x%E1%BA%BFp+ch%E1%BB%8Dn" },
+                    { "id": "F4", "title": "Bài 4: Sắp xếp nổi bọt", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=S%E1%BA%AFp+x%E1%BA%BFp+n%E1%BB%95i+b%E1%BB%8Dt" },
+                    { "id": "F5", "title": "Bài 5: Thực hành mô phỏng các thuật toán", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=M%C3%B4+ph%E1%BB%8Fng+thu%E1%BA%ADt+to%C3%A1n" }
+                ]
+            }
+        };
+        
+        function getLessonDetails(lessonId) {
+            const details = {
+                "A1": {
+                    "objectives": ["Nhận biết được các thiết bị vào – ra cơ bản và thông dụng nhất.", "Biết được có nhiều loại máy tính cá nhân với các kiểu thiết bị vào – ra khác nhau.", "Biết được một thiết bị có thể vừa là đầu vào vừa là đầu ra."],
+                    "core_content": [
+                        "Máy tính để bàn gồm các bộ phận cơ bản: hộp thân máy, màn hình, bàn phím, chuột.",
+                        "Thiết bị vào cơ bản: Bàn phím, chuột. Thiết bị ra cơ bản: Màn hình.",
+                        "Máy tính xách tay tích hợp các thiết bị vào-ra cơ bản (bàn phím, màn hình, tấm chạm thay chuột, loa, micro, camera).",
+                        "Máy tính bảng và điện thoại thông minh dùng màn hình cảm ứng vừa là thiết bị vào, vừa là thiết bị ra."
+                    ],
+                    "activities": [
+                        { "name": "Hoạt động 1: Khởi động", "duration": 5, "teacher_tasks": ["Đặt câu hỏi: \"Nên nói 'một chiếc' hay 'một bộ' máy tính xách tay?\"", "Ghi nhận ý kiến, không kết luận.", "Dẫn dắt vào bài học mới."], "student_tasks": ["Thảo luận cặp đôi, đưa ra câu trả lời.", "Tập trung, sẵn sàng vào bài mới."] },
+                        { "name": "Hoạt động 2: Hình thành kiến thức", "duration": 25, "teacher_tasks": ["Giới thiệu thiết bị vào-ra của máy tính để bàn.", "Giải thích sự tích hợp trên máy tính xách tay (tấm chạm).", "Giới thiệu màn hình cảm ứng.", "Chốt các kiến thức trọng tâm."], "student_tasks": ["Quan sát, phân biệt các thiết bị.", "Ghi chép các khái niệm.", "Tích cực trả lời câu hỏi."] },
+                        { "name": "Hoạt động 3: Luyện tập", "duration": 5, "teacher_tasks": ["Tổ chức cho HS trả lời 3 câu hỏi Luyện tập.", "Nhận xét, chốt đáp án."], "student_tasks": ["Hoạt động cá nhân/cặp đôi trả lời câu hỏi.", "Trình bày câu trả lời."] },
+                        { "name": "Hoạt động 4: Vận dụng", "duration": 5, "teacher_tasks": ["Nêu tình huống Vận dụng.", "Mời HS chia sẻ lựa chọn và lý do."], "student_tasks": ["Suy nghĩ, liên hệ thực tế.", "Giải thích cho lựa chọn của mình."] },
+                        { "name": "Hoạt động 5: Củng cố & Dặn dò", "duration": 5, "teacher_tasks": ["Hệ thống lại kiến thức qua các câu hỏi Tự kiểm tra.", "Giao nhiệm vụ về nhà: Đọc trước Bài 2."], "student_tasks": ["Trả lời câu hỏi củng cố.", "Ghi chép nhiệm vụ về nhà."] }
+                    ],
+                    "answer_keys": {
+                        "luyen_tap": [
+                            "Câu 1: Một bộ máy tính để bàn gồm có: hộp thân máy, màn hình, bàn phím và chuột.",
+                            "Câu 2: Bàn phím ảo thường có ở máy tính bảng, điện thoại thông minh.",
+                            "Câu 3: Máy tính xách tay dùng tấm chạm (touchpad) để thay thế chuột máy tính."
+                        ],
+                        "van_dung": "Gợi ý: HS lựa chọn loại máy tính (để bàn, xách tay, bảng) và giải thích dựa trên ưu/nhược điểm liên quan đến nhu cầu học tập, tính di động, giá thành, hiệu năng...",
+                        "tu_kiem_tra": [
+                            "Câu 1: Hộp thân máy chứa: bộ xử lí trung tâm (CPU), bộ nhớ trong (RAM) và ổ đĩa cứng.",
+                            "Câu 2: Các thiết bị vào-ra cơ bản của máy tính là: bàn phím, chuột, màn hình.",
+                            "Câu 3: Màn hình cảm ứng vừa là thiết bị vào vừa là thiết bị ra."
+                        ]
+                    }
+                }
+                // Thêm chi tiết cho các bài học khác ở đây
+            };
+            return details[lessonId] || { "objectives": ["Nội dung đang được cập nhật."], "core_content": [], "activities": [], "answer_keys": {} };
+        }
+
+        const chaptersContainer = document.getElementById('chapters-container');
+        const lessonListView = document.getElementById('lesson-list-view');
+        const lessonDetailView = document.getElementById('lesson-detail-view');
+        let currentActivities = [];
+        let activityStatus = {};
+
+        function renderLessonList() {
+            chaptersContainer.innerHTML = '';
+            for (const chapterKey in lessonsData) {
+                const chapter = lessonsData[chapterKey];
+                let chapterHtml = `
+                    <div>
+                        <h2 class="text-2xl font-bold text-theme-blue mb-4">${chapter.title}</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                `;
+                chapter.lessons.forEach(lesson => {
+                    chapterHtml += `
+                        <div onclick="renderLessonDetail('${chapterKey}', '${lesson.id}')" class="lesson-link cursor-pointer bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col items-center text-center">
+                            <i class="fas fa-book-open text-3xl text-theme-red mb-3"></i>
+                            <h4 class="font-semibold text-theme-blue">${lesson.title}</h4>
+                        </div>
+                    `;
+                });
+                chapterHtml += `</div></div>`;
+                chaptersContainer.innerHTML += chapterHtml;
+            }
+        }
+
+        function renderLessonDetail(chapterKey, lessonId) {
+            const lesson = lessonsData[chapterKey].lessons.find(l => l.id === lessonId);
+            const lessonDetails = getLessonDetails(lessonId);
+            if (!lesson) return;
+
+            currentActivities = lessonDetails.activities.map((_, index) => `activity-${index + 1}`);
+            activityStatus = {};
+            currentActivities.forEach(id => activityStatus[id] = 'pending');
+
+            let detailHtml = `
+                <button onclick="showLessonList()" class="mb-6 bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>Quay lại Danh sách bài học
+                </button>
+                
+                <div class="text-center mb-8">
+                    <img src="https://scontent.fhan3-3.fna.fbcdn.net/v/t39.30808-6/525568601_633257409812092_8475139235726062175_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeEh_s0yXneg85v9J_KMcvvE_-jzYli6LnT_6PNiWLoudC0_-LwMeohVsaxonAudm1J6wLpum06lqkPMPGanB1FC&_nc_ohc=dliWmkdDBDkQ7kNvwF-fs2O&_nc_oc=AdmUDoj13FaxoFqN4gPSx0_UhrZjSworNYZmG47Sf_sYUOnLAOWJVN9odRn63xhWd3k&_nc_zt=23&_nc_ht=scontent.fhan3-3.fna&_nc_gid=CBCvuAYsf0VU50CtiSn9zw&oh=00_AfXHq5t8G5DsNfYURxCwI0evsUJS_rTgqBUk2eLT1uAbyw&oe=6895D6F6" alt="Viet Anh School Logo" class="h-20 w-auto mx-auto mb-4">
+                    <h1 class="text-3xl sm:text-4xl font-bold text-theme-blue">${lesson.title}</h1>
+                    <p class="text-lg text-gray-500 mt-2">${lessonsData[chapterKey].title}</p>
+                </div>
+
+                <img src="${lesson.image}" alt="Hình ảnh minh họa cho ${lesson.title}" class="w-full h-64 object-cover rounded-2xl mb-8 shadow-lg">
+
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Tiến trình tổng thể</h3>
+                    <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div id="progress-bar" class="bg-theme-red h-4 rounded-full progress-bar-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="space-y-4 mb-8">
+                    <!-- Mục tiêu -->
+                    <details class="bg-gray-50 rounded-lg p-4">
+                        <summary class="font-bold text-theme-blue text-lg flex justify-between items-center">
+                            <span><i class="fas fa-bullseye mr-3 text-theme-red"></i>Mục tiêu bài học</span>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </summary>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700 mt-4 pl-5">
+                            ${lessonDetails.objectives.map(obj => `<li>${obj}</li>`).join('')}
+                        </ul>
+                    </details>
+                    <!-- Nội dung cốt lõi -->
+                    <details class="bg-gray-50 rounded-lg p-4">
+                        <summary class="font-bold text-theme-blue text-lg flex justify-between items-center">
+                            <span><i class="fas fa-book-reader mr-3 text-theme-red"></i>Nội dung cốt lõi</span>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </summary>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700 mt-4 pl-5">
+                            ${lessonDetails.core_content.map(content => `<li>${content}</li>`).join('')}
+                        </ul>
+                    </details>
+                    <!-- Gợi ý trả lời -->
+                    <details class="bg-gray-50 rounded-lg p-4">
+                        <summary class="font-bold text-theme-blue text-lg flex justify-between items-center">
+                            <span><i class="fas fa-lightbulb mr-3 text-theme-red"></i>Gợi ý trả lời</span>
+                            <i class="fas fa-chevron-right arrow"></i>
+                        </summary>
+                        <div class="mt-4 pl-5 space-y-3 text-gray-700">
+                            ${lessonDetails.answer_keys.luyen_tap ? `<div><h4 class="font-semibold">Luyện tập:</h4><ul class="list-decimal list-inside ml-4">${lessonDetails.answer_keys.luyen_tap.map(answer => `<li>${answer}</li>`).join('')}</ul></div>` : ''}
+                            ${lessonDetails.answer_keys.van_dung ? `<div><h4 class="font-semibold">Vận dụng:</h4><p class="ml-4">${lessonDetails.answer_keys.van_dung}</p></div>` : ''}
+                            ${lessonDetails.answer_keys.tu_kiem_tra ? `<div><h4 class="font-semibold">Tự kiểm tra:</h4><ul class="list-decimal list-inside ml-4">${lessonDetails.answer_keys.tu_kiem_tra.map(answer => `<li>${answer}</li>`).join('')}</ul></div>` : ''}
+                        </div>
+                    </details>
+                </div>
+
+                <div>
+                    <h2 class="text-2xl font-bold text-theme-blue mb-6 border-b-2 pb-2 border-theme-blue">Chi tiết các Hoạt động</h2>
+                    <div class="space-y-6">
+                        ${lessonDetails.activities.length > 0 ? lessonDetails.activities.map((activity, index) => `
+                            <div id="activity-${index + 1}" class="activity-card status-pending bg-white p-6 rounded-lg shadow-md">
+                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+                                    <h3 class="text-xl font-bold text-gray-900">${activity.name}</h3>
+                                    <span class="text-sm font-semibold text-gray-500 mt-2 sm:mt-0"><i class="far fa-clock mr-1"></i>Thời lượng: ${activity.duration} phút</span>
+                                </div>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h4 class="font-semibold text-gray-700 mb-2"><i class="fas fa-chalkboard-teacher mr-2"></i>Nhiệm vụ của Giáo viên</h4>
+                                        <ul class="space-y-2 text-sm">
+                                            ${activity.teacher_tasks.map(task => `<li class="flex items-start"><input type="checkbox" class="mr-2 mt-1 flex-shrink-0"><span>${task}</span></li>`).join('')}
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-700 mb-2"><i class="fas fa-user-graduate mr-2"></i>Hoạt động của Học sinh</h4>
+                                        <ul class="space-y-2 text-sm">
+                                            ${activity.student_tasks.map(task => `<li class="flex items-start"><input type="checkbox" class="mr-2 mt-1 flex-shrink-0"><span>${task}</span></li>`).join('')}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="mt-6 text-right space-x-2">
+                                    <button onclick="updateStatus('activity-${index + 1}', 'pending')" class="px-3 py-1 text-xs font-medium text-gray-700 bg-gray-200 rounded-full">Chưa bắt đầu</button>
+                                    <button onclick="updateStatus('activity-${index + 1}', 'in-progress')" class="px-3 py-1 text-xs font-medium text-amber-800 bg-amber-100 rounded-full">Đang diễn ra</button>
+                                    <button onclick="updateStatus('activity-${index + 1}', 'completed')" class="px-3 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">Hoàn thành</button>
+                                </div>
+                            </div>
+                        `).join('') : '<p class="text-gray-500">Nội dung chi tiết cho bài học này đang được cập nhật.</p>'}
+                    </div>
+                </div>
+            `;
+            lessonDetailView.innerHTML = detailHtml;
+            lessonListView.style.display = 'none';
+            lessonDetailView.style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function showLessonList() {
+            lessonDetailView.style.display = 'none';
+            lessonListView.style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function updateStatus(activityId, newStatus) {
+            const card = document.getElementById(activityId);
+            if (!card) return;
+            
+            activityStatus[activityId] = newStatus;
+
+            card.classList.remove('status-pending', 'status-in-progress', 'status-completed');
+            card.classList.add(`status-${newStatus}`);
+            
+            updateProgressBar();
+        }
+
+        function updateProgressBar() {
+            if (currentActivities.length === 0) return;
+            const completedCount = Object.values(activityStatus).filter(status => status === 'completed').length;
+            const progressPercentage = (completedCount / currentActivities.length) * 100;
+            
+            const progressBar = document.getElementById('progress-bar');
+            if(progressBar) {
+                progressBar.style.width = `${progressPercentage}%`;
+            }
+        }
+
+        // Khởi tạo
+        document.addEventListener('DOMContentLoaded', renderLessonList);
+    </script>
+</body>
+</html>
