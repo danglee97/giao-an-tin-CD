@@ -1,2 +1,2 @@
-# giao-an-tin-7-CD
-Giáo án tin học 7 - Sách cánh diều
+# Giáo án điện tử Tin học
+Bản quyền thuộc về Đăng Lee - 2025
