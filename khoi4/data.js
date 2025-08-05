@@ -214,7 +214,132 @@ function getLessonDetails(lessonId) {
             ],
             "answer_keys": { "luyen_tap": ["Bài 1: B. Transitions.", "Bài 2: HS thực hành tạo thư mục và lưu tệp."], "van_dung": ["HS hoàn thiện bài trình chiếu 'Que huong cua em' với đầy đủ các yêu cầu."] }
         },
-        // ... (Các bài học còn lại của Chủ đề E và F)
+        "E2-1": {
+            "objectives": ["Nhận biết được biểu tượng và kích hoạt được phần mềm soạn thảo văn bản.", "Tạo được tệp văn bản mới, gõ được một số dòng văn bản không dấu.", "Đặt tên và lưu được tệp văn bản vào thư mục cụ thể."],
+            "core_content": ["Kích hoạt Word bằng cách nháy đúp vào biểu tượng.", "Tạo tệp mới: File -> New -> Blank document.", "Vùng soạn thảo là nơi nhập nội dung văn bản.", "Lưu tệp: File -> Save."],
+            "activities": [
+                { "name": "Hoạt động 1: Tạo tệp và nhập văn bản", "duration": 20, "teacher_tasks": ["Hướng dẫn cách tạo tệp mới và giới thiệu các thành phần chính của cửa sổ Word.", "Cho HS tập gõ một vài dòng đơn giản."], "student_tasks": ["Thực hành tạo tệp và gõ văn bản."] },
+                { "name": "Hoạt động 2: Lưu tệp văn bản", "duration": 15, "teacher_tasks": ["Hướng dẫn các bước lưu tệp bằng lệnh Save và chọn đúng thư mục."], "student_tasks": ["Thực hành lưu tệp đã tạo."] }
+            ],
+            "answer_keys": { "luyen_tap": ["HS thực hành soạn thảo và lưu bài thơ 'Nặn đồ chơi'."], "van_dung": ["HS thực hành tạo và lưu tệp đọc số 85 497."] }
+        },
+        "E2-2": {
+            "objectives": ["Mở được tệp văn bản đã có.", "Lưu được tệp văn bản với tên mới vào thư mục theo yêu cầu.", "Soạn thảo được văn bản đơn giản bằng tiếng Việt có dấu, có chữ hoa."],
+            "core_content": ["Mở tệp đã có: File -> Open.", "Lưu với tên mới: File -> Save As.", "Để gõ tiếng Việt, cần có phần mềm hỗ trợ như Unikey và chọn kiểu gõ Telex.", "Gõ chữ trước, gõ dấu sau."],
+            "activities": [
+                { "name": "Hoạt động 1: Mở và lưu với tên mới", "duration": 15, "teacher_tasks": ["Hướng dẫn cách mở tệp đã có bằng lệnh Open.", "Hướng dẫn cách lưu tệp với tên mới bằng lệnh Save As."], "student_tasks": ["Thực hành mở và lưu lại tệp với tên khác."] },
+                { "name": "Hoạt động 2: Soạn thảo tiếng Việt", "duration": 20, "teacher_tasks": ["Kiểm tra và hướng dẫn HS bật Unikey.", "Giới thiệu bảng quy tắc gõ chữ và dấu kiểu Telex.", "Cho HS thực hành gõ tiếng Việt có dấu."], "student_tasks": ["Thực hành gõ tiếng Việt."] }
+            ],
+            "answer_keys": { "luyen_tap": ["Bài 1: Lưu lần đầu (Save) cần đặt tên và chọn nơi lưu. Lưu trong lúc soạn (Save) chỉ cần nhấn nút. Lưu với tên mới (Save As) tạo ra một bản sao với tên khác.", "Bài 2: HS thực hành tạo tệp và gõ tên bạn."], "van_dung": ["HS mở tệp 'Nan do choi', gõ lại có dấu và lưu với tên mới."] }
+        },
+        "E2-3": {
+            "objectives": ["Rèn luyện được kĩ năng tạo, mở tệp văn bản và lưu tệp theo yêu cầu.", "Chọn được chế độ gõ tiếng Việt."],
+            "core_content": ["Đây là bài thực hành tổng hợp các kỹ năng: tạo, mở, sửa và lưu tệp văn bản tiếng Việt."],
+            "activities": [
+                { "name": "Hoạt động 1: Thực hành tạo tệp mới", "duration": 20, "teacher_tasks": ["Yêu cầu HS tạo tệp mới, gõ 'Năm điều Bác Hồ dạy' và lưu lại."], "student_tasks": ["Thực hành theo yêu cầu."] },
+                { "name": "Hoạt động 2: Thực hành mở và sửa tệp", "duration": 20, "teacher_tasks": ["Yêu cầu HS mở tệp vừa tạo, sửa và bổ sung nội dung, sau đó lưu lại với tên mới."], "student_tasks": ["Thực hành theo yêu cầu."] }
+            ],
+            "answer_keys": { "van_dung": ["Nguyên nhân: Bạn An chưa bật chế độ gõ tiếng Việt (chữ V) trong Unikey. Cần nháy chuột vào biểu tượng Unikey ở thanh Taskbar để chuyển từ chữ E sang chữ V."] }
+        },
+        "E2-4": {
+            "objectives": ["Chèn được ảnh vào văn bản.", "Thay đổi được kích thước và vị trí của ảnh sau khi chèn vào văn bản."],
+            "core_content": ["Chèn ảnh vào văn bản: Insert -> Pictures.", "Thay đổi kích thước ảnh bằng cách kéo thả các điểm mốc ở góc và cạnh.", "Để di chuyển ảnh tự do trong văn bản, cần chọn ảnh, vào Picture Format -> Wrap Text -> Square."],
+            "activities": [
+                { "name": "Hoạt động 1: Chèn ảnh", "duration": 15, "teacher_tasks": ["Hướng dẫn các bước chèn ảnh vào văn bản."], "student_tasks": ["Thực hành chèn ảnh vào tệp 'Năm điều Bác Hồ dạy'."] },
+                { "name": "Hoạt động 2: Thay đổi kích thước và vị trí", "duration": 20, "teacher_tasks": ["Hướng dẫn cách thay đổi kích thước ảnh.", "Hướng dẫn cách sử dụng Wrap Text -> Square để di chuyển ảnh."], "student_tasks": ["Thực hành điều chỉnh kích thước và vị trí ảnh."] }
+            ],
+            "answer_keys": { "luyen_tap": ["HS thực hành chèn và điều chỉnh ảnh."], "van_dung": ["HS giúp bạn Hà chèn ảnh quả thị vào bên phải văn bản."] }
+        },
+        "E2-5": {
+            "objectives": ["Soạn thảo được văn bản theo chủ đề và có ảnh minh hoạ.", "Chọn được cách bố trí ảnh trong văn bản theo yêu cầu."],
+            "core_content": ["Đây là bài thực hành tổng hợp kỹ năng soạn thảo văn bản và chèn, bố trí ảnh."],
+            "activities": [
+                { "name": "Hoạt động 1: Thực hành", "duration": 35, "teacher_tasks": ["Hướng dẫn HS thực hiện các bước để tạo một tấm thiệp chúc mừng mẹ ngày 8-3, bao gồm soạn thảo, chèn ảnh và bố trí ảnh."], "student_tasks": ["Thực hành theo các bước để hoàn thành sản phẩm."] }
+            ],
+            "answer_keys": { "van_dung": ["HS tự tạo một sản phẩm văn bản có ảnh theo chủ đề yêu thích."] }
+        },
+        "E2-6": {
+            "objectives": ["Thực hiện được các thao tác chọn, xoá, sao chép, di chuyển một khối văn bản."],
+            "core_content": ["Chọn khối văn bản (bôi đen) bằng cách kéo thả chuột hoặc dùng phím Shift + phím mũi tên.", "Xoá khối đã chọn bằng phím Delete.", "Di chuyển khối: Chọn khối -> Cut -> Đặt con trỏ đến vị trí mới -> Paste.", "Sao chép khối: Chọn khối -> Copy -> Đặt con trỏ đến vị trí mới -> Paste."],
+            "activities": [
+                { "name": "Hoạt động 1: Chọn và xoá khối", "duration": 15, "teacher_tasks": ["Hướng dẫn cách chọn và xoá một khối văn bản."], "student_tasks": ["Thực hành chọn và xoá một câu trong văn bản."] },
+                { "name": "Hoạt động 2: Di chuyển và sao chép", "duration": 20, "teacher_tasks": ["Giới thiệu các lệnh Cut, Copy, Paste.", "Hướng dẫn các bước di chuyển và sao chép một khối văn bản."], "student_tasks": ["Thực hành di chuyển một câu để sắp xếp lại đoạn văn."] }
+            ],
+            "answer_keys": { "luyen_tap": ["HS thực hành sao chép cụm từ 'Ai yêu Bác Hồ Chí Minh hơn thiếu niên nhi đồng' và xoá câu đầu tiên."], "van_dung": ["Sử dụng thao tác di chuyển (Cut và Paste) để đổi chỗ các câu thơ bị sai thứ tự."] }
+        },
+        "E2-7": {
+            "objectives": ["Rèn luyện được kĩ năng tạo tệp văn bản có ảnh.", "Rèn luyện được kĩ năng sửa văn bản với các thao tác chọn, xoá, sao chép, di chuyển khối văn bản."],
+            "core_content": ["Đây là bài thực hành tổng hợp, ôn lại toàn bộ kỹ năng soạn thảo văn bản đã học."],
+            "activities": [
+                { "name": "Hoạt động 1: Thực hành các thao tác cơ bản", "duration": 20, "teacher_tasks": ["Yêu cầu HS tạo tệp mới, gõ bài thơ, sau đó mở lại và sửa đổi bằng cách sao chép, di chuyển, xoá."], "student_tasks": ["Thực hành theo yêu cầu."] },
+                { "name": "Hoạt động 2: Thực hành tạo văn bản có ảnh", "duration": 20, "teacher_tasks": ["Yêu cầu HS mở lại tệp, bổ sung nội dung và chèn ảnh minh hoạ."], "student_tasks": ["Thực hành theo yêu cầu."] }
+            ],
+            "answer_keys": { "van_dung": ["HS tự tạo một sản phẩm văn bản hoàn chỉnh theo chủ đề tự chọn."] }
+        },
+        // CHỦ ĐỀ F
+        "F1-1": {
+            "objectives": ["Chỉ ra được năm vùng chính trên màn hình và mô tả tóm tắt chức năng của chúng trong môi trường lập trình Scratch.", "Thực hiện được các thao tác chọn lệnh từ vùng Thư viện lệnh và đưa vào vùng Lập trình."],
+            "core_content": ["Scratch là ngôn ngữ lập trình trực quan (kéo-thả).", "5 vùng chính: Thư viện lệnh, Vùng lập trình, Sân khấu, Vùng nhân vật, Vùng phông nền.", "Các lệnh được phân theo nhóm màu sắc và chức năng.", "Có thể kéo thả lệnh từ thư viện sang vùng lập trình và ghép chúng lại với nhau."],
+            "activities": [
+                { "name": "Hoạt động 1: Giới thiệu Scratch", "duration": 15, "teacher_tasks": ["Giới thiệu về lập trình trực quan và Scratch.", "Hướng dẫn HS nhận diện 5 vùng chính trên màn hình."], "student_tasks": ["Quan sát và gọi tên các vùng."] },
+                { "name": "Hoạt động 2 & 3: Lệnh và nhóm lệnh", "duration": 25, "teacher_tasks": ["Hướng dẫn cách kéo thả lệnh, thay đổi giá trị trong lệnh.", "Hướng dẫn cách chọn lệnh từ các nhóm khác nhau và ghép chúng lại."], "student_tasks": ["Thực hành kéo thả và ghép các lệnh."] }
+            ],
+            "answer_keys": { "luyen_tap": ["Bài 1: Vùng Lập trình.", "Bài 2: Lệnh 'nói ... trong ... giây' hoặc 'nói ...' trong nhóm lệnh Hiển thị."], "van_dung": ["HS tự kéo thả 3 lệnh chuyển động đầu tiên và quan sát hoạt động của nhân vật Mèo."] }
+        },
+        "F1-2": {
+            "objectives": ["Sử dụng được một số lệnh ở nhóm lệnh Sự kiện để bắt đầu khởi chạy chương trình.", "Tạo được chương trình Scratch đơn giản."],
+            "core_content": ["Chương trình Scratch là một tập hợp các khối lệnh được ghép lại với nhau.", "Nhóm lệnh Sự kiện (màu vàng) chứa các lệnh để bắt đầu chương trình (ví dụ: 'Khi bấm vào cờ xanh', 'Khi bấm phím...', 'Khi bấm vào nhân vật này').", "Xây dựng kịch bản trước khi lập trình giúp chọn và sắp xếp lệnh đúng thứ tự."],
+            "activities": [
+                { "name": "Hoạt động 1: Nhóm lệnh Sự kiện", "duration": 15, "teacher_tasks": ["Giới thiệu lệnh 'Khi bấm vào cờ xanh' và các lệnh sự kiện khác.", "Giải thích rằng đây là các lệnh bắt đầu, không thể ghép lệnh khác vào trước nó."], "student_tasks": ["Quan sát, thử nghiệm các lệnh sự kiện."] },
+                { "name": "Hoạt động 2: Tạo chương trình đầu tiên", "duration": 25, "teacher_tasks": ["Hướng dẫn HS quy trình 3 bước: Tìm hiểu yêu cầu -> Xây dựng kịch bản -> Lập trình.", "Cùng HS tạo chương trình 'Giới thiệu bản thân'."], "student_tasks": ["Phân tích yêu cầu, kịch bản và thực hành lập trình theo mẫu."] }
+            ],
+            "answer_keys": { "luyen_tap": ["Bài 1: Không thể.", "Bài 2: Chương trình A: Mèo nói trước rồi di chuyển. Chương trình B: Mèo di chuyển trước rồi nói."], "van_dung": ["HS tạo chương trình giới thiệu bản thân, bắt đầu bằng sự kiện 'Khi bấm vào nhân vật này'."] }
+        },
+        "F1-3": {
+            "objectives": ["Chọn được các hình ảnh làm phông nền cho vùng Sân khấu.", "Sử dụng được lệnh thay đổi phông nền.", "Tạo được chương trình có phông nền thay đổi."],
+            "core_content": ["Có thể thêm nhiều phông nền (background) cho Sân khấu từ thư viện có sẵn.", "Sử dụng lệnh 'đổi phông nền thành...' trong nhóm lệnh Hiển thị để thay đổi phông nền trong chương trình."],
+            "activities": [
+                { "name": "Hoạt động 1: Thêm, đổi tên phông nền", "duration": 20, "teacher_tasks": ["Hướng dẫn các bước để thêm phông nền mới từ thư viện và đổi tên phông nền trong vùng Phông nền."], "student_tasks": ["Thực hành thêm và đổi tên 2 phông nền 'Biển' và 'Bắc cực'."] },
+                { "name": "Hoạt động 2: Tạo chương trình", "duration": 20, "teacher_tasks": ["Hướng dẫn HS tạo chương trình 'Địa điểm yêu thích', trong đó nhân vật Mèo nói về địa điểm nào thì phông nền đổi sang hình ảnh tương ứng."], "student_tasks": ["Thực hành lập trình theo kịch bản."] }
+            ],
+            "answer_keys": { "luyen_tap": ["Bài 1: Vùng Phông nền.", "Bài 2: Ghép lệnh 'đổi phông nền thành Biển' trước, sau đó ghép lệnh 'nói Tớ thích biển nhất!'."], "van_dung": ["HS tạo chương trình giới thiệu 2 môn thể thao, có đổi phông nền tương ứng (ví dụ: sân bóng đá, sân bóng rổ)."] }
+        },
+        "F1-4": {
+            "objectives": ["Thực hiện được các thao tác thêm, đổi tên và xoá nhân vật.", "Tạo được chương trình có nhiều nhân vật."],
+            "core_content": ["Một chương trình Scratch có thể có nhiều nhân vật (sprite).", "Thêm, xoá, đổi tên nhân vật được thực hiện ở Vùng Nhân vật.", "Mỗi nhân vật có một vùng lập trình riêng. Để lập trình cho nhân vật nào, cần nháy chuột chọn nhân vật đó trước."],
+            "activities": [
+                { "name": "Hoạt động 1: Thao tác với nhân vật", "duration": 20, "teacher_tasks": ["Hướng dẫn các bước xoá nhân vật Mèo, thêm nhân vật mới từ thư viện và đổi tên nhân vật."], "student_tasks": ["Thực hành thêm 2 nhân vật An và Bích."] },
+                { "name": "Hoạt động 2: Tạo chương trình nhiều nhân vật", "duration": 20, "teacher_tasks": ["Hướng dẫn HS tạo chương trình 'Cuộc thi chạy', trong đó mỗi nhân vật được điều khiển bằng một phím khác nhau."], "student_tasks": ["Lập trình riêng cho từng nhân vật theo kịch bản."] }
+            ],
+            "answer_keys": { "luyen_tap": ["Bài 1: Vùng Nhân vật.", "Bài 2: Nháy chuột vào nhân vật Huyền ở Vùng Nhân vật."], "van_dung": ["HS tạo chương trình có 2 nhân vật, khi nháy chuột vào nhân vật nào thì nhân vật đó sẽ nói."] }
+        },
+        "F1-5": {
+            "objectives": ["Sử dụng được các lệnh trong nhóm lệnh Chuyển động để điều khiển nhân vật chuyển động, xoay.", "Tạo được chương trình với nhân vật chuyển động đơn giản."],
+            "core_content": ["Nhóm lệnh Chuyển động (màu xanh dương) chứa các lệnh để thay đổi vị trí và hướng của nhân vật.", "Các lệnh thường dùng: di chuyển, xoay, đi tới vị trí, lướt tới vị trí."],
+            "activities": [
+                { "name": "Hoạt động 1: Nhóm lệnh Chuyển động", "duration": 15, "teacher_tasks": ["Giới thiệu chức năng của một số lệnh chuyển động cơ bản trong Bảng 1."], "student_tasks": ["Đọc và hiểu chức năng các lệnh."] },
+                { "name": "Hoạt động 2: Tạo chương trình", "duration": 25, "teacher_tasks": ["Hướng dẫn HS tạo chương trình 'Khám phá đại dương' với 2 nhân vật Cá và Sao biển.", "Nhân vật Cá sẽ lướt tới vị trí ngẫu nhiên, nhân vật Sao biển sẽ xoay."], "student_tasks": ["Xây dựng kịch bản và lập trình cho 2 nhân vật."] }
+            ],
+            "answer_keys": { "luyen_tap": ["a) Lệnh 'xoay (trái) 15 độ'.", "b) Lệnh 'di chuyển 10 bước', 'đi tới vị trí ngẫu nhiên', 'lướt trong 1 giây tới vị trí ngẫu nhiên'."], "van_dung": ["HS tạo chương trình với nhân vật Quả bóng, sử dụng lệnh 'lướt trong 2 giây tới vị trí ngẫu nhiên'."] }
+        },
+        "F1-6": {
+            "objectives": ["Sử dụng được các lệnh trong nhóm lệnh Hiển thị để thay đổi kích thước, màu sắc của nhân vật.", "Tạo được chương trình với các hiệu ứng hình ảnh đơn giản."],
+            "core_content": ["Nhóm lệnh Hiển thị (màu tím) chứa các lệnh để thay đổi ngoại hình của nhân vật.", "Các lệnh thường dùng: thay đổi/đặt kích thước, thay đổi/đặt hiệu ứng màu, bỏ hiệu ứng đồ hoạ."],
+            "activities": [
+                { "name": "Hoạt động 1: Tạo hiệu ứng hình ảnh", "duration": 15, "teacher_tasks": ["Giới thiệu chức năng của một số lệnh trong nhóm Hiển thị ở Bảng 1."], "student_tasks": ["Đọc và hiểu chức năng các lệnh."] },
+                { "name": "Hoạt động 2: Tạo chương trình", "duration": 25, "teacher_tasks": ["Hướng dẫn HS tạo chương trình 'Cá biến hình' với 2 nhân vật.", "Cá Nóc sẽ phình to rồi nhỏ lại, Sứa sẽ đổi màu."], "student_tasks": ["Xây dựng kịch bản và lập trình cho 2 nhân vật, kết hợp lệnh Chuyển động và Hiển thị."] }
+            ],
+            "answer_keys": { "luyen_tap": ["Bài 1: Lệnh 'đặt hiệu ứng màu' hoặc 'thay đổi hiệu ứng màu'.", "Bài 2: B. đặt kích thước thành 200%"], "van_dung": ["HS tạo chương trình với nhân vật Quả bóng, sử dụng lệnh 'thay đổi hiệu ứng màu một lượng 25' trong sự kiện 'Khi bấm vào nhân vật này'."] }
+        },
+        "F1-7": {
+            "objectives": ["Lựa chọn được nhân vật và xây dựng được kịch bản cho các nhân vật.", "Tự tạo được một chương trình đơn giản theo kịch bản đã xây dựng."],
+            "core_content": ["Đây là bài thực hành tổng hợp theo dự án nhóm, vận dụng toàn bộ kiến thức về Scratch đã học."],
+            "activities": [
+                { "name": "Hoạt động 1: Giao nhiệm vụ và lập kế hoạch", "duration": 15, "teacher_tasks": ["Cho các nhóm chọn một hoạt động (kể chuyện, chuyển động, thay đổi hình dạng).", "Hướng dẫn các nhóm lập bản mô tả đề tài (yêu cầu, kịch bản)."], "student_tasks": ["Thảo luận nhóm, chọn đề tài và xây dựng kịch bản."] },
+                { "name": "Hoạt động 2: Thực hiện dự án", "duration": 25, "teacher_tasks": ["Quan sát các nhóm làm việc, hỗ trợ khi cần."], "student_tasks": ["Các nhóm thực hiện tạo chương trình Scratch theo kịch bản đã xây dựng."] }
+            ],
+            "answer_keys": { "van_dung": ["HS tự do sáng tạo chương trình của riêng mình."] }
+        }
     };
     return allDetails[lessonId] || { "objectives": ["Nội dung đang được cập nhật."], "core_content": [], "activities": [], "answer_keys": {} };
 }
