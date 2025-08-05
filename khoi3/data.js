@@ -158,6 +158,42 @@ function getLessonDetails(lessonId) {
             ],
             "answer_keys": { "luyen_tap": ["Câu 1 và 3 đúng. Câu 2 sai."], "van_dung": ["Cả hai cùng xử lí thông tin. Em xử lí thông tin trên màn hình để ra quyết định. Máy tính xử lí các quyết định của em để thay đổi trạng thái trò chơi."] }
         },
+        "A3-1": {
+            "objectives": ["Chỉ ra được khu vực chính của bàn phím.", "Gọi được tên các hàng phím trong khu vực chính của bàn phím."],
+            "core_content": ["Khu vực chính của bàn phím gồm 5 hàng phím: hàng phím số, hàng phím trên, hàng phím cơ sở, hàng phím dưới và hàng phím chứa phím cách.", "Hàng phím cơ sở có hai phím F và J có gờ nổi (gai) để làm mốc đặt ngón tay trỏ."],
+            "activities": [
+                { "name": "Hoạt động 1: Tìm hiểu khu vực chính", "duration": 15, "teacher_tasks": ["Giới thiệu 4 khu vực của bàn phím và tập trung vào khu vực chính.", "Giới thiệu tên 5 hàng phím."], "student_tasks": ["Quan sát, nhận biết và gọi tên các hàng phím."] },
+                { "name": "Hoạt động 2: Khám phá hàng phím cơ sở", "duration": 20, "teacher_tasks": ["Yêu cầu HS tìm các phím có gờ nổi trên hàng phím cơ sở.", "Giải thích ý nghĩa của hai phím F và J."], "student_tasks": ["Sờ và tìm phím có gờ.", "Gõ thử tên của mình vào Wordpad."] }
+            ],
+            "answer_keys": { "luyen_tap": ["Bài 1: a)-2, b)-1, c)-3.", "Bài 2: Cần sử dụng các phím ở hàng phím trên, hàng phím dưới và hàng phím cơ sở."], "van_dung": ["Để đánh dấu vị trí đặt hai ngón trỏ, giúp chúng ta có thể gõ phím bằng 10 ngón mà không cần nhìn vào bàn phím."] }
+        },
+        "A3-2": {
+            "objectives": ["Đặt được các ngón tay đúng trên hàng phím cơ sở và thực hiện được thao tác gõ các phím ở hàng phím này đúng cách."],
+            "core_content": ["Đặt tay đúng trên hàng phím cơ sở: Ngón trỏ trái ở phím F, ngón trỏ phải ở phím J. Các ngón còn lại đặt lần lượt lên các phím A, S, D và K, L, ;.", "Gõ bàn phím bằng 10 ngón, mỗi ngón gõ đúng phím đã được phân công."],
+            "activities": [
+                { "name": "Hoạt động 1: Đặt tay đúng", "duration": 15, "teacher_tasks": ["Hướng dẫn cách đặt 8 ngón tay lên hàng phím cơ sở.", "Uốn nắn tư thế tay cho HS."], "student_tasks": ["Thực hành đặt tay theo hướng dẫn."] },
+                { "name": "Hoạt động 2: Luyện tập với RapidTyping", "duration": 25, "teacher_tasks": ["Hướng dẫn HS mở phần mềm RapidTyping và chọn bài luyện tập hàng phím cơ sở.", "Quan sát và hỗ trợ HS luyện tập."], "student_tasks": ["Thực hành luyện gõ và ghi lại kết quả (tốc độ, độ chính xác)."] }
+            ],
+            "answer_keys": { "van_dung": ["Gợi ý một số từ: Tiếng Việt: 'ga', 'da', 'la', 'ha', 'sa', 'a ha'... Tiếng Anh: 'sad', 'dad', 'had', 'has', 'gas', 'lad', 'ask'..."] }
+        },
+        "A3-3": {
+            "objectives": ["Thực hiện được thao tác gõ ở hàng phím trên và hàng phím dưới đúng cách."],
+            "core_content": ["Luôn đặt tay ở hàng phím cơ sở.", "Khi cần gõ phím ở hàng trên hoặc dưới, vươn ngón tay tương ứng để gõ, sau đó lập tức đưa ngón tay về lại vị trí trên hàng phím cơ sở."],
+            "activities": [
+                { "name": "Hoạt động 1: Cách gõ phím", "duration": 15, "teacher_tasks": ["Giới thiệu quy tắc phân công các phím cho từng ngón tay ở hàng trên và hàng dưới.", "Nhấn mạnh việc phải đưa tay về hàng phím cơ sở sau khi gõ."], "student_tasks": ["Quan sát sơ đồ và ghi nhớ quy tắc."] },
+                { "name": "Hoạt động 2: Luyện tập với RapidTyping", "duration": 25, "teacher_tasks": ["Hướng dẫn HS chọn các bài luyện tập cho hàng phím trên và hàng phím dưới.", "Quan sát và hỗ trợ HS."], "student_tasks": ["Thực hành luyện gõ và ghi lại kết quả."] }
+            ],
+            "answer_keys": { "van_dung": ["HS tự thực hành và xác định các hàng phím đã sử dụng để gõ tên của mình."] }
+        },
+        "A3-4": {
+            "objectives": ["Thực hiện được thao tác gõ các phím ở hàng phím cơ sở, hàng phím trên và hàng phím dưới đúng quy định.", "Phối hợp được thao tác gõ phím ở các hàng phím để gõ theo nhu cầu."],
+            "core_content": ["Đây là bài ôn tập và thực hành tổng hợp kỹ năng gõ phím bằng 10 ngón."],
+            "activities": [
+                { "name": "Trò chơi: Ai gõ đúng hơn?", "duration": 20, "teacher_tasks": ["Tổ chức thi gõ phím tiếp sức theo nhóm.", "Đặt ra luật chơi, nhấn mạnh tiêu chí gõ đúng cách hơn là gõ nhanh."], "student_tasks": ["Tham gia thi gõ phím theo nhóm."] },
+                { "name": "Hoạt động: Vinh danh", "duration": 15, "teacher_tasks": ["Tổ chức cho các nhóm bình bầu các danh hiệu 'bạn chăm chỉ nhất', 'bạn gõ nhanh nhất', 'bạn gõ chính xác nhất'.", "Tuyên dương và trao thưởng."], "student_tasks": ["Bình bầu và chúc mừng các bạn có thành tích tốt."] }
+            ],
+            "answer_keys": {}
+        },
         // CHỦ ĐỀ B
         "B1-1": {
             "objectives": ["Biết được trên Internet có nhiều thông tin bổ ích và lí thú.", "Biết được có thể tìm thấy trên Internet những thông tin không có sẵn trong máy tính."],
