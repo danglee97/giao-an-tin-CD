@@ -28,19 +28,13 @@ details[open] summary .arrow { transform: rotate(90deg); }
 .slide-icon { position: absolute; top: 8px; right: 8px; background-color: rgba(0, 32, 96, 0.8); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; transition: all 0.2s ease; z-index: 10; }
 .slide-icon:hover { background-color: #C00000; transform: scale(1.1); }
 
-/* === PHẦN MỚI & CẬP NHẬT: TABS VÀ QUIZ === */
-.tab-nav {
-    display: flex;
-    flex-wrap: wrap; /* Cho phép các tab xuống dòng trên màn hình nhỏ */
-    border-bottom: 1px solid #e5e7eb;
-}
+/* === PHẦN MỚI: TABS VÀ QUIZ === */
 .tab-button {
     padding: 10px 20px;
     cursor: pointer;
     border-bottom: 3px solid transparent;
     transition: all 0.3s ease;
     font-weight: 600;
-    margin-bottom: -1px; /* Giúp đường viền dưới liền mạch */
 }
 .tab-button.active {
     color: #002060; /* text-theme-blue */
