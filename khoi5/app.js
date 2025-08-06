@@ -65,30 +65,36 @@ function renderLessonDetail(chapterKey, lessonId) {
     // --- [THAY ĐỔI] Tạo HTML cho các tab tài liệu bổ sung ---
     let extraResourcesHtml = `
         <div class="mt-12">
-            <div class="border-b border-gray-200">
-                <nav class="flex -mb-px" aria-label="Tabs">
-                    ${lesson.gdrive_embed ? `<button class="tab-button active" onclick="openTab(event, 'tab-presentation')">Bài giảng trình chiếu</button>` : ''}
-                    ${lesson.video_embed ? `<button class="tab-button ${!lesson.gdrive_embed ? 'active' : ''}" onclick="openTab(event, 'tab-video')">Video bài giảng</button>` : ''}
-                    ${(lessonDetails.quiz && lessonDetails.quiz.length > 0) ? `<button class="tab-button ${!lesson.gdrive_embed && !lesson.video_embed ? 'active' : ''}" onclick="openTab(event, 'tab-quiz')">Luyện tập trắc nghiệm</button>` : ''}
-                </nav>
+            <div class="tab-nav">
+                <button class="tab-button active" onclick="openTab(event, 'tab-core-knowledge')">Kiến thức trọng tâm</button>
+                ${lesson.gdrive_embed ? `<button class="tab-button" onclick="openTab(event, 'tab-presentation')">Bài giảng trình chiếu</button>` : ''}
+                ${lesson.video_embed ? `<button class="tab-button" onclick="openTab(event, 'tab-video')">Video bài giảng</button>` : ''}
+                ${(lessonDetails.quiz && lessonDetails.quiz.length > 0) ? `<button class="tab-button" onclick="openTab(event, 'tab-quiz')">Luyện tập trắc nghiệm</button>` : ''}
             </div>
             <div>
+                <div id="tab-core-knowledge" class="tab-content active">
+                    <h3 class="text-xl font-bold text-theme-blue mb-4">Nội dung cốt lõi</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 pl-5">
+                        ${(lessonDetails.core_content && lessonDetails.core_content.length > 0) ? lessonDetails.core_content.map(content => `<li>${content}</li>`).join('') : '<li>Nội dung đang được cập nhật.</li>'}
+                    </ul>
+                </div>
+
                 ${lesson.gdrive_embed ? `
-                <div id="tab-presentation" class="tab-content active">
+                <div id="tab-presentation" class="tab-content">
                     <div class="relative w-full" style="padding-top: 56.25%;">
                         <iframe class="absolute top-0 left-0 w-full h-full" src="${lesson.gdrive_embed}" frameborder="0" allowfullscreen="true"></iframe>
                     </div>
                 </div>` : ''}
 
                 ${lesson.video_embed ? `
-                <div id="tab-video" class="tab-content ${!lesson.gdrive_embed ? 'active' : ''}">
+                <div id="tab-video" class="tab-content">
                      <div class="relative w-full" style="padding-top: 56.25%;">
                         <iframe class="absolute top-0 left-0 w-full h-full" src="${lesson.video_embed}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 </div>` : ''}
 
                 ${(lessonDetails.quiz && lessonDetails.quiz.length > 0) ? `
-                <div id="tab-quiz" class="tab-content ${!lesson.gdrive_embed && !lesson.video_embed ? 'active' : ''}">
+                <div id="tab-quiz" class="tab-content">
                     <div id="quiz-container"></div>
                 </div>` : ''}
             </div>
@@ -105,7 +111,6 @@ function renderLessonDetail(chapterKey, lessonId) {
             <p class="text-lg text-gray-500 mt-2">${lessonsData[chapterKey].title}</p>
         </div>
         
-        <!-- Các mục cũ -->
         <div class="space-y-4 mb-8">
              <details class="bg-gray-50 rounded-lg p-4">
                 <summary class="font-bold text-theme-blue text-lg flex justify-between items-center">
@@ -115,9 +120,14 @@ function renderLessonDetail(chapterKey, lessonId) {
             </details>
             <details class="bg-gray-50 rounded-lg p-4">
                 <summary class="font-bold text-theme-blue text-lg flex justify-between items-center">
-                    <span><i class="fas fa-book-reader mr-3 text-theme-red"></i>Nội dung cốt lõi</span><i class="fas fa-chevron-right arrow"></i>
+                    <span><i class="fas fa-lightbulb mr-3 text-theme-red"></i>Gợi ý trả lời</span><i class="fas fa-chevron-right arrow"></i>
                 </summary>
-                <ul class="list-disc list-inside space-y-2 text-gray-700 mt-4 pl-5">${(lessonDetails.core_content && lessonDetails.core_content.length > 0) ? lessonDetails.core_content.map(content => `<li>${content}</li>`).join('') : '<li>Nội dung đang được cập nhật.</li>'}</ul>
+                <div class="mt-4 pl-5 space-y-3 text-gray-700">
+                     ${(lessonDetails.answer_keys && Object.keys(lessonDetails.answer_keys).length > 0) ? `
+                        ${lessonDetails.answer_keys.luyen_tap ? `<div><h4 class="font-semibold">Luyện tập:</h4><ul class="list-decimal list-inside ml-4">${lessonDetails.answer_keys.luyen_tap.map(answer => `<li>${answer}</li>`).join('')}</ul></div>` : ''}
+                        ${lessonDetails.answer_keys.van_dung ? `<div><h4 class="font-semibold">Vận dụng:</h4><p class="ml-4">${lessonDetails.answer_keys.van_dung}</p></div>` : ''}
+                    ` : '<p>Nội dung đang được cập nhật.</p>'}
+                </div>
             </details>
         </div>
 
@@ -128,7 +138,6 @@ function renderLessonDetail(chapterKey, lessonId) {
     lessonListView.style.display = 'none';
     lessonDetailView.style.display = 'block';
 
-    // Khởi tạo quiz nếu có
     if (lessonDetails.quiz && lessonDetails.quiz.length > 0) {
         quizData = lessonDetails.quiz;
         startQuiz();
@@ -142,19 +151,18 @@ function showLessonList() {
     lessonDetailView.style.display = 'none';
 }
 
-// --- LOGIC MỚI CHO TABS VÀ QUIZ ---
 function openTab(event, tabId) {
     let i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tab-content");
     for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
+        tabcontent[i].classList.remove("active");
     }
     tablinks = document.getElementsByClassName("tab-button");
     for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
+        tablinks[i].classList.remove("active");
     }
-    document.getElementById(tabId).style.display = "block";
-    event.currentTarget.className += " active";
+    document.getElementById(tabId).classList.add("active");
+    event.currentTarget.classList.add("active");
 }
 
 function startQuiz() {
@@ -172,21 +180,18 @@ function renderQuizQuestion() {
     questionData.options.forEach((option, index) => {
         optionsHtml += `<button class="quiz-option" onclick="selectOption(${index}, this)">${option}</button>`;
     });
-
     quizContainer.innerHTML = `
-        <div class="mb-4">
-            <p class="font-semibold text-lg">${currentQuestionIndex + 1}. ${questionData.question}</p>
-        </div>
+        <div class="mb-4"><p class="font-semibold text-lg">${currentQuestionIndex + 1}. ${questionData.question}</p></div>
         <div id="quiz-options">${optionsHtml}</div>
         <div id="quiz-feedback" class="mt-4 font-semibold"></div>
         <div class="mt-6 text-right">
             <button id="check-answer-btn" onclick="checkAnswer()" class="bg-theme-blue text-white font-bold py-2 px-5 rounded-lg hover:bg-opacity-90">Kiểm tra</button>
             <button id="next-question-btn" onclick="nextQuestion()" class="bg-theme-red text-white font-bold py-2 px-5 rounded-lg hover:bg-opacity-90 hidden">Câu tiếp theo</button>
-        </div>
-    `;
+        </div>`;
 }
 
 function selectOption(index, element) {
+    if (document.getElementById('check-answer-btn').classList.contains('hidden')) return;
     const options = document.querySelectorAll('.quiz-option');
     options.forEach(opt => opt.classList.remove('selected'));
     element.classList.add('selected');
@@ -199,7 +204,6 @@ function checkAnswer() {
     const options = document.querySelectorAll('.quiz-option');
     const feedback = document.getElementById('quiz-feedback');
     
-    options.forEach(opt => opt.disabled = true);
     document.getElementById('check-answer-btn').classList.add('hidden');
     document.getElementById('next-question-btn').classList.remove('hidden');
 
@@ -231,9 +235,7 @@ function showFinalScore() {
             <h3 class="text-2xl font-bold text-theme-blue mb-4">Hoàn thành!</h3>
             <p class="text-lg">Bạn đã trả lời đúng ${score} / ${quizData.length} câu hỏi.</p>
             <button onclick="startQuiz()" class="mt-6 bg-theme-blue text-white font-bold py-2 px-5 rounded-lg hover:bg-opacity-90">Làm lại</button>
-        </div>
-    `;
+        </div>`;
 }
 
-// Lắng nghe sự kiện khi trang đã tải xong và hiển thị danh sách bài học
 document.addEventListener('DOMContentLoaded', renderLessonList);
