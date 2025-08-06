@@ -7,6 +7,10 @@ const resourceLinksContainer = document.getElementById('resource-links-container
 // Biến toàn cục để theo dõi trạng thái
 let currentActivities = [];
 let activityStatus = {};
+let quizData = [];
+let currentQuestionIndex = 0;
+let score = 0;
+let selectedOption = null;
 
 /**
  * Hiển thị các nút link đến tài liệu PDF
@@ -15,18 +19,10 @@ function renderResourceLinks() {
     if (!resourceLinksContainer || typeof gradeInfo === 'undefined') return;
     let linksHtml = '<div class="flex justify-center items-center gap-4 flex-wrap">';
     if (gradeInfo.sgk_pdf) {
-        linksHtml += `
-            <a href="${gradeInfo.sgk_pdf}" target="_blank" class="bg-theme-blue text-white font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors flex items-center gap-2">
-                <i class="fas fa-book-open"></i>
-                <span>Xem Sách Giáo Khoa</span>
-            </a>`;
+        linksHtml += `<a href="${gradeInfo.sgk_pdf}" target="_blank" class="bg-theme-blue text-white font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors flex items-center gap-2"><i class="fas fa-book-open"></i><span>Xem Sách Giáo Khoa</span></a>`;
     }
     if (gradeInfo.sgv_pdf) {
-        linksHtml += `
-            <a href="${gradeInfo.sgv_pdf}" target="_blank" class="bg-theme-red text-white font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors flex items-center gap-2">
-                <i class="fas fa-user-tie"></i>
-                <span>Xem Sách Giáo Viên</span>
-            </a>`;
+        linksHtml += `<a href="${gradeInfo.sgv_pdf}" target="_blank" class="bg-theme-red text-white font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors flex items-center gap-2"><i class="fas fa-user-tie"></i><span>Xem Sách Giáo Viên</span></a>`;
     }
     linksHtml += '</div>';
     resourceLinksContainer.innerHTML = linksHtml;
@@ -50,14 +46,8 @@ function renderLessonList() {
             chapterHtml += `
                 <div onclick="renderLessonDetail('${chapterKey}', '${lesson.id}')" class="lesson-link cursor-pointer bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col items-center text-center">
                     <i class="${iconClass} text-3xl text-theme-red mb-3"></i>
-                    <h4 class="font-semibold text-theme-blue">${lesson.title}</h4>`;
-            if (lesson.gdrive_embed) {
-                chapterHtml += `
-                    <span onclick="event.stopPropagation(); window.open('${lesson.gdrive_embed}', '_blank');" class="slide-icon" title="Mở bài giảng Slide">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                    </span>`;
-            }
-            chapterHtml += `</div>`;
+                    <h4 class="font-semibold text-theme-blue">${lesson.title}</h4>
+                </div>`;
         });
         chapterHtml += `</div></div>`;
         chaptersContainer.innerHTML += chapterHtml;
@@ -71,52 +61,66 @@ function renderLessonDetail(chapterKey, lessonId) {
     const lesson = lessonsData[chapterKey].lessons.find(l => l.id === lessonId);
     const lessonDetails = getLessonDetails(lessonId);
     if (!lesson) return;
-    currentActivities = (lessonDetails.activities || []).map((_, index) => `activity-${index + 1}`);
-    activityStatus = {};
-    currentActivities.forEach(id => activityStatus[id] = 'pending');
-    let contentDisplayHtml = lesson.gdrive_embed 
-        ? `<div class="relative w-full mb-8 shadow-lg rounded-2xl overflow-hidden" style="padding-top: 56.25%;"><iframe class="absolute top-0 left-0 w-full h-full" src="${lesson.gdrive_embed}" frameborder="0" allowfullscreen="true"></iframe></div>`
-        : `<img src="${lesson.image || 'https://placehold.co/1200x400/cccccc/ffffff?text=H%C3%ACnh+%E1%BA%A3nh'}" alt="Hình ảnh minh họa cho ${lesson.title}" class="w-full h-64 object-cover rounded-2xl mb-8 shadow-lg">`;
-    
+
+    // --- [THAY ĐỔI] Tạo HTML cho các tab tài liệu bổ sung ---
+    let extraResourcesHtml = `
+        <div class="mt-12">
+            <div class="tab-nav">
+                <button class="tab-button active" onclick="openTab(event, 'tab-core-knowledge')">Kiến thức trọng tâm</button>
+                ${lesson.gdrive_embed ? `<button class="tab-button" onclick="openTab(event, 'tab-presentation')">Bài giảng trình chiếu</button>` : ''}
+                ${lesson.video_embed ? `<button class="tab-button" onclick="openTab(event, 'tab-video')">Video bài giảng</button>` : ''}
+                ${(lessonDetails.quiz && lessonDetails.quiz.length > 0) ? `<button class="tab-button" onclick="openTab(event, 'tab-quiz')">Luyện tập trắc nghiệm</button>` : ''}
+            </div>
+            <div>
+                <div id="tab-core-knowledge" class="tab-content active">
+                    <h3 class="text-xl font-bold text-theme-blue mb-4">Nội dung cốt lõi</h3>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700 pl-5">
+                        ${(lessonDetails.core_content && lessonDetails.core_content.length > 0) ? lessonDetails.core_content.map(content => `<li>${content}</li>`).join('') : '<li>Nội dung đang được cập nhật.</li>'}
+                    </ul>
+                </div>
+
+                ${lesson.gdrive_embed ? `
+                <div id="tab-presentation" class="tab-content">
+                    <div class="relative w-full" style="padding-top: 56.25%;">
+                        <iframe class="absolute top-0 left-0 w-full h-full" src="${lesson.gdrive_embed}" frameborder="0" allowfullscreen="true"></iframe>
+                    </div>
+                </div>` : ''}
+
+                ${lesson.video_embed ? `
+                <div id="tab-video" class="tab-content">
+                     <div class="relative w-full" style="padding-top: 56.25%;">
+                        <iframe class="absolute top-0 left-0 w-full h-full" src="${lesson.video_embed}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>` : ''}
+
+                ${(lessonDetails.quiz && lessonDetails.quiz.length > 0) ? `
+                <div id="tab-quiz" class="tab-content">
+                    <div id="quiz-container"></div>
+                </div>` : ''}
+            </div>
+        </div>
+    `;
+
     let detailHtml = `
         <button onclick="showLessonList()" class="mb-6 bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
-            <i class="fas fa-arrow-left mr-2"></i>Quay lại Danh sách bài học
+            <i class="fas fa-arrow-left mr-2"></i>Quay lại Danh sách
         </button>
         <div class="text-center mb-8">
             <img src="../logo.jpg" alt="Viet Anh School Logo" class="h-20 w-auto mx-auto mb-4" onerror="this.src='https://placehold.co/150x150/002060/FFFFFF?text=VA'; this.onerror=null;">
             <h1 class="text-3xl sm:text-4xl font-bold text-theme-blue">${lesson.title}</h1>
             <p class="text-lg text-gray-500 mt-2">${lessonsData[chapterKey].title}</p>
         </div>
-        ${contentDisplayHtml}
-        <div class="mb-8">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">Tiến trình tổng thể</h3>
-            <div class="w-full bg-gray-200 rounded-full h-4">
-                <div id="progress-bar" class="bg-theme-red h-4 rounded-full progress-bar-fill" style="width: 0%"></div>
-            </div>
-        </div>
+        
         <div class="space-y-4 mb-8">
              <details class="bg-gray-50 rounded-lg p-4">
                 <summary class="font-bold text-theme-blue text-lg flex justify-between items-center">
-                    <span><i class="fas fa-bullseye mr-3 text-theme-red"></i>Mục tiêu bài học</span>
-                    <i class="fas fa-chevron-right arrow"></i>
+                    <span><i class="fas fa-bullseye mr-3 text-theme-red"></i>Mục tiêu bài học</span><i class="fas fa-chevron-right arrow"></i>
                 </summary>
-                <ul class="list-disc list-inside space-y-2 text-gray-700 mt-4 pl-5">
-                    ${lessonDetails.objectives.map(obj => `<li>${obj}</li>`).join('')}
-                </ul>
+                <ul class="list-disc list-inside space-y-2 text-gray-700 mt-4 pl-5">${lessonDetails.objectives.map(obj => `<li>${obj}</li>`).join('')}</ul>
             </details>
             <details class="bg-gray-50 rounded-lg p-4">
                 <summary class="font-bold text-theme-blue text-lg flex justify-between items-center">
-                    <span><i class="fas fa-book-reader mr-3 text-theme-red"></i>Nội dung cốt lõi</span>
-                    <i class="fas fa-chevron-right arrow"></i>
-                </summary>
-                <ul class="list-disc list-inside space-y-2 text-gray-700 mt-4 pl-5">
-                    ${(lessonDetails.core_content && lessonDetails.core_content.length > 0) ? lessonDetails.core_content.map(content => `<li>${content}</li>`).join('') : '<li>Nội dung đang được cập nhật.</li>'}
-                </ul>
-            </details>
-            <details class="bg-gray-50 rounded-lg p-4">
-                <summary class="font-bold text-theme-blue text-lg flex justify-between items-center">
-                    <span><i class="fas fa-lightbulb mr-3 text-theme-red"></i>Gợi ý trả lời</span>
-                    <i class="fas fa-chevron-right arrow"></i>
+                    <span><i class="fas fa-lightbulb mr-3 text-theme-red"></i>Gợi ý trả lời</span><i class="fas fa-chevron-right arrow"></i>
                 </summary>
                 <div class="mt-4 pl-5 space-y-3 text-gray-700">
                      ${(lessonDetails.answer_keys && Object.keys(lessonDetails.answer_keys).length > 0) ? `
@@ -126,64 +130,112 @@ function renderLessonDetail(chapterKey, lessonId) {
                 </div>
             </details>
         </div>
-        <div>
-            <h2 class="text-2xl font-bold text-theme-blue mb-6 border-b-2 pb-2 border-theme-blue">Chi tiết các Hoạt động</h2>
-            <div class="space-y-6">
-                ${(lessonDetails.activities && lessonDetails.activities.length > 0) ? lessonDetails.activities.map((activity, index) => `
-                    <div id="activity-${index + 1}" class="activity-card status-pending bg-white p-6 rounded-lg shadow-md">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-                            <h3 class="text-xl font-bold text-gray-900">${activity.name}</h3>
-                            ${activity.duration ? `<span class="text-sm font-semibold text-gray-500 mt-2 sm:mt-0"><i class="far fa-clock mr-1"></i>Thời lượng: ${activity.duration} phút</span>` : ''}
-                        </div>
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div>
-                                <h4 class="font-semibold text-gray-700 mb-2"><i class="fas fa-chalkboard-teacher mr-2"></i>Nhiệm vụ của Giáo viên</h4>
-                                <ul class="space-y-2 text-sm">${activity.teacher_tasks.map(task => `<li class="flex items-start"><input type="checkbox" class="mr-2 mt-1 flex-shrink-0"><span>${task}</span></li>`).join('')}</ul>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-700 mb-2"><i class="fas fa-user-graduate mr-2"></i>Hoạt động của Học sinh</h4>
-                                <ul class="space-y-2 text-sm">${activity.student_tasks.map(task => `<li class="flex items-start"><input type="checkbox" class="mr-2 mt-1 flex-shrink-0"><span>${task}</span></li>`).join('')}</ul>
-                            </div>
-                        </div>
-                        <div class="mt-6 text-right space-x-2">
-                            <button onclick="updateStatus('activity-${index + 1}', 'pending')" class="px-3 py-1 text-xs font-medium text-gray-700 bg-gray-200 rounded-full">Chưa bắt đầu</button>
-                            <button onclick="updateStatus('activity-${index + 1}', 'in-progress')" class="px-3 py-1 text-xs font-medium text-amber-800 bg-amber-100 rounded-full">Đang diễn ra</button>
-                            <button onclick="updateStatus('activity-${index + 1}', 'completed')" class="px-3 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">Hoàn thành</button>
-                        </div>
-                    </div>
-                `).join('') : '<p class="text-gray-500">Nội dung chi tiết cho bài học này đang được cập nhật.</p>'}
-            </div>
-        </div>
+
+        <!-- Khu vực tài liệu bổ sung mới -->
+        ${extraResourcesHtml}
     `;
     lessonDetailView.innerHTML = detailHtml;
     lessonListView.style.display = 'none';
     lessonDetailView.style.display = 'block';
+
+    if (lessonDetails.quiz && lessonDetails.quiz.length > 0) {
+        quizData = lessonDetails.quiz;
+        startQuiz();
+    }
     window.scrollTo(0, 0);
 }
 
 function showLessonList() {
-    lessonDetailView.style.display = 'none';
+    lessonDetailView.innerHTML = '';
     lessonListView.style.display = 'block';
-    window.scrollTo(0, 0);
+    lessonDetailView.style.display = 'none';
 }
 
-function updateStatus(activityId, newStatus) {
-    const card = document.getElementById(activityId);
-    if (!card) return;
-    activityStatus[activityId] = newStatus;
-    card.classList.remove('status-pending', 'status-in-progress', 'status-completed');
-    card.classList.add(`status-${newStatus}`);
-    updateProgressBar();
-}
-
-function updateProgressBar() {
-    if (currentActivities.length === 0) return;
-    const completedCount = Object.values(activityStatus).filter(status => status === 'completed').length;
-    const progressPercentage = (completedCount / currentActivities.length) * 100;
-    const progressBar = document.getElementById('progress-bar');
-    if (progressBar) {
-        progressBar.style.width = `${progressPercentage}%`;
+function openTab(event, tabId) {
+    let i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].classList.remove("active");
     }
+    tablinks = document.getElementsByClassName("tab-button");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].classList.remove("active");
+    }
+    document.getElementById(tabId).classList.add("active");
+    event.currentTarget.classList.add("active");
+}
+
+function startQuiz() {
+    currentQuestionIndex = 0;
+    score = 0;
+    selectedOption = null;
+    renderQuizQuestion();
+}
+
+function renderQuizQuestion() {
+    const quizContainer = document.getElementById('quiz-container');
+    if (!quizContainer) return;
+    const questionData = quizData[currentQuestionIndex];
+    let optionsHtml = '';
+    questionData.options.forEach((option, index) => {
+        optionsHtml += `<button class="quiz-option" onclick="selectOption(${index}, this)">${option}</button>`;
+    });
+    quizContainer.innerHTML = `
+        <div class="mb-4"><p class="font-semibold text-lg">${currentQuestionIndex + 1}. ${questionData.question}</p></div>
+        <div id="quiz-options">${optionsHtml}</div>
+        <div id="quiz-feedback" class="mt-4 font-semibold"></div>
+        <div class="mt-6 text-right">
+            <button id="check-answer-btn" onclick="checkAnswer()" class="bg-theme-blue text-white font-bold py-2 px-5 rounded-lg hover:bg-opacity-90">Kiểm tra</button>
+            <button id="next-question-btn" onclick="nextQuestion()" class="bg-theme-red text-white font-bold py-2 px-5 rounded-lg hover:bg-opacity-90 hidden">Câu tiếp theo</button>
+        </div>`;
+}
+
+function selectOption(index, element) {
+    if (document.getElementById('check-answer-btn').classList.contains('hidden')) return;
+    const options = document.querySelectorAll('.quiz-option');
+    options.forEach(opt => opt.classList.remove('selected'));
+    element.classList.add('selected');
+    selectedOption = index;
+}
+
+function checkAnswer() {
+    if (selectedOption === null) return;
+    const questionData = quizData[currentQuestionIndex];
+    const options = document.querySelectorAll('.quiz-option');
+    const feedback = document.getElementById('quiz-feedback');
+    
+    document.getElementById('check-answer-btn').classList.add('hidden');
+    document.getElementById('next-question-btn').classList.remove('hidden');
+
+    if (selectedOption === questionData.answer) {
+        score++;
+        options[selectedOption].classList.add('correct');
+        feedback.innerHTML = '<span class="text-green-600">Chính xác!</span>';
+    } else {
+        options[selectedOption].classList.add('incorrect');
+        options[questionData.answer].classList.add('correct');
+        feedback.innerHTML = '<span class="text-red-600">Không đúng. Đáp án đúng đã được tô màu xanh.</span>';
+    }
+}
+
+function nextQuestion() {
+    currentQuestionIndex++;
+    selectedOption = null;
+    if (currentQuestionIndex < quizData.length) {
+        renderQuizQuestion();
+    } else {
+        showFinalScore();
+    }
+}
+
+function showFinalScore() {
+    const quizContainer = document.getElementById('quiz-container');
+    quizContainer.innerHTML = `
+        <div class="text-center">
+            <h3 class="text-2xl font-bold text-theme-blue mb-4">Hoàn thành!</h3>
+            <p class="text-lg">Bạn đã trả lời đúng ${score} / ${quizData.length} câu hỏi.</p>
+            <button onclick="startQuiz()" class="mt-6 bg-theme-blue text-white font-bold py-2 px-5 rounded-lg hover:bg-opacity-90">Làm lại</button>
+        </div>`;
 }
 
 document.addEventListener('DOMContentLoaded', renderLessonList);
