@@ -1,86 +1,57 @@
-/* Áp dụng font Inter cho toàn bộ trang */
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #f8fafc; /* Màu nền xám nhạt */
+    background-color: #f8fafc;
 }
+.grade-card {
+    transition: all 0.3s ease;
+    background-color: white;
+}
+.grade-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 32, 96, 0.15);
+}
+.text-theme-blue { color: #002060; }
+.bg-theme-red { background-color: #C00000; }
 
-/* Định nghĩa các biến màu để dễ dàng quản lý và tái sử dụng */
-:root {
-    --theme-blue: #002060;
-    --theme-red: #C00000;
-}
-
-/* Áp dụng màu tùy chỉnh bằng biến CSS */
-.text-theme-blue { color: var(--theme-blue); }
-.bg-theme-blue { background-color: var(--theme-blue); }
-.bg-theme-red { background-color: var(--theme-red); }
-.border-theme-red { border-color: var(--theme-red); }
-
-/* Kiểu cho các thẻ bài học */
-.lesson-link { 
-    position: relative; 
-    transition: all 0.3s ease-in-out; 
-    border: 1px solid #e5e7eb;
-}
-.lesson-link:hover { 
-    transform: translateY(-5px); 
-    box-shadow: 0 8px 20px rgba(0, 32, 96, 0.12); 
-    border-color: var(--theme-blue);
-}
-
-/* Biểu tượng mở slide */
-.slide-icon { 
-    position: absolute; 
-    top: 8px; 
-    right: 8px; 
-    background-color: rgba(0, 32, 96, 0.8); 
-    color: white; 
-    width: 28px; 
-    height: 28px; 
-    border-radius: 50%; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    font-size: 14px; 
-    cursor: pointer; 
-    transition: all 0.2s ease; 
-    z-index: 10; 
-}
-.slide-icon:hover { 
-    background-color: var(--theme-red); 
-    transform: scale(1.1); 
-}
-
-/* Kiểu cho các thẻ hoạt động */
-.activity-card { 
-    transition: all 0.3s ease; 
-    border-left-width: 4px; 
-}
+/* === PHẦN CŨ CHO CÁC TRANG BÀI HỌC === */
+.activity-card { transition: all 0.3s ease; border-left-width: 4px; }
 .status-pending { border-color: #6b7280; }
 .status-in-progress { border-color: #f59e0b; }
 .status-completed { border-color: #22c55e; }
+.progress-bar-fill { transition: width 0.5s ease-in-out; }
+.lesson-link { position: relative; transition: all 0.2s ease-in-out; }
+.lesson-link:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+details summary .arrow { transition: transform 0.2s; }
+details[open] summary .arrow { transform: rotate(90deg); }
+.slide-icon { position: absolute; top: 8px; right: 8px; background-color: rgba(0, 32, 96, 0.8); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; transition: all 0.2s ease; z-index: 10; }
+.slide-icon:hover { background-color: #C00000; transform: scale(1.1); }
 
-/* Thanh tiến trình */
-.progress-bar-fill { 
-    transition: width 0.5s ease-in-out; 
+/* === PHẦN MỚI: TABS VÀ QUIZ === */
+.tab-button {
+    padding: 10px 20px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+.tab-button.active {
+    color: #002060; /* text-theme-blue */
+    border-bottom-color: #C00000; /* border-theme-red */
+}
+.tab-content {
+    display: none;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    border-top: none;
+    border-radius: 0 0 0.5rem 0.5rem;
+}
+.tab-content.active {
+    display: block;
 }
 
-/* Thẻ details/summary (Mục tiêu, Nội dung...) */
-details > summary { 
-    list-style: none; 
-    cursor: pointer; 
-}
-details > summary::-webkit-details-marker { 
-    display: none; 
-}
-details summary .arrow { 
-    transition: transform 0.2s; 
-}
-details[open] summary .arrow { 
-    transform: rotate(90deg); 
-}
-
-/* === PHẦN TRẮC NGHIỆM (QUIZ) === */
+/* Quiz Styles */
 .quiz-option {
     display: block;
     width: 100%;
@@ -92,24 +63,19 @@ details[open] summary .arrow {
     transition: all 0.2s ease;
     text-align: left;
 }
-.quiz-option:hover:not([disabled]) {
-    border-color: var(--theme-blue);
+.quiz-option:hover {
+    border-color: #002060;
     background-color: #f0f9ff;
 }
 .quiz-option.selected {
-    border-color: var(--theme-blue);
+    border-color: #002060;
     background-color: #e0f2fe;
-    font-weight: 600;
 }
 .quiz-option.correct {
-    border-color: #22c55e !important;
-    background-color: #dcfce7 !important;
+    border-color: #22c55e;
+    background-color: #dcfce7;
 }
 .quiz-option.incorrect {
-    border-color: #ef4444 !important;
-    background-color: #fee2e2 !important;
-}
-.quiz-option:disabled {
-    cursor: not-allowed;
-    opacity: 0.7;
+    border-color: #ef4444;
+    background-color: #fee2e2;
 }
