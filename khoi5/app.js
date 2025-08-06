@@ -1,20 +1,32 @@
-// Lựa chọn các phần tử DOM
+// --- LOGIC ỨNG DỤNG ---
+
+// DOM Elements
 const chaptersContainer = document.getElementById('chapters-container');
 const lessonListView = document.getElementById('lesson-list-view');
 const lessonDetailView = document.getElementById('lesson-detail-view');
 const resourceLinksContainer = document.getElementById('resource-links-container');
 
-// Biến toàn cục để theo dõi trạng thái
-let currentActivities = [];
-let activityStatus = {};
+// Global State
+let currentQuizData = [];
 
-/**
- * Hiển thị các nút link đến tài liệu PDF
- */
+// --- FUNCTIONS ---
+
+function openTab(evt, tabName) {
+    const tabcontent = lessonDetailView.getElementsByClassName("tab-content");
+    for (let i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    const tablinks = lessonDetailView.getElementsByClassName("tab-button");
+    for (let i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
 function renderResourceLinks() {
     if (!resourceLinksContainer || typeof gradeInfo === 'undefined') return;
     let linksHtml = '<div class="flex justify-center items-center gap-4 flex-wrap">';
-    // [THAY ĐỔI] Cập nhật lại class để giống với giao diện cũ
     if (gradeInfo.sgk_pdf) {
         linksHtml += `
             <a href="${gradeInfo.sgk_pdf}" target="_blank" class="bg-theme-blue text-white font-semibold py-2 px-5 rounded-md hover:bg-opacity-90 transition-colors flex items-center gap-2 border border-gray-300 shadow-sm">
@@ -22,7 +34,6 @@ function renderResourceLinks() {
                 <span>Xem Sách Giáo Khoa</span>
             </a>`;
     }
-    // [THAY ĐỔI] Cập nhật lại class để giống với giao diện cũ
     if (gradeInfo.sgv_pdf) {
         linksHtml += `
             <a href="${gradeInfo.sgv_pdf}" target="_blank" class="bg-theme-red text-white font-semibold py-2 px-5 rounded-md hover:bg-opacity-90 transition-colors flex items-center gap-2 border border-gray-300 shadow-sm">
@@ -34,9 +45,6 @@ function renderResourceLinks() {
     resourceLinksContainer.innerHTML = linksHtml;
 }
 
-/**
- * Hiển thị danh sách các chủ đề và bài học
- */
 function renderLessonList() {
     if (!chaptersContainer) return;
     renderResourceLinks();
@@ -44,123 +52,104 @@ function renderLessonList() {
     for (const chapterKey in lessonsData) {
         const chapter = lessonsData[chapterKey];
         let chapterHtml = `
-            <div>
+            <section>
                 <h2 class="text-2xl font-bold text-theme-blue mb-4">${chapter.title}</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">`;
         chapter.lessons.forEach(lesson => {
-            const iconClass = chapter.icon || 'fas fa-book-open';
+            const iconClass = chapter.icon || 'fas fa-book';
             chapterHtml += `
-                <div onclick="renderLessonDetail('${chapterKey}', '${lesson.id}')" class="lesson-link cursor-pointer bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col items-center text-center">
+                <div onclick="renderLessonDetail('${chapterKey}', '${lesson.id}')" class="lesson-link cursor-pointer bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col items-center text-center hover:shadow-lg hover:border-theme-blue">
                     <i class="${iconClass} text-3xl text-theme-red mb-3"></i>
-                    <h4 class="font-semibold text-theme-blue">${lesson.title}</h4>`;
-            if (lesson.gdrive_embed) {
-                chapterHtml += `
-                    <span onclick="event.stopPropagation(); window.open('${lesson.gdrive_embed}', '_blank');" class="slide-icon" title="Mở bài giảng Slide">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                    </span>`;
-            }
-            chapterHtml += `</div>`;
+                    <h4 class="font-semibold text-theme-blue">${lesson.title}</h4>
+                </div>`;
         });
-        chapterHtml += `</div></div>`;
+        chapterHtml += `</div></section>`;
         chaptersContainer.innerHTML += chapterHtml;
     }
 }
 
-/**
- * Hiển thị chi tiết một bài học cụ thể
- */
 function renderLessonDetail(chapterKey, lessonId) {
     const lesson = lessonsData[chapterKey].lessons.find(l => l.id === lessonId);
     const lessonDetails = getLessonDetails(lessonId);
     if (!lesson) return;
-    currentActivities = (lessonDetails.activities || []).map((_, index) => `activity-${index + 1}`);
-    activityStatus = {};
-    currentActivities.forEach(id => activityStatus[id] = 'pending');
-    let contentDisplayHtml = lesson.gdrive_embed 
-        ? `<div class="relative w-full mb-8 shadow-lg rounded-2xl overflow-hidden" style="padding-top: 56.25%;"><iframe class="absolute top-0 left-0 w-full h-full" src="${lesson.gdrive_embed}" frameborder="0" allowfullscreen="true"></iframe></div>`
-        : `<img src="${lesson.image || 'https://placehold.co/1200x400/cccccc/ffffff?text=H%C3%ACnh+%E1%BA%A3nh'}" alt="Hình ảnh minh họa cho ${lesson.title}" class="w-full h-64 object-cover rounded-2xl mb-8 shadow-lg">`;
     
-    let detailHtml = `
-        <button onclick="showLessonList()" class="mb-6 bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
-            <i class="fas fa-arrow-left mr-2"></i>Quay lại Danh sách bài học
-        </button>
-        <div class="text-center mb-8">
-            <img src="../logo.jpg" alt="Viet Anh School Logo" class="h-20 w-auto mx-auto mb-4" onerror="this.src='https://placehold.co/150x150/002060/FFFFFF?text=VA'; this.onerror=null;">
-            <h1 class="text-3xl sm:text-4xl font-bold text-theme-blue">${lesson.title}</h1>
+    currentQuizData = lessonDetails.quiz || [];
+    
+    const headerHtml = `
+        <header class="text-center mb-10">
+            <a href="#" onclick="showLessonList(); return false;" class="text-gray-500 hover:text-theme-blue mb-4 inline-block"><i class="fas fa-arrow-left"></i> Quay lại</a>
+            <h1 class="text-4xl font-bold text-theme-blue">${lesson.title}</h1>
             <p class="text-lg text-gray-500 mt-2">${lessonsData[chapterKey].title}</p>
-        </div>
-        ${contentDisplayHtml}
-        <div class="mb-8">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">Tiến trình tổng thể</h3>
-            <div class="w-full bg-gray-200 rounded-full h-4">
-                <div id="progress-bar" class="bg-theme-red h-4 rounded-full progress-bar-fill" style="width: 0%"></div>
-            </div>
-        </div>
-        <div class="space-y-4 mb-8">
-             <details class="bg-gray-50 rounded-lg p-4">
-                <summary class="font-bold text-theme-blue text-lg flex justify-between items-center">
-                    <span><i class="fas fa-bullseye mr-3 text-theme-red"></i>Mục tiêu bài học</span>
-                    <i class="fas fa-chevron-right arrow"></i>
-                </summary>
-                <ul class="list-disc list-inside space-y-2 text-gray-700 mt-4 pl-5">
+        </header>`;
+
+    const objectivesHtml = `
+        <details class="knowledge-section" open>
+            <summary class="knowledge-summary">
+                <span><i class="fas fa-bullseye-pointer icon-blue"></i>Mục tiêu bài học</span>
+                <i class="fas fa-chevron-down arrow"></i>
+            </summary>
+            <div class="knowledge-content">
+                <ul class="list-disc list-inside space-y-2">
                     ${lessonDetails.objectives.map(obj => `<li>${obj}</li>`).join('')}
                 </ul>
-            </details>
-            <details class="bg-gray-50 rounded-lg p-4">
-                <summary class="font-bold text-theme-blue text-lg flex justify-between items-center">
-                    <span><i class="fas fa-book-reader mr-3 text-theme-red"></i>Nội dung cốt lõi</span>
-                    <i class="fas fa-chevron-right arrow"></i>
-                </summary>
-                <ul class="list-disc list-inside space-y-2 text-gray-700 mt-4 pl-5">
-                    ${(lessonDetails.core_content && lessonDetails.core_content.length > 0) ? lessonDetails.core_content.map(content => `<li>${content}</li>`).join('') : '<li>Nội dung đang được cập nhật.</li>'}
-                </ul>
-            </details>
-            <details class="bg-gray-50 rounded-lg p-4">
-                <summary class="font-bold text-theme-blue text-lg flex justify-between items-center">
-                    <span><i class="fas fa-lightbulb mr-3 text-theme-red"></i>Gợi ý trả lời</span>
-                    <i class="fas fa-chevron-right arrow"></i>
-                </summary>
-                <div class="mt-4 pl-5 space-y-3 text-gray-700">
-                     ${(lessonDetails.answer_keys && Object.keys(lessonDetails.answer_keys).length > 0) ? `
-                        ${lessonDetails.answer_keys.luyen_tap ? `<div><h4 class="font-semibold">Luyện tập:</h4><ul class="list-decimal list-inside ml-4">${lessonDetails.answer_keys.luyen_tap.map(answer => `<li>${answer}</li>`).join('')}</ul></div>` : ''}
-                        ${lessonDetails.answer_keys.van_dung ? `<div><h4 class="font-semibold">Vận dụng:</h4><p class="ml-4">${lessonDetails.answer_keys.van_dung}</p></div>` : ''}
-                    ` : '<p>Nội dung đang được cập nhật.</p>'}
-                </div>
-            </details>
-        </div>
-        <div>
-            <h2 class="text-2xl font-bold text-theme-blue mb-6 border-b-2 pb-2 border-theme-blue">Chi tiết các Hoạt động</h2>
-            <div class="space-y-6">
-                ${(lessonDetails.activities && lessonDetails.activities.length > 0) ? lessonDetails.activities.map((activity, index) => `
-                    <div id="activity-${index + 1}" class="activity-card status-pending bg-white p-6 rounded-lg shadow-md">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-                            <h3 class="text-xl font-bold text-gray-900">${activity.name}</h3>
-                            ${activity.duration ? `<span class="text-sm font-semibold text-gray-500 mt-2 sm:mt-0"><i class="far fa-clock mr-1"></i>Thời lượng: ${activity.duration} phút</span>` : ''}
-                        </div>
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div>
-                                <h4 class="font-semibold text-gray-700 mb-2"><i class="fas fa-chalkboard-teacher mr-2"></i>Nhiệm vụ của Giáo viên</h4>
-                                <ul class="space-y-2 text-sm">${activity.teacher_tasks.map(task => `<li class="flex items-start"><input type="checkbox" class="mr-2 mt-1 flex-shrink-0"><span>${task}</span></li>`).join('')}</ul>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-700 mb-2"><i class="fas fa-user-graduate mr-2"></i>Hoạt động của Học sinh</h4>
-                                <ul class="space-y-2 text-sm">${activity.student_tasks.map(task => `<li class="flex items-start"><input type="checkbox" class="mr-2 mt-1 flex-shrink-0"><span>${task}</span></li>`).join('')}</ul>
-                            </div>
-                        </div>
-                        <div class="mt-6 text-right space-x-2">
-                            <button onclick="updateStatus('activity-${index + 1}', 'pending')" class="px-3 py-1 text-xs font-medium text-gray-700 bg-gray-200 rounded-full">Chưa bắt đầu</button>
-                            <button onclick="updateStatus('activity-${index + 1}', 'in-progress')" class="px-3 py-1 text-xs font-medium text-amber-800 bg-amber-100 rounded-full">Đang diễn ra</button>
-                            <button onclick="updateStatus('activity-${index + 1}', 'completed')" class="px-3 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">Hoàn thành</button>
-                        </div>
-                    </div>
-                `).join('') : '<p class="text-gray-500">Nội dung chi tiết cho bài học này đang được cập nhật.</p>'}
             </div>
-        </div>
-    `;
-    lessonDetailView.innerHTML = detailHtml;
+        </details>`;
+    
+    const coreContentHtml = `
+        <details class="knowledge-section">
+            <summary class="knowledge-summary">
+                <span><i class="fas fa-book-sparkles icon-blue"></i>Nội dung cốt lõi</span>
+                <i class="fas fa-chevron-down arrow"></i>
+            </summary>
+            <div class="knowledge-content">
+                <ul class="list-disc list-inside space-y-2">
+                     ${(lessonDetails.core_content && lessonDetails.core_content.length > 0) ? lessonDetails.core_content.map(content => `<li>${content}</li>`).join('') : '<li>Nội dung đang được cập nhật.</li>'}
+                </ul>
+            </div>
+        </details>`;
+
+    const tabsHtml = `
+        <div class="w-full mt-8">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="openTab(event, 'tab-slideshow')">Bài giảng trình chiếu</button>
+                <button class="tab-button" onclick="openTab(event, 'tab-video')">Video bài giảng</button>
+                <button class="tab-button" onclick="openTab(event, 'tab-quiz')">Luyện tập trắc nghiệm</button>
+            </div>
+            <div id="tab-slideshow" class="tab-content active">
+                ${lesson.gdrive_embed ? `<div class="aspect-w-16 aspect-h-9"><iframe class="w-full h-full" src="${lesson.gdrive_embed}" frameborder="0" allowfullscreen="true"></iframe></div>` : `<p class="text-center text-gray-500 p-8">Không có bài giảng trình chiếu cho bài học này.</p>`}
+            </div>
+            <div id="tab-video" class="tab-content">
+                 ${lesson.video_embed ? `<div class="aspect-w-16 aspect-h-9"><iframe class="w-full h-full" src="${lesson.video_embed}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>` : `<p class="text-center text-gray-500 p-8">Không có video cho bài học này.</p>`}
+            </div>
+            <div id="tab-quiz" class="tab-content">
+                ${renderQuizHtml()}
+            </div>
+        </div>`;
+
+    lessonDetailView.innerHTML = `${headerHtml}<main class="space-y-4">${objectivesHtml}${coreContentHtml}${tabsHtml}</main>`;
     lessonListView.style.display = 'none';
     lessonDetailView.style.display = 'block';
     window.scrollTo(0, 0);
+}
+
+function renderQuizHtml() {
+    if (currentQuizData.length === 0) {
+        return '<p class="text-center text-gray-500 p-8">Không có bài trắc nghiệm cho bài học này.</p>';
+    }
+    return `
+        <div id="quiz-container" class="space-y-6">
+            ${currentQuizData.map((q, index) => `
+                <div class="quiz-question" id="question-${index}">
+                    <p class="font-semibold text-lg mb-3">${index + 1}. ${q.question}</p>
+                    <div class="quiz-options space-y-2">
+                        ${q.options.map((opt, optIndex) => `<button onclick="selectAnswer(${index}, ${optIndex})" class="quiz-option">${opt}</button>`).join('')}
+                    </div>
+                </div>`).join('')}
+        </div>
+        <div class="mt-6 text-center">
+            <button onclick="checkQuiz()" class="bg-theme-red text-white font-bold py-2 px-6 rounded-lg hover:bg-opacity-90 transition-colors">Kiểm tra đáp án</button>
+            <p id="quiz-result" class="mt-3 font-bold text-lg"></p>
+        </div>`;
 }
 
 function showLessonList() {
@@ -169,23 +158,37 @@ function showLessonList() {
     window.scrollTo(0, 0);
 }
 
-function updateStatus(activityId, newStatus) {
-    const card = document.getElementById(activityId);
-    if (!card) return;
-    activityStatus[activityId] = newStatus;
-    card.classList.remove('status-pending', 'status-in-progress', 'status-completed');
-    card.classList.add(`status-${newStatus}`);
-    updateProgressBar();
+function selectAnswer(questionIndex, optionIndex) {
+    const questionDiv = document.getElementById(`question-${questionIndex}`);
+    questionDiv.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('selected'));
+    const selectedButton = questionDiv.querySelectorAll('.quiz-option')[optionIndex];
+    selectedButton.classList.add('selected');
 }
 
-function updateProgressBar() {
-    if (currentActivities.length === 0) return;
-    const completedCount = Object.values(activityStatus).filter(status => status === 'completed').length;
-    const progressPercentage = (completedCount / currentActivities.length) * 100;
-    const progressBar = document.getElementById('progress-bar');
-    if (progressBar) {
-        progressBar.style.width = `${progressPercentage}%`;
-    }
+function checkQuiz() {
+    let score = 0;
+    currentQuizData.forEach((q, index) => {
+        const questionDiv = document.getElementById(`question-${index}`);
+        const options = questionDiv.querySelectorAll('.quiz-option');
+        const selectedButton = questionDiv.querySelector('.quiz-option.selected');
+        options.forEach(btn => btn.disabled = true);
+        if (selectedButton) {
+            const selectedAnswerIndex = Array.from(options).indexOf(selectedButton);
+            if (selectedAnswerIndex === q.answer) {
+                score++;
+                selectedButton.classList.add('correct');
+            } else {
+                selectedButton.classList.add('incorrect');
+                options[q.answer].classList.add('correct');
+            }
+        } else {
+            options[q.answer].classList.add('correct');
+        }
+    });
+    const resultElement = document.getElementById('quiz-result');
+    resultElement.textContent = `Bạn đã trả lời đúng ${score} / ${currentQuizData.length} câu!`;
+    resultElement.style.color = (score === currentQuizData.length) ? '#22c55e' : '#ef4444';
 }
 
+// Initial Render
 document.addEventListener('DOMContentLoaded', renderLessonList);
