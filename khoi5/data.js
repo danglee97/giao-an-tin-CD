@@ -7,9 +7,15 @@ const lessonsData = {
     "A": {
         "title": "Chủ đề A: Máy tính và em", "icon": "fas fa-desktop",
         "lessons": [
-            { "id": "A1", "title": "Bài 1: Lợi ích của máy tính", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=L%E1%BB%A3i+%C3%ADch+m%C3%A1y+t%C3%ADnh" },
-            { "id": "A2", "title": "Bài 2: Thực hành tạo sản phẩm số", "image": "https://placehold.co/1200x400/C00000/FFFFFF?text=S%E1%BA%A3n+ph%E1%BA%A9m+s%E1%BB%91" },
-            { "id": "A3", "title": "Bài 3: Lợi ích của việc sử dụng máy tính thành thạo", "image": "https://placehold.co/1200x400/002060/FFFFFF?text=S%E1%BB%AD+d%E1%BB%A5ng+th%C3%A0nh+th%E1%BA%A1o" }
+            { 
+                "id": "A1", 
+                "title": "Bài 1: Lợi ích của máy tính", 
+                "image": "https://placehold.co/1200x400/002060/FFFFFF?text=L%E1%BB%A3i+%C3%ADch+m%C3%A1y+t%C3%ADnh",
+                "gdrive_embed": "https://docs.google.com/presentation/d/e/2PACX-1vR.../embed?start=false&loop=false&delayms=3000", // Link nhúng Canva/PowerPoint
+                "video_embed": "https://www.youtube.com/embed/dQw4w9WgXcQ" // Link nhúng Video YouTube
+            },
+            { "id": "A2", "title": "Bài 2: Thực hành tạo sản phẩm số" },
+            { "id": "A3", "title": "Bài 3: Lợi ích của việc sử dụng máy tính thành thạo" }
         ]
     },
     "B": {
@@ -68,13 +74,27 @@ const lessonsData = {
 function getLessonDetails(lessonId) {
     const allDetails = {
         "A1": {
-            "objectives": ["Nêu được ví dụ máy tính giúp em giải trí, học tập, tìm kiếm, trao đổi thông tin, hợp tác với bạn bè và tạo ra sản phẩm số theo ý tưởng của bản thân."],
+            "objectives": ["Nêu được ví dụ máy tính giúp em giải trí, học tập, tìm kiếm, trao đổi thông tin và hợp tác với bạn bè."],
             "core_content": ["Máy tính là một công cụ hữu ích giúp em học tập, giải trí, tìm kiếm, trao đổi thông tin, hợp tác với bạn bè.", "Đồng thời, máy tính cũng giúp em học tập và rèn luyện những kĩ năng để sử dụng máy tính thành thạo hơn."],
-            "activities": [
-                {"name": "Hoạt động 1: Những việc em có thể làm nhờ máy tính", "duration": 20, "teacher_tasks": ["Cho HS quan sát hình ảnh các phần mềm/website và giải câu đố.", "Thảo luận về các công việc có thể làm với máy tính."], "student_tasks": ["Giải câu đố, so sánh kết quả.", "Chia sẻ kinh nghiệm sử dụng máy tính."] },
-                {"name": "Hoạt động 2: Lợi ích của máy tính", "duration": 15, "teacher_tasks": ["Cho HS quan sát sơ đồ tư duy về lợi ích của máy tính.", "Yêu cầu HS bổ sung thêm các nhánh con cho sơ đồ."], "student_tasks": ["Quan sát và thảo luận để mở rộng sơ đồ tư duy."] }
-            ],
-            "answer_keys": { "luyen_tap": ["Câu SAI là: b) Máy tính chỉ dùng cho mục đích giải trí."], "van_dung": ["HS tự nêu ví dụ thực tế của bản thân cho từng tình huống: học trực tuyến, tìm kiếm thông tin, chia sẻ hình ảnh, giải trí."] }
+            "activities": [],
+            "answer_keys": { "luyen_tap": ["Câu SAI là: b) Máy tính chỉ dùng cho mục đích giải trí."], "van_dung": ["HS tự nêu ví dụ thực tế của bản thân cho từng tình huống."] },
+            "quiz": [
+                {
+                    "question": "Máy tính KHÔNG thể giúp em làm việc nào sau đây?",
+                    "options": ["Học trực tuyến", "Chơi thể thao ngoài trời", "Tìm kiếm thông tin", "Xem phim giải trí"],
+                    "answer": 1
+                },
+                {
+                    "question": "Để trao đổi thông tin với bạn bè ở xa, em có thể dùng máy tính với ứng dụng nào?",
+                    "options": ["Microsoft Word", "Zalo", "Paint", "Calculator"],
+                    "answer": 1
+                },
+                {
+                    "question": "Lợi ích chính của việc sử dụng máy tính trong học tập là gì?",
+                    "options": ["Chỉ để chơi game sau giờ học", "Làm bài tập nhanh hơn mà không cần suy nghĩ", "Tiếp cận được nhiều nguồn kiến thức phong phú", "Thay thế hoàn toàn vai trò của giáo viên"],
+                    "answer": 2
+                }
+            ]
         },
         "A2": {
             "objectives": ["Tạo được sản phẩm số theo ý tưởng của bản thân."],

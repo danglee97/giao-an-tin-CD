@@ -2,42 +2,80 @@ body {
     font-family: 'Inter', sans-serif;
     background-color: #f8fafc;
 }
-.activity-card {
+.grade-card {
     transition: all 0.3s ease;
-    border-left-width: 4px;
+    background-color: white;
 }
+.grade-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 32, 96, 0.15);
+}
+.text-theme-blue { color: #002060; }
+.bg-theme-red { background-color: #C00000; }
+
+/* === PHẦN CŨ CHO CÁC TRANG BÀI HỌC === */
+.activity-card { transition: all 0.3s ease; border-left-width: 4px; }
 .status-pending { border-color: #6b7280; }
 .status-in-progress { border-color: #f59e0b; }
 .status-completed { border-color: #22c55e; }
-.progress-bar-fill {
-    transition: width 0.5s ease-in-out;
-}
-.lesson-link {
-    transition: all 0.2s ease-in-out;
-}
-.lesson-link:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-#lesson-detail-view {
-    display: none;
-}
-details > summary {
-    list-style: none;
+.progress-bar-fill { transition: width 0.5s ease-in-out; }
+.lesson-link { position: relative; transition: all 0.2s ease-in-out; }
+.lesson-link:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+details > summary { list-style: none; cursor: pointer; }
+details > summary::-webkit-details-marker { display: none; }
+details summary .arrow { transition: transform 0.2s; }
+details[open] summary .arrow { transform: rotate(90deg); }
+.slide-icon { position: absolute; top: 8px; right: 8px; background-color: rgba(0, 32, 96, 0.8); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; transition: all 0.2s ease; z-index: 10; }
+.slide-icon:hover { background-color: #C00000; transform: scale(1.1); }
+
+/* === PHẦN MỚI: TABS VÀ QUIZ === */
+.tab-button {
+    padding: 10px 20px;
     cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+    font-weight: 600;
 }
-details > summary::-webkit-details-marker {
+.tab-button.active {
+    color: #002060; /* text-theme-blue */
+    border-bottom-color: #C00000; /* border-theme-red */
+}
+.tab-content {
     display: none;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    border-top: none;
+    border-radius: 0 0 0.5rem 0.5rem;
 }
-details summary .arrow {
-    transition: transform 0.2s;
+.tab-content.active {
+    display: block;
 }
-details[open] summary .arrow {
-    transform: rotate(90deg);
+
+/* Quiz Styles */
+.quiz-option {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
 }
-/* Custom Colors from Logo */
-.bg-theme-blue { background-color: #002060; }
-.text-theme-blue { color: #002060; }
-.border-theme-blue { border-color: #002060; }
-.bg-theme-red { background-color: #C00000; }
-.text-theme-red { color: #C00000; }
+.quiz-option:hover {
+    border-color: #002060;
+    background-color: #f0f9ff;
+}
+.quiz-option.selected {
+    border-color: #002060;
+    background-color: #e0f2fe;
+}
+.quiz-option.correct {
+    border-color: #22c55e;
+    background-color: #dcfce7;
+}
+.quiz-option.incorrect {
+    border-color: #ef4444;
+    background-color: #fee2e2;
+}
