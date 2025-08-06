@@ -18,6 +18,8 @@ body {
 /* Màu sắc chủ đạo */
 .text-theme-blue { color: #002060; }
 .bg-theme-red { background-color: #C00000; }
+.text-theme-red { color: #C00000; } /* [BỔ SUNG] Thêm dòng này để icon có màu đỏ */
+
 
 /* === KIỂU CHO CÁC TRANG BÀI HỌC CHI TIẾT === */
 .activity-card { 
