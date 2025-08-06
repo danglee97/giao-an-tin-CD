@@ -4,69 +4,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cổng Giáo án Tương tác - Đăng Lee</title>
+    <!-- Favicon của trang web -->
     <link rel="icon" type="image/png" href="favicon.png">
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Inter) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome cho các biểu tượng -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Liên kết đến tệp CSS ngoài -->
     <link rel="stylesheet" href="style.css">
+
 </head>
-<body class="flex flex-col items-center justify-between min-h-screen p-4">
-    <div class="max-w-6xl mx-auto text-center p-8">
-        <!-- [THAY ĐỔI] Bọc logo trong thẻ <a> để có thể nhấp -->
-        <a href="index.html">
-            <img src="logo.jpg" alt="Viet Anh School Logo" class="h-28 w-auto mx-auto mb-6" onerror="this.style.display='none'">
+<body class="bg-gray-50 flex flex-col min-h-screen">
+
+    <!-- Phần đầu trang (Header) -->
+    <header class="text-center p-8 sm:p-12">
+        <a href="index.html" title="Trở về trang chủ">
+            <img src="logo.jpg" alt="Logo Trường Việt Anh" class="h-24 sm:h-28 w-auto mx-auto mb-6 transition-transform duration-300 hover:scale-105" onerror="this.src='https://placehold.co/200x100/002060/FFFFFF?text=Logo'; this.onerror=null;">
         </a>
         <h1 class="text-4xl sm:text-5xl font-bold text-theme-blue">Cổng Giáo án Tương tác</h1>
-        <p class="text-xl text-gray-500 mt-3 mb-12">Môn Tin học - Bộ sách Cánh Diều</p>
+        <p class="text-lg sm:text-xl text-gray-600 mt-3">Môn Tin học - Bộ sách Cánh Diều</p>
+    </header>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-6">
+    <!-- Phần nội dung chính (Main) -->
+    <main class="flex-grow w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Lưới chứa các khối lớp -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6">
+            
             <!-- Lớp 3 -->
-            <a href="khoi3/index.html" class="grade-card block p-6 rounded-2xl shadow-md border border-gray-200">
-                <i class="fas fa-child text-5xl text-theme-red mb-4"></i>
+            <a href="khoi3/index.html" class="grade-card flex flex-col items-center justify-center text-center p-6 rounded-2xl shadow-md">
+                <i class="fa-solid fa-child text-5xl text-theme-blue mb-4"></i>
                 <h2 class="text-2xl font-bold text-theme-blue">Lớp 3</h2>
             </a>
 
             <!-- Lớp 4 -->
-            <a href="khoi4/index.html" class="grade-card block p-6 rounded-2xl shadow-md border border-gray-200">
-                <i class="fas fa-child text-5xl text-theme-red mb-4"></i>
+            <a href="khoi4/index.html" class="grade-card flex flex-col items-center justify-center text-center p-6 rounded-2xl shadow-md">
+                <i class="fa-solid fa-child-reaching text-5xl text-theme-blue mb-4"></i>
                 <h2 class="text-2xl font-bold text-theme-blue">Lớp 4</h2>
             </a>
 
             <!-- Lớp 5 -->
-            <a href="khoi5/index.html" class="grade-card block p-6 rounded-2xl shadow-md border border-gray-200">
-                <i class="fas fa-child text-5xl text-theme-red mb-4"></i>
+            <a href="khoi5/index.html" class="grade-card flex flex-col items-center justify-center text-center p-6 rounded-2xl shadow-md">
+                <i class="fa-solid fa-person-running text-5xl text-theme-blue mb-4"></i>
                 <h2 class="text-2xl font-bold text-theme-blue">Lớp 5</h2>
             </a>
 
             <!-- Lớp 6 (Sắp có) -->
-            <div class="grade-card block p-6 rounded-2xl shadow-md border border-gray-200 bg-gray-100 opacity-70 cursor-not-allowed">
-                <i class="fas fa-user-graduate text-5xl text-gray-400 mb-4"></i>
+            <div class="coming-soon-card flex flex-col items-center justify-center text-center p-6 rounded-2xl shadow-md" aria-label="Lớp 6 - Nội dung đang được cập nhật">
+                <i class="fa-solid fa-user-graduate text-5xl text-gray-400 mb-4"></i>
                 <h2 class="text-2xl font-bold text-gray-500">Lớp 6</h2>
+                <span class="text-xs text-gray-400 mt-1">(Sắp có)</span>
             </div>
 
             <!-- Lớp 7 -->
-            <a href="khoi7/index.html" class="grade-card block p-6 rounded-2xl shadow-md border border-gray-200">
-                <i class="fas fa-user-graduate text-5xl text-theme-red mb-4"></i>
+            <a href="khoi7/index.html" class="grade-card flex flex-col items-center justify-center text-center p-6 rounded-2xl shadow-md">
+                <i class="fa-solid fa-user-graduate text-5xl text-theme-blue mb-4"></i>
                 <h2 class="text-2xl font-bold text-theme-blue">Lớp 7</h2>
             </a>
             
             <!-- Lớp 8 (Sắp có) -->
-            <div class="grade-card block p-6 rounded-2xl shadow-md border border-gray-200 bg-gray-100 opacity-70 cursor-not-allowed">
-                <i class="fas fa-user-graduate text-5xl text-gray-400 mb-4"></i>
+            <div class="coming-soon-card flex flex-col items-center justify-center text-center p-6 rounded-2xl shadow-md" aria-label="Lớp 8 - Nội dung đang được cập nhật">
+                <i class="fa-solid fa-user-pen text-5xl text-gray-400 mb-4"></i>
                 <h2 class="text-2xl font-bold text-gray-500">Lớp 8</h2>
+                <span class="text-xs text-gray-400 mt-1">(Sắp có)</span>
             </div>
 
             <!-- Lớp 9 (Sắp có) -->
-            <div class="grade-card block p-6 rounded-2xl shadow-md border border-gray-200 bg-gray-100 opacity-70 cursor-not-allowed">
-                <i class="fas fa-user-graduate text-5xl text-gray-400 mb-4"></i>
+            <div class="coming-soon-card flex flex-col items-center justify-center text-center p-6 rounded-2xl shadow-md" aria-label="Lớp 9 - Nội dung đang được cập nhật">
+                <i class="fa-solid fa-user-tie text-5xl text-gray-400 mb-4"></i>
                 <h2 class="text-2xl font-bold text-gray-500">Lớp 9</h2>
+                 <span class="text-xs text-gray-400 mt-1">(Sắp có)</span>
             </div>
+            
+             <!-- Thẻ trống để căn chỉnh lưới cho đẹp hơn trên một số màn hình -->
+            <div class="hidden md:block"></div>
+
         </div>
-    </div>
+    </main>
     
-    <!-- [THAY ĐỔI] Thêm footer vào cuối trang -->
-    <footer class="w-full text-center p-4 mt-8">
-        <p class="text-sm text-gray-500">Bản quyền thuộc về Đăng Lee - 2025</p>
+    <!-- Phần chân trang (Footer) -->
+    <footer class="w-full text-center p-6 mt-12">
+        <p class="text-sm text-gray-500">&copy; 2025 Bản quyền thuộc về Đăng Lee. Phát triển với ❤️.</p>
     </footer>
+
 </body>
 </html>
