@@ -4,98 +4,85 @@ body {
     background-color: #f8fafc;
 }
 
-/* === KIỂU CHO TRANG CHỦ (CỔNG CHỌN LỚP) === */
-.grade-card {
-    transition: all 0.3s ease;
-    background-color: white;
-}
+/* === MÀU SẮC CHỦ ĐẠO === */
+.text-theme-blue { color: #002060; }
+.bg-theme-blue { background-color: #002060; }
+.bg-theme-red { background-color: #C00000; }
+.text-theme-red { color: #C00000; }
+.border-theme-blue { border-color: #002060; }
 
+/* === TRANG CHỦ & DANH SÁCH BÀI HỌC === */
 .grade-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 32, 96, 0.15);
 }
-
-/* Màu sắc chủ đạo */
-.text-theme-blue { color: #002060; }
-.bg-theme-blue { background-color: #002060; } /* [BỔ SUNG] Thêm dòng này */
-.bg-theme-red { background-color: #C00000; }
-.text-theme-red { color: #C00000; }
-
-
-/* === KIỂU CHO CÁC TRANG BÀI HỌC CHI TIẾT === */
-.activity-card { 
-    transition: all 0.3s ease; 
-    border-left-width: 4px; 
-}
-.status-pending { border-color: #6b7280; }
-.status-in-progress { border-color: #f59e0b; }
-.status-completed { border-color: #22c55e; }
-
-.progress-bar-fill { 
-    transition: width 0.5s ease-in-out; 
-}
-
 .lesson-link { 
-    position: relative; 
     transition: all 0.2s ease-in-out; 
 }
-.lesson-link:hover { 
-    transform: translateY(-2px); 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+
+/* === TRANG CHI TIẾT BÀI HỌC (GIAO DIỆN MỚI) === */
+
+/* Phần củng cố kiến thức (Mục tiêu, Nội dung...) */
+.knowledge-section {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+.knowledge-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    color: #111827;
+    list-style: none;
+}
+.knowledge-summary::-webkit-details-marker {
+    display: none;
+}
+.knowledge-summary .icon-blue {
+    color: #002060;
+    margin-right: 0.75rem;
+    font-size: 1.25rem;
+}
+.knowledge-summary .arrow {
+    transition: transform 0.2s;
+}
+.knowledge-section[open] > .knowledge-summary .arrow {
+    transform: rotate(180deg);
+}
+.knowledge-content {
+    padding: 0 1.5rem 1.5rem 2.5rem;
+    color: #374151;
 }
 
-details > summary { 
-    list-style: none; 
-    cursor: pointer; 
+/* Hệ thống Tabs */
+.tab-buttons {
+    display: flex;
+    border-bottom: 2px solid #e5e7eb;
 }
-details > summary::-webkit-details-marker { 
-    display: none; 
-}
-details summary .arrow { 
-    transition: transform 0.2s; 
-}
-details[open] summary .arrow { 
-    transform: rotate(90deg); 
-}
-
-.slide-icon { 
-    position: absolute; 
-    top: 8px; 
-    right: 8px; 
-    background-color: rgba(0, 32, 96, 0.8); 
-    color: white; 
-    width: 28px; 
-    height: 28px; 
-    border-radius: 50%; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    font-size: 14px; 
-    cursor: pointer; 
-    transition: all 0.2s ease; 
-    z-index: 10; 
-}
-.slide-icon:hover { 
-    background-color: #C00000; 
-    transform: scale(1.1); 
-}
-
-/* === PHẦN MỚI: TABS VÀ QUIZ === */
 .tab-button {
-    padding: 10px 20px;
+    padding: 0.75rem 1.5rem;
     cursor: pointer;
     border-bottom: 3px solid transparent;
     transition: all 0.3s ease;
     font-weight: 600;
+    color: #6b7280;
+    margin-bottom: -2px;
+}
+.tab-button:hover {
+    color: #002060;
 }
 .tab-button.active {
-    color: #002060; /* text-theme-blue */
-    border-bottom-color: #C00000; /* border-theme-red */
+    color: #002060;
+    border-bottom-color: #C00000;
 }
-
 .tab-content {
     display: none;
-    padding: 20px;
+    padding: 1.5rem;
+    background-color: white;
     border: 1px solid #e5e7eb;
     border-top: none;
     border-radius: 0 0 0.5rem 0.5rem;
@@ -103,6 +90,41 @@ details[open] summary .arrow {
 .tab-content.active {
     display: block;
 }
+
+/* [MỚI] Đảm bảo iframe giữ đúng tỉ lệ 16:9 */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    overflow: hidden;
+    width: 100%;
+}
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* [MỚI] Kiểu cho tab "Củng cố bài học" */
+.consolidation-section {
+    margin-bottom: 1.5rem;
+}
+.consolidation-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #002060;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+.consolidation-content ul {
+    list-style-type: disc;
+    padding-left: 1.5rem;
+    color: #374151;
+}
+
 
 /* Kiểu cho phần Trắc nghiệm */
 .quiz-option {
@@ -115,20 +137,28 @@ details[open] summary .arrow {
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: left;
+    background-color: white;
 }
-.quiz-option:hover {
+.quiz-option:hover:not([disabled]) {
     border-color: #002060;
     background-color: #f0f9ff;
 }
 .quiz-option.selected {
-    border-color: #002060;
-    background-color: #e0f2fe;
+    border-color: #3b82f6;
+    background-color: #eff6ff;
+    font-weight: 600;
 }
 .quiz-option.correct {
-    border-color: #22c55e;
-    background-color: #dcfce7;
+    border-color: #22c55e !important;
+    background-color: #dcfce7 !important;
+    color: #166534;
 }
 .quiz-option.incorrect {
-    border-color: #ef4444;
-    background-color: #fee2e2;
+    border-color: #ef4444 !important;
+    background-color: #fee2e2 !important;
+    color: #991b1b;
+}
+.quiz-option:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
 }

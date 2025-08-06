@@ -11,7 +11,7 @@ const lessonsData = {
                 "id": "A1", 
                 "title": "Bài 1: Lợi ích của máy tính", 
                 "image": "https://placehold.co/1200x400/002060/FFFFFF?text=L%E1%BB%A3i+%C3%ADch+m%C3%A1y+t%C3%ADnh",
-                "gdrive_embed": "https://docs.google.com/presentation/d/e/2PACX-1vR.../embed?start=false&loop=false&delayms=3000", // Link nhúng Canva/PowerPoint
+                "gdrive_embed": "https://docs.google.com/presentation/d/1QMX3KR7VojnbKeWpiIV5LoDwcrCh6Ll6/edit?usp=sharing&ouid=117731971133526281568&rtpof=true&sd=true", // Link nhúng Canva/PowerPoint
                 "video_embed": "https://www.youtube.com/embed/dQw4w9WgXcQ" // Link nhúng Video YouTube
             },
             { "id": "A2", "title": "Bài 2: Thực hành tạo sản phẩm số" },
