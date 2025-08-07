@@ -21,6 +21,16 @@ let currentQuizData = [];
  * Lấy dữ liệu từ Google Sheet API với hệ thống báo lỗi cải tiến
  */
 async function fetchData() {
+    // [CẢI TIẾN] Kiểm tra xem các phần tử HTML cần thiết có tồn tại không
+    if (!chaptersContainer || !lessonListView || !lessonDetailView) {
+        document.body.innerHTML = `<div class="text-center p-6 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg m-4">
+            <h3 class="font-bold text-lg mb-2">Lỗi Cấu Trúc HTML!</h3>
+            <p>Không tìm thấy các phần tử cần thiết (ví dụ: #chapters-container). Vui lòng đảm bảo bạn đang sử dụng phiên bản <strong>index.html</strong> mới nhất.</p>
+        </div>`;
+        console.error("Lỗi: Thiếu các phần tử DOM quan trọng.");
+        return;
+    }
+
     // Kiểm tra xem URL đã được thay thế hay chưa.
     if (GOOGLE_SHEET_API_URL === 'https://script.google.com/macros/s/AKfycbyPRjqxt4_7ZQTqYMaXrI-7QneVNNJ6beQxU2KNvNRG5nrzXNpRVjCVncNbVkMfK5wL/exec' || !GOOGLE_SHEET_API_URL) {
         chaptersContainer.innerHTML = `
@@ -48,7 +58,7 @@ async function fetchData() {
         }
 
         if (!data.lessonsData || Object.keys(data.lessonsData).length === 0) {
-            throw new Error('Dữ liệu trả về không có phần "lessonsData" hoặc "lessonsData" bị rỗng. Hãy kiểm tra lại cấu trúc file Google Sheet.');
+            throw new Error('Dữ liệu trả về không có phần "lessonsData" hoặc "lessonsData" bị rỗng. Hãy kiểm tra lại cấu trúc và dữ liệu trong file Google Sheet.');
         }
         
         // Lưu dữ liệu vào biến toàn cục
@@ -217,9 +227,8 @@ function showLessonList() {
 }
 
 function selectAnswer(questionIndex, optionIndex) {
-    // [SỬA LỖI] Thay 'index' bằng 'questionIndex'
     const questionDiv = document.getElementById(`question-${questionIndex}`);
-    if (!questionDiv) return; // Thêm kiểm tra để tránh lỗi
+    if (!questionDiv) return;
     questionDiv.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('selected'));
     const selectedButton = questionDiv.querySelectorAll('.quiz-option')[optionIndex];
     selectedButton.classList.add('selected');
