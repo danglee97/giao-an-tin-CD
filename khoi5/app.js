@@ -7,7 +7,7 @@ const lessonDetailView = document.getElementById('lesson-detail-view');
 const resourceLinksContainer = document.getElementById('resource-links-container');
 
 // URL API từ Google Apps Script
-const GOOGLE_SHEET_API_URL = 'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY';
+const GOOGLE_SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbyPRjqxt4_7ZQTqYMaXrI-7QneVNNJ6beQxU2KNvNRG5nrzXNpRVjCVncNbVkMfK5wL/exec';
 
 // Global State
 let lessonsData = {};
