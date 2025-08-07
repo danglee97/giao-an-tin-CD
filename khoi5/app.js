@@ -7,7 +7,7 @@ const lessonDetailView = document.getElementById('lesson-detail-view');
 const resourceLinksContainer = document.getElementById('resource-links-container');
 
 // URL API từ Google Apps Script
-const GOOGLE_SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbyPRjqxt4_7ZQTqYMaXrI-7QneVNNJ6beQxU2KNvNRG5nrzXNpRVjCVncNbVkMfK5wL/exec';
+const GOOGLE_SHEET_API_URL = 'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY';
 
 // Global State
 let lessonsData = {};
@@ -76,12 +76,7 @@ function openTab(evt, tabName) {
     evt.currentTarget.className += " active";
 }
 
-/**
- * [SỬA LỖI] Hiển thị các nút link đến tài liệu PDF với đường dẫn chính xác
- */
 function renderResourceLinks() {
-    // Định nghĩa đường dẫn tới các file PDF.
-    // Các đường dẫn này là tương đối so với file index.html trong thư mục khoi5.
     const gradeInfo = {
         sgk_pdf: "Sách GK Tin học 5 - Cánh Diệu.pdf",
         sgv_pdf: "Sách GV Tin học 5 - Cánh Diệu.pdf"
@@ -90,7 +85,6 @@ function renderResourceLinks() {
     if (!resourceLinksContainer) return;
     
     let linksHtml = '<div class="flex justify-center items-center gap-4 flex-wrap">';
-    
     if (gradeInfo.sgk_pdf) {
         linksHtml += `
             <a href="${gradeInfo.sgk_pdf}" target="_blank" class="bg-theme-blue text-white font-semibold py-2 px-5 rounded-md hover:bg-opacity-90 transition-colors flex items-center gap-2 border border-gray-300 shadow-sm">
@@ -98,7 +92,6 @@ function renderResourceLinks() {
                 <span>Xem Sách Giáo Khoa</span>
             </a>`;
     }
-    
     if (gradeInfo.sgv_pdf) {
         linksHtml += `
             <a href="${gradeInfo.sgv_pdf}" target="_blank" class="bg-theme-red text-white font-semibold py-2 px-5 rounded-md hover:bg-opacity-90 transition-colors flex items-center gap-2 border border-gray-300 shadow-sm">
@@ -106,7 +99,6 @@ function renderResourceLinks() {
                 <span>Xem Sách Giáo Viên</span>
             </a>`;
     }
-    
     linksHtml += '</div>';
     resourceLinksContainer.innerHTML = linksHtml;
 }
@@ -144,6 +136,7 @@ function renderLessonDetail(chapterKey, lessonId) {
     
     const imageHtml = lesson.image ? `<div class="mb-8 rounded-lg overflow-hidden shadow-lg"><img src="${lesson.image}" alt="Hình ảnh bài học: ${lesson.title}" class="w-full h-auto max-h-96 object-cover"></div>` : '';
     
+    // [THAY ĐỔI] Thêm tab "Củng cố bài học" vào cấu trúc HTML
     const fullDetailHtml = `
         <header class="text-center mb-10">
             <a href="#" onclick="showLessonList(); return false;" class="text-gray-500 hover:text-theme-blue mb-4 inline-block"><i class="fas fa-arrow-left"></i> Quay lại</a>
@@ -175,10 +168,12 @@ function renderLessonDetail(chapterKey, lessonId) {
                     <button class="tab-button active" onclick="openTab(event, 'tab-slideshow')">Bài giảng trình chiếu</button>
                     <button class="tab-button" onclick="openTab(event, 'tab-video')">Video bài giảng</button>
                     <button class="tab-button" onclick="openTab(event, 'tab-quiz')">Luyện tập trắc nghiệm</button>
+                    <button class="tab-button" onclick="openTab(event, 'tab-consolidation')">Củng cố bài học</button>
                 </div>
-                <div id="tab-slideshow" class="tab-content active">${lesson.gdrive_embed ? `<div class="aspect-w-16 aspect-h-9"><iframe class="w-full h-full" src="${lesson.gdrive_embed}" frameborder="0" allowfullscreen="true"></iframe></div>` : `<p class="text-center text-gray-500 p-8">Không có bài giảng.</p>`}</div>
-                <div id="tab-video" class="tab-content">${lesson.video_embed ? `<div class="aspect-w-16 aspect-h-9"><iframe class="w-full h-full" src="${lesson.video_embed}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>` : `<p class="text-center text-gray-500 p-8">Không có video.</p>`}</div>
+                <div id="tab-slideshow" class="tab-content active">${lesson.gdrive_embed ? `<div class="video-container"><iframe src="${lesson.gdrive_embed}" frameborder="0" allowfullscreen="true"></iframe></div>` : `<p class="text-center text-gray-500 p-8">Không có bài giảng.</p>`}</div>
+                <div id="tab-video" class="tab-content">${lesson.video_embed ? `<div class="video-container"><iframe src="${lesson.video_embed}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>` : `<p class="text-center text-gray-500 p-8">Không có video.</p>`}</div>
                 <div id="tab-quiz" class="tab-content">${renderQuizHtml()}</div>
+                <div id="tab-consolidation" class="tab-content">${renderConsolidationHtml(lessonDetails)}</div>
             </div>
         </main>`;
 
@@ -187,6 +182,58 @@ function renderLessonDetail(chapterKey, lessonId) {
     lessonDetailView.style.display = 'block';
     window.scrollTo(0, 0);
 }
+
+/**
+ * [MỚI] Tạo HTML cho tab "Củng cố bài học"
+ */
+function renderConsolidationHtml(lessonDetails) {
+    const hasActivities = lessonDetails.activities && lessonDetails.activities.length > 0;
+    const hasAnswerKeys = lessonDetails.answer_keys && Object.keys(lessonDetails.answer_keys).length > 0;
+
+    if (!hasActivities && !hasAnswerKeys) {
+        return '<p class="text-center text-gray-500 p-8">Nội dung củng cố đang được cập nhật.</p>';
+    }
+
+    let activitiesHtml = '';
+    if (hasActivities) {
+        activitiesHtml = `
+            <div class="consolidation-section">
+                <h3 class="consolidation-title">Hoạt động trong bài</h3>
+                <div class="consolidation-content space-y-4">
+                    ${lessonDetails.activities.map(activity => `
+                        <div>
+                            <h4 class="font-bold">${activity.name} (${activity.duration} phút)</h4>
+                            <div class="grid md:grid-cols-2 gap-4 mt-2">
+                                <div>
+                                    <p class="font-semibold">Nhiệm vụ giáo viên:</p>
+                                    <ul class="list-disc pl-5">${activity.teacher_tasks.map(task => `<li>${task}</li>`).join('')}</ul>
+                                </div>
+                                <div>
+                                    <p class="font-semibold">Hoạt động học sinh:</p>
+                                    <ul class="list-disc pl-5">${activity.student_tasks.map(task => `<li>${task}</li>`).join('')}</ul>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>`;
+    }
+
+    let answerKeysHtml = '';
+    if (hasAnswerKeys) {
+        answerKeysHtml = `
+            <div class="consolidation-section">
+                <h3 class="consolidation-title">Gợi ý trả lời</h3>
+                <div class="consolidation-content space-y-2">
+                    ${lessonDetails.answer_keys.luyen_tap ? `<div><p class="font-bold">Luyện tập:</p><ul class="list-disc pl-5">${lessonDetails.answer_keys.luyen_tap.map(answer => `<li>${answer}</li>`).join('')}</ul></div>` : ''}
+                    ${lessonDetails.answer_keys.van_dung ? `<div><p class="font-bold">Vận dụng:</p><p class="pl-5">${lessonDetails.answer_keys.van_dung}</p></div>` : ''}
+                </div>
+            </div>`;
+    }
+
+    return activitiesHtml + answerKeysHtml;
+}
+
 
 function renderQuizHtml() {
     if (currentQuizData.length === 0) {
