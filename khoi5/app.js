@@ -5,7 +5,6 @@ const chaptersContainer = document.getElementById('chapters-container');
 const lessonListView = document.getElementById('lesson-list-view');
 const lessonDetailView = document.getElementById('lesson-detail-view');
 const resourceLinksContainer = document.getElementById('resource-links-container');
-const mainContent = document.querySelector('main');
 
 // URL API từ Google Apps Script
 // [QUAN TRỌNG] Dán URL ứng dụng web của bạn vào đây
@@ -19,32 +18,61 @@ let currentQuizData = [];
 // --- FUNCTIONS ---
 
 /**
- * Lấy dữ liệu từ Google Sheet API
+ * Lấy dữ liệu từ Google Sheet API với hệ thống báo lỗi cải tiến
  */
 async function fetchData() {
+    // Kiểm tra xem URL đã được thay thế hay chưa.
+    if (GOOGLE_SHEET_API_URL === 'https://script.google.com/macros/s/AKfycbyPRjqxt4_7ZQTqYMaXrI-7QneVNNJ6beQxU2KNvNRG5nrzXNpRVjCVncNbVkMfK5wL/exec' || !GOOGLE_SHEET_API_URL) {
+        chaptersContainer.innerHTML = `
+            <div class="text-center p-6 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg">
+                <h3 class="font-bold text-lg mb-2">Lỗi Cấu Hình!</h3>
+                <p>Bạn chưa cập nhật URL của Google Sheet API trong tệp <strong>app.js</strong>.</p>
+                <p class="mt-1">Vui lòng thay thế dòng chữ <code>'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY'</code> bằng URL ứng dụng web bạn đã nhận được từ Google Apps Script.</p>
+            </div>`;
+        return;
+    }
+
     // Hiển thị thông báo đang tải
-    mainContent.innerHTML = '<p class="text-center text-gray-500">Đang tải dữ liệu bài học...</p>';
+    chaptersContainer.innerHTML = '<p class="text-center text-gray-500 animate-pulse">Đang tải dữ liệu bài học...</p>';
     try {
         const response = await fetch(GOOGLE_SHEET_API_URL);
         if (!response.ok) {
-            throw new Error(`Lỗi mạng: ${response.statusText}`);
+            throw new Error(`Lỗi mạng khi kết nối tới API: ${response.statusText} (status: ${response.status})`);
         }
+        
+        chaptersContainer.innerHTML = '<p class="text-center text-gray-500 animate-pulse">Đang xử lý dữ liệu...</p>';
         const data = await response.json();
+
         if (data.error) {
             throw new Error(`Lỗi từ Google Script: ${data.error}`);
+        }
+
+        if (!data.lessonsData || Object.keys(data.lessonsData).length === 0) {
+            throw new Error('Dữ liệu trả về không có phần "lessonsData" hoặc "lessonsData" bị rỗng. Hãy kiểm tra lại cấu trúc file Google Sheet.');
         }
         
         // Lưu dữ liệu vào biến toàn cục
         lessonsData = data.lessonsData;
         allDetails = data.allDetails;
         
-        // Xóa thông báo đang tải và hiển thị danh sách bài học
-        mainContent.innerHTML = ''; // Xóa chữ "Đang tải..."
+        // Hiển thị danh sách bài học
         renderLessonList();
 
     } catch (error) {
-        // Hiển thị thông báo lỗi
-        mainContent.innerHTML = `<p class="text-center text-red-500">Không thể tải dữ liệu. Vui lòng kiểm tra lại URL API và cài đặt Google Sheet.<br>${error.message}</p>`;
+        // Hiển thị thông báo lỗi chi tiết và các bước gợi ý
+        chaptersContainer.innerHTML = `
+            <div class="text-center p-6 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg">
+                <h3 class="font-bold text-lg mb-2">Không thể tải dữ liệu!</h3>
+                <p>Đã xảy ra lỗi trong quá trình tải hoặc xử lý dữ liệu từ Google Sheet.</p>
+                <p class="mt-2 text-sm"><b>Gợi ý khắc phục:</b></p>
+                <ul class="text-left text-sm list-disc list-inside mt-1 mx-auto max-w-md">
+                    <li>Kiểm tra lại <strong>URL API</strong> trong tệp <code>app.js</code> đã chính xác chưa.</li>
+                    <li>Trong Google Apps Script, đảm bảo bạn đã triển khai phiên bản mới nhất.</li>
+                    <li>Trong cài đặt triển khai, mục <strong>"Ai có quyền truy cập"</strong> phải được đặt là <strong>"Bất kỳ ai"</strong>.</li>
+                    <li>Kiểm tra lại tên của 2 trang tính phải chính xác là <strong>'Lessons'</strong> và <strong>'LessonDetails'</strong>.</li>
+                </ul>
+                <p class="mt-3 text-xs font-mono bg-red-50 p-2 rounded">Chi tiết lỗi: ${error.message}</p>
+            </div>`;
         console.error("Lỗi khi lấy dữ liệu:", error);
     }
 }
@@ -116,14 +144,8 @@ function renderLessonDetail(chapterKey, lessonId) {
     
     currentQuizData = lessonDetails.quiz || [];
     
-    const headerHtml = `<header class="text-center mb-10">... (giữ nguyên)</header>`; // Giữ nguyên cho ngắn gọn
     const imageHtml = lesson.image ? `<div class="mb-8 rounded-lg overflow-hidden shadow-lg"><img src="${lesson.image}" alt="Hình ảnh bài học: ${lesson.title}" class="w-full h-auto max-h-96 object-cover"></div>` : '';
-    const objectivesHtml = `<details class="knowledge-section" open>... (giữ nguyên)</details>`;
-    const coreContentHtml = `<details class="knowledge-section">... (giữ nguyên)</details>`;
-    const tabsHtml = `<div class="w-full mt-8">... (giữ nguyên)</div>`;
-
-    // Tái sử dụng code từ phiên bản trước để render HTML chi tiết
-    // (Phần này không thay đổi logic, chỉ cần đảm bảo nó được gọi đúng)
+    
     const fullDetailHtml = `
         <header class="text-center mb-10">
             <a href="#" onclick="showLessonList(); return false;" class="text-gray-500 hover:text-theme-blue mb-4 inline-block"><i class="fas fa-arrow-left"></i> Quay lại</a>
@@ -195,7 +217,9 @@ function showLessonList() {
 }
 
 function selectAnswer(questionIndex, optionIndex) {
-    const questionDiv = document.getElementById(`question-${index}`);
+    // [SỬA LỖI] Thay 'index' bằng 'questionIndex'
+    const questionDiv = document.getElementById(`question-${questionIndex}`);
+    if (!questionDiv) return; // Thêm kiểm tra để tránh lỗi
     questionDiv.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('selected'));
     const selectedButton = questionDiv.querySelectorAll('.quiz-option')[optionIndex];
     selectedButton.classList.add('selected');
