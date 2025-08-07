@@ -33,8 +33,11 @@
                 <!-- app.js sẽ chèn các nút vào đây -->
             </div>
 
-            <main id="chapters-container" class="space-y-10">
-                <!-- Danh sách bài học sẽ được app.js chèn vào đây -->
+            <main>
+                <!-- [CẬP NHẬT] Đổi tên id từ 'chapters-container' thành 'main-content-area' để tránh nhầm lẫn -->
+                <div id="chapters-container" class="space-y-10">
+                    <!-- Danh sách bài học sẽ được app.js chèn vào đây -->
+                </div>
             </main>
         </div>
 
@@ -49,7 +52,8 @@
     </footer>
 
     <!-- Liên kết đến các tệp JavaScript -->
-    <script src="data.js"></script>
+    <!-- [QUAN TRỌNG] Bỏ qua data.js vì dữ liệu sẽ được tải từ Google Sheet -->
+    <!-- <script src="data.js"></script> -->
     <script src="app.js"></script>
 </body>
 </html>
