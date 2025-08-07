@@ -32,7 +32,7 @@ async function fetchData() {
     }
 
     // Kiểm tra xem URL đã được thay thế hay chưa.
-    if (GOOGLE_SHEET_API_URL === 'https://script.google.com/macros/s/AKfycbyPRjqxt4_7ZQTqYMaXrI-7QneVNNJ6beQxU2KNvNRG5nrzXNpRVjCVncNbVkMfK5wL/exec' || !GOOGLE_SHEET_API_URL) {
+    if (GOOGLE_SHEET_API_URL === 'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY' || !GOOGLE_SHEET_API_URL) {
         chaptersContainer.innerHTML = `
             <div class="text-center p-6 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg">
                 <h3 class="font-bold text-lg mb-2">Lỗi Cấu Hình!</h3>
