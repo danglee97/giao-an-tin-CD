@@ -59,7 +59,7 @@ async function fetchData() {
  * Lấy chi tiết bài học từ dữ liệu đã tải
  */
 function getLessonDetails(lessonId) {
-    return allDetails[lessonId] || { "objectives": ["Nội dung đang được cập nhật."], "core_content": [], "quiz": [] };
+    return allDetails[lessonId] || { "objectives": ["Nội dung đang được cập nhật."], "core_content": [], "quiz": [], "answer_keys": {} };
 }
 
 
@@ -187,51 +187,22 @@ function renderLessonDetail(chapterKey, lessonId) {
  * [MỚI] Tạo HTML cho tab "Củng cố bài học"
  */
 function renderConsolidationHtml(lessonDetails) {
-    const hasActivities = lessonDetails.activities && lessonDetails.activities.length > 0;
     const hasAnswerKeys = lessonDetails.answer_keys && Object.keys(lessonDetails.answer_keys).length > 0;
 
-    if (!hasActivities && !hasAnswerKeys) {
+    if (!hasAnswerKeys) {
         return '<p class="text-center text-gray-500 p-8">Nội dung củng cố đang được cập nhật.</p>';
     }
 
-    let activitiesHtml = '';
-    if (hasActivities) {
-        activitiesHtml = `
-            <div class="consolidation-section">
-                <h3 class="consolidation-title">Hoạt động trong bài</h3>
-                <div class="consolidation-content space-y-4">
-                    ${lessonDetails.activities.map(activity => `
-                        <div>
-                            <h4 class="font-bold">${activity.name} (${activity.duration} phút)</h4>
-                            <div class="grid md:grid-cols-2 gap-4 mt-2">
-                                <div>
-                                    <p class="font-semibold">Nhiệm vụ giáo viên:</p>
-                                    <ul class="list-disc pl-5">${activity.teacher_tasks.map(task => `<li>${task}</li>`).join('')}</ul>
-                                </div>
-                                <div>
-                                    <p class="font-semibold">Hoạt động học sinh:</p>
-                                    <ul class="list-disc pl-5">${activity.student_tasks.map(task => `<li>${task}</li>`).join('')}</ul>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>`;
-    }
+    let answerKeysHtml = `
+        <div class="consolidation-section">
+            <h3 class="consolidation-title">Gợi ý trả lời</h3>
+            <div class="consolidation-content space-y-2">
+                ${lessonDetails.answer_keys.luyen_tap ? `<div><p class="font-bold">Luyện tập:</p><ul class="list-disc pl-5">${lessonDetails.answer_keys.luyen_tap.map(answer => `<li>${answer}</li>`).join('')}</ul></div>` : ''}
+                ${lessonDetails.answer_keys.van_dung ? `<div><p class="font-bold">Vận dụng:</p><p class="pl-5">${lessonDetails.answer_keys.van_dung}</p></div>` : ''}
+            </div>
+        </div>`;
 
-    let answerKeysHtml = '';
-    if (hasAnswerKeys) {
-        answerKeysHtml = `
-            <div class="consolidation-section">
-                <h3 class="consolidation-title">Gợi ý trả lời</h3>
-                <div class="consolidation-content space-y-2">
-                    ${lessonDetails.answer_keys.luyen_tap ? `<div><p class="font-bold">Luyện tập:</p><ul class="list-disc pl-5">${lessonDetails.answer_keys.luyen_tap.map(answer => `<li>${answer}</li>`).join('')}</ul></div>` : ''}
-                    ${lessonDetails.answer_keys.van_dung ? `<div><p class="font-bold">Vận dụng:</p><p class="pl-5">${lessonDetails.answer_keys.van_dung}</p></div>` : ''}
-                </div>
-            </div>`;
-    }
-
-    return activitiesHtml + answerKeysHtml;
+    return answerKeysHtml;
 }
 
 
