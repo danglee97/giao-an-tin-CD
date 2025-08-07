@@ -1,28 +1,110 @@
-/* Áp dụng font Inter cho toàn bộ trang */
+/* === CÀI ĐẶT CHUNG & BIẾN MÀU === */
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #f8fafc;
+    background-color: #f8fafc; /* Màu nền xám nhạt */
 }
 
-/* === MÀU SẮC CHỦ ĐẠO === */
-.text-theme-blue { color: #002060; }
-.bg-theme-blue { background-color: #002060; }
-.bg-theme-red { background-color: #C00000; }
-.text-theme-red { color: #C00000; }
-.border-theme-blue { border-color: #002060; }
+:root {
+    --theme-blue: #002060;
+    --theme-red: #C00000;
+    --text-light: #6b7280; /* Màu chữ xám nhạt */
+}
 
-/* === TRANG CHỦ & DANH SÁCH BÀI HỌC === */
+.text-theme-blue { color: var(--theme-blue); }
+.bg-theme-red { background-color: var(--theme-red); }
+.text-theme-red { color: var(--theme-red); }
+.bg-theme-blue { background-color: var(--theme-blue); }
+.border-theme-blue { border-color: var(--theme-blue); }
+
+
+/* === THIẾT KẾ THẺ CHỌN LỚP (GRADE CARD) - NÂNG CẤP === */
+
+.grade-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background-color: white;
+    border-radius: 1rem; /* bo tròn hơn */
+    border: 1px solid #e5e7eb; /* viền xám nhạt */
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    /* [HIỆU ỨNG] Thêm transition cho thẻ */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* Hiệu ứng khi di chuột vào thẻ */
 .grade-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 32, 96, 0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    border-color: var(--theme-blue);
 }
+
+/* Biểu tượng trong thẻ */
+.grade-card-icon {
+    font-size: 3.5rem; /* to hơn */
+    color: var(--theme-blue);
+    margin-bottom: 1rem;
+    /* [HIỆU ỨNG] Thêm transition cho biểu tượng */
+    transition: transform 0.3s ease-in-out, color 0.3s ease;
+}
+
+/* Hiệu ứng khi di chuột vào biểu tượng */
+.grade-card:hover .grade-card-icon {
+    transform: scale(1.15) rotate(-5deg); /* Phóng to và xoay nhẹ */
+    color: var(--theme-red); /* Đổi sang màu đỏ */
+}
+
+/* Tiêu đề trong thẻ */
+.grade-card-title {
+    font-size: 1.5rem; /* 24px */
+    font-weight: 700;
+    color: var(--theme-blue);
+    transition: color 0.3s ease;
+}
+
+/* Thẻ bị vô hiệu hóa (Sắp có) */
+.grade-card.is-disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.grade-card.is-disabled .grade-card-icon,
+.grade-card.is-disabled .grade-card-title {
+    color: var(--text-light);
+}
+
+/* Hiệu ứng hover cho thẻ bị vô hiệu hóa */
+.grade-card.is-disabled:hover {
+    transform: none;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    border-color: #e5e7eb;
+}
+
+.grade-card.is-disabled:hover .grade-card-icon {
+    transform: none;
+    color: var(--text-light);
+}
+
+/* Nhãn "Sắp có" */
+.coming-soon-badge {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    margin-top: 0.25rem;
+}
+
+
+/* === CÁC PHẦN CSS CŨ CHO CÁC TRANG CHI TIẾT === */
+/* (Giữ lại để các trang con không bị vỡ giao diện) */
+
 .lesson-link { 
     transition: all 0.2s ease-in-out; 
 }
 
-/* === TRANG CHI TIẾT BÀI HỌC (GIAO DIỆN MỚI) === */
-
-/* Phần củng cố kiến thức (Mục tiêu, Nội dung...) */
 .knowledge-section {
     background-color: #f9fafb;
     border: 1px solid #e5e7eb;
@@ -58,7 +140,6 @@ body {
     color: #374151;
 }
 
-/* Hệ thống Tabs */
 .tab-buttons {
     display: flex;
     border-bottom: 2px solid #e5e7eb;
@@ -91,10 +172,9 @@ body {
     display: block;
 }
 
-/* [MỚI] Đảm bảo iframe giữ đúng tỉ lệ 16:9 */
 .video-container {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    padding-bottom: 56.25%;
     height: 0;
     overflow: hidden;
     width: 100%;
@@ -107,7 +187,6 @@ body {
     height: 100%;
 }
 
-/* [MỚI] Kiểu cho tab "Củng cố bài học" */
 .consolidation-section {
     margin-bottom: 1.5rem;
 }
@@ -125,8 +204,6 @@ body {
     color: #374151;
 }
 
-
-/* Kiểu cho phần Trắc nghiệm */
 .quiz-option {
     display: block;
     width: 100%;

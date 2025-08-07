@@ -7,7 +7,6 @@ const lessonDetailView = document.getElementById('lesson-detail-view');
 const resourceLinksContainer = document.getElementById('resource-links-container');
 
 // URL API từ Google Apps Script
-// [QUAN TRỌNG] Dán URL ứng dụng web của bạn vào đây
 const GOOGLE_SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbyPRjqxt4_7ZQTqYMaXrI-7QneVNNJ6beQxU2KNvNRG5nrzXNpRVjCVncNbVkMfK5wL/exec';
 
 // Global State
@@ -21,17 +20,6 @@ let currentQuizData = [];
  * Lấy dữ liệu từ Google Sheet API với hệ thống báo lỗi cải tiến
  */
 async function fetchData() {
-    // [CẢI TIẾN] Kiểm tra xem các phần tử HTML cần thiết có tồn tại không
-    if (!chaptersContainer || !lessonListView || !lessonDetailView) {
-        document.body.innerHTML = `<div class="text-center p-6 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg m-4">
-            <h3 class="font-bold text-lg mb-2">Lỗi Cấu Trúc HTML!</h3>
-            <p>Không tìm thấy các phần tử cần thiết (ví dụ: #chapters-container). Vui lòng đảm bảo bạn đang sử dụng phiên bản <strong>index.html</strong> mới nhất.</p>
-        </div>`;
-        console.error("Lỗi: Thiếu các phần tử DOM quan trọng.");
-        return;
-    }
-
-    // Kiểm tra xem URL đã được thay thế hay chưa.
     if (GOOGLE_SHEET_API_URL === 'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY' || !GOOGLE_SHEET_API_URL) {
         chaptersContainer.innerHTML = `
             <div class="text-center p-6 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg">
@@ -42,45 +30,25 @@ async function fetchData() {
         return;
     }
 
-    // Hiển thị thông báo đang tải
     chaptersContainer.innerHTML = '<p class="text-center text-gray-500 animate-pulse">Đang tải dữ liệu bài học...</p>';
     try {
         const response = await fetch(GOOGLE_SHEET_API_URL);
-        if (!response.ok) {
-            throw new Error(`Lỗi mạng khi kết nối tới API: ${response.statusText} (status: ${response.status})`);
-        }
+        if (!response.ok) throw new Error(`Lỗi mạng: ${response.statusText}`);
         
-        chaptersContainer.innerHTML = '<p class="text-center text-gray-500 animate-pulse">Đang xử lý dữ liệu...</p>';
         const data = await response.json();
+        if (data.error) throw new Error(`Lỗi từ Google Script: ${data.error}`);
+        if (!data.lessonsData) throw new Error('Dữ liệu không hợp lệ từ Google Sheet.');
 
-        if (data.error) {
-            throw new Error(`Lỗi từ Google Script: ${data.error}`);
-        }
-
-        if (!data.lessonsData || Object.keys(data.lessonsData).length === 0) {
-            throw new Error('Dữ liệu trả về không có phần "lessonsData" hoặc "lessonsData" bị rỗng. Hãy kiểm tra lại cấu trúc và dữ liệu trong file Google Sheet.');
-        }
-        
-        // Lưu dữ liệu vào biến toàn cục
         lessonsData = data.lessonsData;
         allDetails = data.allDetails;
         
-        // Hiển thị danh sách bài học
         renderLessonList();
 
     } catch (error) {
-        // Hiển thị thông báo lỗi chi tiết và các bước gợi ý
         chaptersContainer.innerHTML = `
             <div class="text-center p-6 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg">
                 <h3 class="font-bold text-lg mb-2">Không thể tải dữ liệu!</h3>
-                <p>Đã xảy ra lỗi trong quá trình tải hoặc xử lý dữ liệu từ Google Sheet.</p>
-                <p class="mt-2 text-sm"><b>Gợi ý khắc phục:</b></p>
-                <ul class="text-left text-sm list-disc list-inside mt-1 mx-auto max-w-md">
-                    <li>Kiểm tra lại <strong>URL API</strong> trong tệp <code>app.js</code> đã chính xác chưa.</li>
-                    <li>Trong Google Apps Script, đảm bảo bạn đã triển khai phiên bản mới nhất.</li>
-                    <li>Trong cài đặt triển khai, mục <strong>"Ai có quyền truy cập"</strong> phải được đặt là <strong>"Bất kỳ ai"</strong>.</li>
-                    <li>Kiểm tra lại tên của 2 trang tính phải chính xác là <strong>'Lessons'</strong> và <strong>'LessonDetails'</strong>.</li>
-                </ul>
+                <p>Đã xảy ra lỗi. Vui lòng kiểm tra lại URL API và cài đặt Google Sheet.</p>
                 <p class="mt-3 text-xs font-mono bg-red-50 p-2 rounded">Chi tiết lỗi: ${error.message}</p>
             </div>`;
         console.error("Lỗi khi lấy dữ liệu:", error);
@@ -108,21 +76,41 @@ function openTab(evt, tabName) {
     evt.currentTarget.className += " active";
 }
 
+/**
+ * [SỬA LỖI] Hiển thị các nút link đến tài liệu PDF với đường dẫn chính xác
+ */
 function renderResourceLinks() {
-    // Phần này có thể lấy dữ liệu từ một sheet khác nếu muốn
-    let linksHtml = `
-        <div class="flex justify-center items-center gap-4 flex-wrap">
-            <a href="#" target="_blank" class="bg-theme-blue text-white font-semibold py-2 px-5 rounded-md hover:bg-opacity-90 transition-colors flex items-center gap-2 border border-gray-300 shadow-sm">
+    // Định nghĩa đường dẫn tới các file PDF.
+    // Các đường dẫn này là tương đối so với file index.html trong thư mục khoi5.
+    const gradeInfo = {
+        sgk_pdf: "Sách GK Tin học 5 - Cánh Diệu.pdf",
+        sgv_pdf: "Sách GV Tin học 5 - Cánh Diệu.pdf"
+    };
+
+    if (!resourceLinksContainer) return;
+    
+    let linksHtml = '<div class="flex justify-center items-center gap-4 flex-wrap">';
+    
+    if (gradeInfo.sgk_pdf) {
+        linksHtml += `
+            <a href="${gradeInfo.sgk_pdf}" target="_blank" class="bg-theme-blue text-white font-semibold py-2 px-5 rounded-md hover:bg-opacity-90 transition-colors flex items-center gap-2 border border-gray-300 shadow-sm">
                 <i class="fas fa-book-open"></i>
                 <span>Xem Sách Giáo Khoa</span>
-            </a>
-            <a href="#" target="_blank" class="bg-theme-red text-white font-semibold py-2 px-5 rounded-md hover:bg-opacity-90 transition-colors flex items-center gap-2 border border-gray-300 shadow-sm">
+            </a>`;
+    }
+    
+    if (gradeInfo.sgv_pdf) {
+        linksHtml += `
+            <a href="${gradeInfo.sgv_pdf}" target="_blank" class="bg-theme-red text-white font-semibold py-2 px-5 rounded-md hover:bg-opacity-90 transition-colors flex items-center gap-2 border border-gray-300 shadow-sm">
                 <i class="fas fa-user-tie"></i>
                 <span>Xem Sách Giáo Viên</span>
-            </a>
-        </div>`;
+            </a>`;
+    }
+    
+    linksHtml += '</div>';
     resourceLinksContainer.innerHTML = linksHtml;
 }
+
 
 function renderLessonList() {
     if (!chaptersContainer || Object.keys(lessonsData).length === 0) return;
