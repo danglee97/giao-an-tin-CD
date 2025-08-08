@@ -7,7 +7,7 @@ const lessonDetailView = document.getElementById('lesson-detail-view');
 const resourceLinksContainer = document.getElementById('resource-links-container');
 
 // URL API từ Google Apps Script
-const GOOGLE_SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbxKUqMQEeMgIqW-yLjWseiigbrFK23RlwyIxQy8CHG7yBn_46wIMgJOQ_CUl6OE5jQp/exec';
+const GOOGLE_SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbwd8WRjhWoh6_YlvK77v3IktS61rQtd6oUSOetk6LvO_SqfMJFn7_biIlniFn2VoGcs/exec';
 
 // Global State
 let lessonsData = {};
@@ -46,7 +46,6 @@ function convertGoogleSlideToEmbedUrl(url) {
 }
 
 async function fetchData() {
-    // ... (Phần này giữ nguyên, không thay đổi)
     if (GOOGLE_SHEET_API_URL === 'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY' || !GOOGLE_SHEET_API_URL) {
         chaptersContainer.innerHTML = `<div class="text-center p-6 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg"><h3 class="font-bold text-lg mb-2">Lỗi Cấu Hình!</h3><p>Bạn chưa cập nhật URL của Google Sheet API trong tệp <strong>app.js</strong>.</p><p class="mt-1">Vui lòng thay thế dòng chữ <code>'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY'</code> bằng URL ứng dụng web bạn đã nhận được từ Google Apps Script.</p></div>`;
         return;
@@ -94,10 +93,6 @@ function renderResourceLinks() {
     resourceLinksContainer.innerHTML = linksHtml;
 }
 
-
-/**
- * [CẬP NHẬT] Hiển thị danh sách các chủ đề và bài học với nút xem slide
- */
 function renderLessonList() {
     if (!chaptersContainer || Object.keys(lessonsData).length === 0) return;
     renderResourceLinks();
@@ -139,38 +134,48 @@ function renderLessonDetail(chapterKey, lessonId) {
     
     currentQuizData = lessonDetails.quiz || [];
     
-    const backButtonHtml = `<a href="#" onclick="showLessonList(); return false;" class="back-button"><i class="fas fa-arrow-left mr-2"></i> Quay lại danh sách</a>`;
+    // [CẬP NHẬT] Nút quay lại có khung
+    const backButtonHtml = `<a href="#" onclick="showLessonList(); return false;" class="inline-flex items-center gap-2 bg-white text-gray-700 font-semibold py-2 px-4 rounded-full border border-gray-300 shadow-sm hover:bg-gray-100 transition-all duration-300 mb-8">
+                                <i class="fas fa-arrow-left"></i>
+                                <span>Quay lại danh sách</span>
+                            </a>`;
 
+    // [CẬP NHẬT] Header được căn giữa
     const headerHtml = `
-        <header class="lesson-header">
+        <header class="lesson-header text-center">
             <h1 class="text-4xl sm:text-5xl font-bold text-theme-blue">${lesson.title}</h1>
             <p class="text-lg text-gray-500 mt-2">${lessonsData[chapterKey].title}</p>
         </header>`;
 
     const imageHtml = lesson.image ? `<div class="my-8 rounded-lg overflow-hidden shadow-lg"><img src="${lesson.image}" alt="Hình ảnh bài học: ${lesson.title}" class="w-full h-auto max-h-96 object-cover"></div>` : '';
 
+    // [CẬP NHẬT] Thiết kế lại các mục tiêu và nội dung cốt lõi gọn gàng hơn
     const objectivesHtml = `
-        <details class="knowledge-section" open>
-            <summary class="knowledge-summary">
-                <div class="summary-title">
-                    <span class="summary-icon bg-blue-100 text-blue-600"><i class="fas fa-bullseye-pointer"></i></span>
-                    Mục tiêu bài học
-                </div>
-                <i class="fas fa-chevron-down arrow"></i>
+        <details class="knowledge-section-compact" open>
+            <summary class="knowledge-summary-compact">
+                <i class="fas fa-bullseye-pointer text-lg text-blue-600"></i>
+                <span class="font-semibold text-gray-800">Mục tiêu bài học</span>
+                <i class="fas fa-chevron-down arrow ml-auto text-gray-500"></i>
             </summary>
-            <div class="knowledge-content"><ul class="list-disc list-inside space-y-2">${lessonDetails.objectives.map(obj => `<li>${obj}</li>`).join('')}</ul></div>
+            <div class="knowledge-content-compact">
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    ${lessonDetails.objectives.map(obj => `<li>${obj}</li>`).join('')}
+                </ul>
+            </div>
         </details>`;
     
     const coreContentHtml = `
-        <details class="knowledge-section">
-            <summary class="knowledge-summary">
-                <div class="summary-title">
-                    <span class="summary-icon bg-green-100 text-green-600"><i class="fas fa-book-sparkles"></i></span>
-                    Nội dung cốt lõi
-                </div>
-                <i class="fas fa-chevron-down arrow"></i>
+        <details class="knowledge-section-compact">
+            <summary class="knowledge-summary-compact">
+                <i class="fas fa-book-sparkles text-lg text-green-600"></i>
+                <span class="font-semibold text-gray-800">Nội dung cốt lõi</span>
+                <i class="fas fa-chevron-down arrow ml-auto text-gray-500"></i>
             </summary>
-            <div class="knowledge-content"><ul class="list-disc list-inside space-y-2">${(lessonDetails.core_content && lessonDetails.core_content.length > 0) ? lessonDetails.core_content.map(content => `<li>${content}</li>`).join('') : '<li>Nội dung đang được cập nhật.</li>'}</ul></div>
+            <div class="knowledge-content-compact">
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    ${(lessonDetails.core_content && lessonDetails.core_content.length > 0) ? lessonDetails.core_content.map(content => `<li>${content}</li>`).join('') : '<li>Nội dung đang được cập nhật.</li>'}
+                </ul>
+            </div>
         </details>`;
 
     const gdriveEmbedUrl = convertGoogleSlideToEmbedUrl(lesson.gdrive_embed);
@@ -252,7 +257,7 @@ function showLessonList() {
 }
 
 function selectAnswer(questionIndex, optionIndex) {
-    const questionDiv = document.getElementById(`question-${questionIndex}`);
+    const questionDiv = document.getElementById(`question-${index}`);
     if (!questionDiv) return;
     questionDiv.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('selected'));
     const selectedButton = questionDiv.querySelectorAll('.quiz-option')[optionIndex];
