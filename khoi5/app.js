@@ -28,23 +28,14 @@ function convertToEmbedUrl(url) {
         } else if (urlObj.hostname.includes('youtube.com') && urlObj.pathname.startsWith('/embed/')) {
             return url;
         }
-        if (videoId) {
-            return `https://www.youtube.com/embed/${videoId}`;
-        }
-    } catch (e) {
-        console.error("URL video không hợp lệ:", url, e);
-        return "";
-    }
+        if (videoId) { return `https://www.youtube.com/embed/${videoId}`; }
+    } catch (e) { console.error("URL video không hợp lệ:", url, e); return ""; }
     return url;
 }
 
 function convertGoogleSlideToEmbedUrl(url) {
-    if (!url || typeof url !== 'string' || !url.includes('docs.google.com/presentation')) {
-        return "";
-    }
-    if (url.includes('/embed')) {
-        return url;
-    }
+    if (!url || typeof url !== 'string' || !url.includes('docs.google.com/presentation')) { return ""; }
+    if (url.includes('/embed')) { return url; }
     const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
     if (match && match[1]) {
         const presentationId = match[1];
@@ -55,6 +46,7 @@ function convertGoogleSlideToEmbedUrl(url) {
 }
 
 async function fetchData() {
+    // ... (Phần này giữ nguyên, không thay đổi)
     if (GOOGLE_SHEET_API_URL === 'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY' || !GOOGLE_SHEET_API_URL) {
         chaptersContainer.innerHTML = `<div class="text-center p-6 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg"><h3 class="font-bold text-lg mb-2">Lỗi Cấu Hình!</h3><p>Bạn chưa cập nhật URL của Google Sheet API trong tệp <strong>app.js</strong>.</p><p class="mt-1">Vui lòng thay thế dòng chữ <code>'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY'</code> bằng URL ứng dụng web bạn đã nhận được từ Google Apps Script.</p></div>`;
         return;
@@ -137,6 +129,9 @@ function renderLessonList() {
     }
 }
 
+/**
+ * [CẬP NHẬT] Hiển thị chi tiết một bài học với giao diện mới hoàn toàn
+ */
 function renderLessonDetail(chapterKey, lessonId) {
     const lesson = lessonsData[chapterKey].lessons.find(l => l.id === lessonId);
     const lessonDetails = getLessonDetails(lessonId);
@@ -144,32 +139,67 @@ function renderLessonDetail(chapterKey, lessonId) {
     
     currentQuizData = lessonDetails.quiz || [];
     
-    const imageHtml = lesson.image ? `<div class="mb-8 rounded-lg overflow-hidden shadow-lg"><img src="${lesson.image}" alt="Hình ảnh bài học: ${lesson.title}" class="w-full h-auto max-h-96 object-cover"></div>` : '';
+    const backButtonHtml = `<a href="#" onclick="showLessonList(); return false;" class="back-button"><i class="fas fa-arrow-left mr-2"></i> Quay lại danh sách</a>`;
+
+    const headerHtml = `
+        <header class="lesson-header">
+            <h1 class="text-4xl sm:text-5xl font-bold text-theme-blue">${lesson.title}</h1>
+            <p class="text-lg text-gray-500 mt-2">${lessonsData[chapterKey].title}</p>
+        </header>`;
+
+    const imageHtml = lesson.image ? `<div class="my-8 rounded-lg overflow-hidden shadow-lg"><img src="${lesson.image}" alt="Hình ảnh bài học: ${lesson.title}" class="w-full h-auto max-h-96 object-cover"></div>` : '';
+
+    const objectivesHtml = `
+        <details class="knowledge-section" open>
+            <summary class="knowledge-summary">
+                <div class="summary-title">
+                    <span class="summary-icon bg-blue-100 text-blue-600"><i class="fas fa-bullseye-pointer"></i></span>
+                    Mục tiêu bài học
+                </div>
+                <i class="fas fa-chevron-down arrow"></i>
+            </summary>
+            <div class="knowledge-content"><ul class="list-disc list-inside space-y-2">${lessonDetails.objectives.map(obj => `<li>${obj}</li>`).join('')}</ul></div>
+        </details>`;
     
+    const coreContentHtml = `
+        <details class="knowledge-section">
+            <summary class="knowledge-summary">
+                <div class="summary-title">
+                    <span class="summary-icon bg-green-100 text-green-600"><i class="fas fa-book-sparkles"></i></span>
+                    Nội dung cốt lõi
+                </div>
+                <i class="fas fa-chevron-down arrow"></i>
+            </summary>
+            <div class="knowledge-content"><ul class="list-disc list-inside space-y-2">${(lessonDetails.core_content && lessonDetails.core_content.length > 0) ? lessonDetails.core_content.map(content => `<li>${content}</li>`).join('') : '<li>Nội dung đang được cập nhật.</li>'}</ul></div>
+        </details>`;
+
     const gdriveEmbedUrl = convertGoogleSlideToEmbedUrl(lesson.gdrive_embed);
     const videoEmbedUrl = convertToEmbedUrl(lesson.video_embed);
 
+    const tabsHtml = `
+        <div class="w-full mt-10">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="openTab(event, 'tab-slideshow')"><i class="fas fa-chalkboard-teacher mr-2"></i>Bài giảng trình chiếu</button>
+                <button class="tab-button" onclick="openTab(event, 'tab-video')"><i class="fab fa-youtube mr-2"></i>Video bài giảng</button>
+                <button class="tab-button" onclick="openTab(event, 'tab-quiz')"><i class="fas fa-tasks mr-2"></i>Luyện tập trắc nghiệm</button>
+                <button class="tab-button" onclick="openTab(event, 'tab-consolidation')"><i class="fas fa-star mr-2"></i>Củng cố bài học</button>
+            </div>
+            <div id="tab-slideshow" class="tab-content active">${gdriveEmbedUrl ? `<div class="video-container"><iframe src="${gdriveEmbedUrl}" frameborder="0" allowfullscreen="true"></iframe></div>` : `<p class="text-center text-gray-500 p-8">Không có bài giảng cho bài học này.</p>`}</div>
+            <div id="tab-video" class="tab-content">${videoEmbedUrl ? `<div class="video-container"><iframe src="${videoEmbedUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>` : `<p class="text-center text-gray-500 p-8">Không có video cho bài học này.</p>`}</div>
+            <div id="tab-quiz" class="tab-content">${renderQuizHtml()}</div>
+            <div id="tab-consolidation" class="tab-content">${renderConsolidationHtml(lessonDetails)}</div>
+        </div>`;
+
     const fullDetailHtml = `
-        <header class="text-center mb-10">
-            <a href="#" onclick="showLessonList(); return false;" class="text-gray-500 hover:text-theme-blue mb-4 inline-block"><i class="fas fa-arrow-left"></i> Quay lại</a>
-            <h1 class="text-4xl font-bold text-theme-blue">${lesson.title}</h1>
-            <p class="text-lg text-gray-500 mt-2">${lessonsData[chapterKey].title}</p>
-        </header>
+        ${backButtonHtml}
+        ${headerHtml}
         <main class="space-y-4">
             ${imageHtml}
-            <details class="knowledge-section" open><summary class="knowledge-summary"><span><i class="fas fa-bullseye-pointer icon-blue"></i>Mục tiêu bài học</span><i class="fas fa-chevron-down arrow"></i></summary><div class="knowledge-content"><ul class="list-disc list-inside space-y-2">${lessonDetails.objectives.map(obj => `<li>${obj}</li>`).join('')}</ul></div></details>
-            <details class="knowledge-section"><summary class="knowledge-summary"><span><i class="fas fa-book-sparkles icon-blue"></i>Nội dung cốt lõi</span><i class="fas fa-chevron-down arrow"></i></summary><div class="knowledge-content"><ul class="list-disc list-inside space-y-2">${(lessonDetails.core_content && lessonDetails.core_content.length > 0) ? lessonDetails.core_content.map(content => `<li>${content}</li>`).join('') : '<li>Nội dung đang được cập nhật.</li>'}</ul></div></details>
-            <div class="w-full mt-8">
-                <div class="tab-buttons">
-                    <button class="tab-button active" onclick="openTab(event, 'tab-slideshow')">Bài giảng trình chiếu</button>
-                    <button class="tab-button" onclick="openTab(event, 'tab-video')">Video bài giảng</button>
-                    <button class="tab-button" onclick="openTab(event, 'tab-quiz')">Luyện tập trắc nghiệm</button>
-                    <button class="tab-button" onclick="openTab(event, 'tab-consolidation')">Củng cố bài học</button>
-                </div>
-                <div id="tab-slideshow" class="tab-content active">${gdriveEmbedUrl ? `<div class="video-container"><iframe src="${gdriveEmbedUrl}" frameborder="0" allowfullscreen="true"></iframe></div>` : `<p class="text-center text-gray-500 p-8">Không có bài giảng.</p>`}</div>
-                <div id="tab-video" class="tab-content">${videoEmbedUrl ? `<div class="video-container"><iframe src="${videoEmbedUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>` : `<p class="text-center text-gray-500 p-8">Không có video.</p>`}</div>
-                <div id="tab-quiz" class="tab-content">${renderQuizHtml()}</div>
-                <div id="tab-consolidation" class="tab-content">${renderConsolidationHtml(lessonDetails)}</div>
+            ${objectivesHtml}
+            ${coreContentHtml}
+            ${tabsHtml}
+            <div class="mt-12">
+                ${backButtonHtml}
             </div>
         </main>`;
 
@@ -178,28 +208,22 @@ function renderLessonDetail(chapterKey, lessonId) {
     lessonDetailView.style.display = 'block';
     window.scrollTo(0, 0);
 }
-/**
- * [MỚI] Tạo HTML cho tab "Củng cố bài học"
- */
-function renderConsolidationHtml(lessonDetails) {
-    const hasAnswerKeys = lessonDetails.answer_keys && Object.keys(lessonDetails.answer_keys).length > 0;
 
+
+function renderConsolidationHtml(lessonDetails) { 
+    const hasAnswerKeys = lessonDetails.answer_keys && Object.keys(lessonDetails.answer_keys).length > 0;
     if (!hasAnswerKeys) {
         return '<p class="text-center text-gray-500 p-8">Nội dung củng cố đang được cập nhật.</p>';
     }
-
-    let answerKeysHtml = `
+    return `
         <div class="consolidation-section">
             <h3 class="consolidation-title">Gợi ý trả lời</h3>
-            <div class="consolidation-content space-y-2">
-                ${lessonDetails.answer_keys.luyen_tap ? `<div><p class="font-bold">Luyện tập:</p><ul class="list-disc pl-5">${lessonDetails.answer_keys.luyen_tap.map(answer => `<li>${answer}</li>`).join('')}</ul></div>` : ''}
-                ${lessonDetails.answer_keys.van_dung ? `<div><p class="font-bold">Vận dụng:</p><p class="pl-5">${lessonDetails.answer_keys.van_dung}</p></div>` : ''}
+            <div class="consolidation-content space-y-4">
+                ${lessonDetails.answer_keys.luyen_tap ? `<div><p class="font-bold text-gray-800">Luyện tập:</p><ul class="list-decimal list-inside ml-4 mt-1">${lessonDetails.answer_keys.luyen_tap.map(answer => `<li>${answer}</li>`).join('')}</ul></div>` : ''}
+                ${lessonDetails.answer_keys.van_dung ? `<div><p class="font-bold text-gray-800">Vận dụng:</p><p class="ml-4 mt-1">${lessonDetails.answer_keys.van_dung}</p></div>` : ''}
             </div>
         </div>`;
-
-    return answerKeysHtml;
 }
-
 
 function renderQuizHtml() {
     if (currentQuizData.length === 0) {
