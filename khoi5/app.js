@@ -85,7 +85,7 @@ function openTab(evt, tabName) {
 }
 
 function renderResourceLinks() {
-    const gradeInfo = { sgk_pdf: "SGK- Tinhoc7 - KetNoiTriThuc.pdf", sgv_pdf: "SGV- Tinhoc7 - KetNoiTriThuc.pdf" };
+    const gradeInfo = { sgk_pdf: "Sách GK Tin học 5 - Cánh Diệu.pdf", sgv_pdf: "Sách GV Tin học 5 - Cánh Diệu.pdf" };
     if (!resourceLinksContainer) return;
     let linksHtml = `<div class="flex justify-center items-center gap-4 flex-wrap">
         <a href="${gradeInfo.sgk_pdf}" target="_blank" class="bg-theme-blue text-white font-semibold py-2 px-5 rounded-md hover:bg-opacity-90 transition-colors flex items-center gap-2 border border-gray-300 shadow-sm"><i class="fas fa-book-open"></i><span>Xem Sách Giáo Khoa</span></a>
