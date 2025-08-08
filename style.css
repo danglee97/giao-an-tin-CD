@@ -58,20 +58,20 @@ body {
 
 /* === [CẬP NHẬT] THIẾT KẾ THẺ THÔNG TIN (Mục tiêu, Nội dung) === */
 .info-card {
-    background-color: #ffffff; /* Nền trắng */
-    border: 1px solid #e5e7eb;
-    border-radius: 0.75rem;
+    background-color: #f3f4f6; /* Nền xám nhạt cho toàn bộ thẻ */
+    border-radius: 0.5rem;
     margin-bottom: 1rem;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+    overflow: hidden; /* Ẩn phần tràn ra khi bo góc */
 }
 
 .info-card-header {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 1rem;
+    padding: 0.75rem 1rem;
     cursor: pointer;
-    list-style: none; /* Bỏ dấu chấm tròn mặc định của summary */
+    list-style: none;
+    font-weight: 600;
 }
 
 .info-card-header::-webkit-details-marker {
@@ -80,7 +80,7 @@ body {
 
 .info-card-header .arrow {
     transition: transform 0.2s ease-in-out;
-    color: #9ca3af; /* Màu mũi tên xám hơn */
+    color: #6b7280; /* Màu mũi tên xám */
 }
 
 .info-card[open] > .info-card-header .arrow {
@@ -88,11 +88,11 @@ body {
 }
 
 .info-card-content {
+    background-color: #ffffff; /* Nền trắng cho nội dung */
     padding: 1rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid #e5e7eb;
     color: #374151;
     line-height: 1.6;
+    border-top: 1px solid #e5e7eb; /* Đường kẻ phân cách */
 }
 
 
