@@ -252,7 +252,7 @@ function showLessonList() {
 }
 
 function selectAnswer(questionIndex, optionIndex) {
-    const questionDiv = document.getElementById(`question-${questionIndex}`);
+    const questionDiv = document.getElementById(`question-${index}`);
     if (!questionDiv) return;
     questionDiv.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('selected'));
     const selectedButton = questionDiv.querySelectorAll('.quiz-option')[optionIndex];

@@ -98,7 +98,78 @@ body {
 }
 
 
-/* === CÁC PHẦN CSS CHO CÁC TRANG CHI TIẾT === */
+/* === [CẬP NHẬT] THIẾT KẾ CHI TIẾT BÀI HỌC === */
+
+/* Header mới với hiệu ứng gradient */
+.lesson-header-pro {
+    background: linear-gradient(135deg, var(--theme-blue) 0%, #0048aa 100%);
+    color: white;
+    padding: 3rem 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 32, 96, 0.2);
+    margin-bottom: 2rem;
+}
+
+/* Cải tiến cho phần Mục tiêu & Nội dung (dạng accordion) */
+.knowledge-section {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem; /* Bo tròn hơn */
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+    margin-bottom: 1.5rem; /* Thêm khoảng cách giữa các section */
+}
+.knowledge-section:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+}
+
+.knowledge-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem; /* Tăng padding */
+    cursor: pointer;
+    list-style: none; /* Bỏ dấu chấm tròn mặc định */
+    transition: background-color 0.2s ease;
+}
+.knowledge-summary:hover {
+    background-color: #f9fafb;
+}
+
+/* Bỏ dấu mũi tên mặc định của <details> */
+.knowledge-summary::-webkit-details-marker { 
+    display: none; 
+}
+
+/* Icon trong summary */
+.summary-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+/* Mũi tên chỉ hướng */
+.knowledge-summary .arrow { 
+    transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1); 
+}
+.knowledge-section[open] > .knowledge-summary .arrow { 
+    transform: rotate(180deg); 
+}
+
+/* Nội dung bên trong */
+.knowledge-content {
+    padding: 0 1.5rem 1.5rem 5.25rem; /* Căn lề với tiêu đề */
+    color: #374151;
+    line-height: 1.75; /* Tăng khoảng cách dòng */
+}
+
+
+/* === CÁC PHẦN CSS KHÁC CHO TRANG CHI TIẾT === */
 
 .lesson-link { 
     position: relative;
@@ -145,35 +216,6 @@ body {
 .slide-icon:hover {
     background-color: var(--theme-red);
     transform: scale(1.1) rotate(5deg) !important;
-}
-
-.knowledge-section {
-    background-color: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.5rem;
-    overflow: hidden;
-}
-.knowledge-summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    cursor: pointer;
-    font-weight: 600;
-    color: #111827;
-    list-style: none;
-}
-.knowledge-summary::-webkit-details-marker { display: none; }
-.knowledge-summary .icon-blue {
-    color: var(--theme-blue);
-    margin-right: 0.75rem;
-    font-size: 1.25rem;
-}
-.knowledge-summary .arrow { transition: transform 0.2s; }
-.knowledge-section[open] > .knowledge-summary .arrow { transform: rotate(180deg); }
-.knowledge-content {
-    padding: 0 1.5rem 1.5rem 2.5rem;
-    color: #374151;
 }
 
 .tab-buttons {
