@@ -46,6 +46,7 @@ function convertGoogleSlideToEmbedUrl(url) {
 }
 
 async function fetchData() {
+    // ... (Phần này giữ nguyên, không thay đổi)
     if (GOOGLE_SHEET_API_URL === 'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY' || !GOOGLE_SHEET_API_URL) {
         chaptersContainer.innerHTML = `<div class="text-center p-6 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg"><h3 class="font-bold text-lg mb-2">Lỗi Cấu Hình!</h3><p>Bạn chưa cập nhật URL của Google Sheet API trong tệp <strong>app.js</strong>.</p><p class="mt-1">Vui lòng thay thế dòng chữ <code>'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY'</code> bằng URL ứng dụng web bạn đã nhận được từ Google Apps Script.</p></div>`;
         return;
@@ -84,7 +85,7 @@ function openTab(evt, tabName) {
 }
 
 function renderResourceLinks() {
-    const gradeInfo = { sgk_pdf: "Sách GK Tin học 5 - Cánh Diệu.pdf", sgv_pdf: "Sách GV Tin học 5 - Cánh Diệu.pdf" };
+    const gradeInfo = { sgk_pdf: "SGK- Tinhoc7 - KetNoiTriThuc.pdf", sgv_pdf: "SGV- Tinhoc7 - KetNoiTriThuc.pdf" };
     if (!resourceLinksContainer) return;
     let linksHtml = `<div class="flex justify-center items-center gap-4 flex-wrap">
         <a href="${gradeInfo.sgk_pdf}" target="_blank" class="bg-theme-blue text-white font-semibold py-2 px-5 rounded-md hover:bg-opacity-90 transition-colors flex items-center gap-2 border border-gray-300 shadow-sm"><i class="fas fa-book-open"></i><span>Xem Sách Giáo Khoa</span></a>
@@ -93,6 +94,10 @@ function renderResourceLinks() {
     resourceLinksContainer.innerHTML = linksHtml;
 }
 
+
+/**
+ * [CẬP NHẬT] Hiển thị danh sách các chủ đề và bài học với nút xem slide
+ */
 function renderLessonList() {
     if (!chaptersContainer || Object.keys(lessonsData).length === 0) return;
     renderResourceLinks();
@@ -102,13 +107,27 @@ function renderLessonList() {
         let chapterHtml = `<section><h2 class="text-2xl font-bold text-theme-blue mb-4">${chapter.title}</h2><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">`;
         chapter.lessons.forEach(lesson => {
             const iconClass = chapter.icon || 'fas fa-book';
-            chapterHtml += `<div onclick="renderLessonDetail('${chapterKey}', '${lesson.id}')" class="lesson-link"><i class="${iconClass} text-3xl text-theme-red mb-3"></i><h4 class="font-semibold text-theme-blue">${lesson.title}</h4></div>`;
+            const slideEmbedUrl = convertGoogleSlideToEmbedUrl(lesson.gdrive_embed);
+
+            chapterHtml += `
+                <div onclick="renderLessonDetail('${chapterKey}', '${lesson.id}')" class="lesson-link">
+                    <i class="${iconClass} text-3xl text-theme-red mb-3"></i>
+                    <h4 class="font-semibold text-theme-blue">${lesson.title}</h4>
+                    
+                    ${slideEmbedUrl ? `
+                        <span 
+                            class="slide-icon" 
+                            title="Xem bài giảng trình chiếu" 
+                            onclick="event.stopPropagation(); window.open('${slideEmbedUrl}', '_blank');">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </span>
+                    ` : ''}
+                </div>`;
         });
         chapterHtml += `</div></section>`;
         chaptersContainer.innerHTML += chapterHtml;
     }
 }
-
 
 /**
  * [CẬP NHẬT] Hiển thị chi tiết một bài học với giao diện mới hoàn toàn
