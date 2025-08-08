@@ -133,15 +133,16 @@ function renderLessonDetail(chapterKey, lessonId) {
     
     const backButtonHtml = `<a href="#" onclick="showLessonList(); return false;" class="back-button"><i class="fas fa-arrow-left mr-2"></i> Quay lại danh sách</a>`;
 
+    // [CẬP NHẬT] Thêm class 'text-center' và màu chữ cho tiêu đề
     const headerHtml = `
-        <header class="lesson-header">
-            <h1 class="text-4xl sm:text-5xl font-bold text-theme-blue">${lesson.title}</h1>
+        <header class="lesson-header text-center">
+            <h1 class="text-4xl sm:text-5xl font-bold text-theme-red">${lesson.title}</h1>
             <p class="text-lg text-gray-500 mt-2">${lessonsData[chapterKey].title}</p>
         </header>`;
 
     const imageHtml = lesson.image ? `<div class="my-8 rounded-lg overflow-hidden shadow-lg"><img src="${lesson.image}" alt="Hình ảnh bài học: ${lesson.title}" class="w-full h-auto max-h-96 object-cover"></div>` : '';
 
-    // [CẬP NHẬT] Sử dụng cấu trúc HTML và class mới cho phần mục tiêu
+    // [CẬP NHẬT] Thêm icon vào phần mục tiêu
     const objectivesHtml = `
         <details class="info-card" open>
             <summary class="info-card-header">
@@ -156,7 +157,7 @@ function renderLessonDetail(chapterKey, lessonId) {
             </div>
         </details>`;
     
-    // [CẬP NHẬT] Sử dụng cấu trúc HTML và class mới cho phần nội dung cốt lõi
+    // [CẬP NHẬT] Thêm icon vào phần nội dung cốt lõi
     const coreContentHtml = `
         <details class="info-card">
             <summary class="info-card-header">
