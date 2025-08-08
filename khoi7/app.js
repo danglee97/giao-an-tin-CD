@@ -134,44 +134,40 @@ function renderLessonDetail(chapterKey, lessonId) {
     
     currentQuizData = lessonDetails.quiz || [];
     
-    // [CẬP NHẬT] Nút quay lại có khung
-    const backButtonHtml = `<a href="#" onclick="showLessonList(); return false;" class="inline-flex items-center gap-2 bg-white text-gray-700 font-semibold py-2 px-4 rounded-full border border-gray-300 shadow-sm hover:bg-gray-100 transition-all duration-300 mb-8">
-                                <i class="fas fa-arrow-left"></i>
-                                <span>Quay lại danh sách</span>
-                            </a>`;
+    const backButtonHtml = `<a href="#" onclick="showLessonList(); return false;" class="back-button"><i class="fas fa-arrow-left mr-2"></i> Quay lại danh sách</a>`;
 
-    // [CẬP NHẬT] Header được căn giữa
     const headerHtml = `
-        <header class="lesson-header text-center">
+        <header class="lesson-header">
             <h1 class="text-4xl sm:text-5xl font-bold text-theme-blue">${lesson.title}</h1>
             <p class="text-lg text-gray-500 mt-2">${lessonsData[chapterKey].title}</p>
         </header>`;
 
     const imageHtml = lesson.image ? `<div class="my-8 rounded-lg overflow-hidden shadow-lg"><img src="${lesson.image}" alt="Hình ảnh bài học: ${lesson.title}" class="w-full h-auto max-h-96 object-cover"></div>` : '';
 
-    // [CẬP NHẬT] Thiết kế lại các mục tiêu và nội dung cốt lõi gọn gàng hơn
+    // [CẬP NHẬT] Sử dụng cấu trúc HTML và class mới cho phần mục tiêu
     const objectivesHtml = `
-        <details class="knowledge-section-compact" open>
-            <summary class="knowledge-summary-compact">
-                <i class="fas fa-bullseye-pointer text-lg text-blue-600"></i>
-                <span class="font-semibold text-gray-800">Mục tiêu bài học</span>
-                <i class="fas fa-chevron-down arrow ml-auto text-gray-500"></i>
+        <details class="info-card" open>
+            <summary class="info-card-header">
+                <i class="fas fa-bullseye-pointer text-lg text-theme-red"></i>
+                <span class="font-bold text-gray-800">Mục tiêu bài học</span>
+                <i class="fas fa-chevron-right arrow ml-auto"></i>
             </summary>
-            <div class="knowledge-content-compact">
+            <div class="info-card-content">
                 <ul class="list-disc list-inside space-y-2 text-gray-700">
                     ${lessonDetails.objectives.map(obj => `<li>${obj}</li>`).join('')}
                 </ul>
             </div>
         </details>`;
     
+    // [CẬP NHẬT] Sử dụng cấu trúc HTML và class mới cho phần nội dung cốt lõi
     const coreContentHtml = `
-        <details class="knowledge-section-compact">
-            <summary class="knowledge-summary-compact">
-                <i class="fas fa-book-sparkles text-lg text-green-600"></i>
-                <span class="font-semibold text-gray-800">Nội dung cốt lõi</span>
-                <i class="fas fa-chevron-down arrow ml-auto text-gray-500"></i>
+        <details class="info-card">
+            <summary class="info-card-header">
+                 <i class="fas fa-book-open-reader text-lg text-theme-red"></i>
+                <span class="font-bold text-gray-800">Nội dung cốt lõi</span>
+                <i class="fas fa-chevron-right arrow ml-auto"></i>
             </summary>
-            <div class="knowledge-content-compact">
+            <div class="info-card-content">
                 <ul class="list-disc list-inside space-y-2 text-gray-700">
                     ${(lessonDetails.core_content && lessonDetails.core_content.length > 0) ? lessonDetails.core_content.map(content => `<li>${content}</li>`).join('') : '<li>Nội dung đang được cập nhật.</li>'}
                 </ul>
