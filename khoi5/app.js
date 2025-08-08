@@ -17,9 +17,9 @@ let currentQuizData = [];
 // --- FUNCTIONS ---
 
 /**
- * [MỚI] Chuyển đổi link YouTube thông thường sang link nhúng (embed)
+ * Chuyển đổi link YouTube thông thường sang link nhúng (embed)
  * @param {string} url - Link YouTube gốc
- * @returns {string} - Link YouTube đã được chuyển đổi sang định dạng embed
+ * @returns {string} - Link YouTube đã được chuyển đổi
  */
 function convertToEmbedUrl(url) {
     if (!url || typeof url !== 'string') return "";
@@ -49,6 +49,28 @@ function convertToEmbedUrl(url) {
     }
     // Trả về URL gốc nếu không thể chuyển đổi
     return url;
+}
+
+/**
+ * [MỚI] Chuyển đổi link Google Slides thông thường sang link nhúng (embed)
+ * @param {string} url - Link Google Slides gốc
+ * @returns {string} - Link Google Slides đã được chuyển đổi
+ */
+function convertGoogleSlideToEmbedUrl(url) {
+    if (!url || typeof url !== 'string' || !url.includes('docs.google.com/presentation')) {
+        return ""; // Trả về rỗng nếu không phải link Google Slides hợp lệ
+    }
+    // Nếu đã là link embed thì giữ nguyên
+    if (url.includes('/embed')) {
+        return url;
+    }
+    // Trích xuất ID của bài trình chiếu từ link
+    const match = url.match(/\/d\/(.*?)\//);
+    if (match && match[1]) {
+        const presentationId = match[1];
+        return `https://docs.google.com/presentation/d/${presentationId}/embed?start=false&loop=false&delayms=3000`;
+    }
+    return ""; // Trả về rỗng nếu không thể trích xuất ID
 }
 
 
@@ -125,8 +147,8 @@ function renderLessonDetail(chapterKey, lessonId) {
     
     const imageHtml = lesson.image ? `<div class="mb-8 rounded-lg overflow-hidden shadow-lg"><img src="${lesson.image}" alt="Hình ảnh bài học: ${lesson.title}" class="w-full h-auto max-h-96 object-cover"></div>` : '';
     
-    // [CẬP NHẬT] Gọi hàm convertToEmbedUrl cho cả gdrive và video
-    const gdriveEmbedUrl = lesson.gdrive_embed; // Giả sử link gdrive đã đúng định dạng embed
+    // [CẬP NHẬT] Gọi hàm chuyển đổi cho cả hai loại link
+    const gdriveEmbedUrl = convertGoogleSlideToEmbedUrl(lesson.gdrive_embed);
     const videoEmbedUrl = convertToEmbedUrl(lesson.video_embed);
 
     const fullDetailHtml = `
@@ -159,20 +181,87 @@ function renderLessonDetail(chapterKey, lessonId) {
     window.scrollTo(0, 0);
 }
 
-function renderConsolidationHtml(lessonDetails) { 
-    const hasActivities = lessonDetails.activities && lessonDetails.activities.length > 0;
+/**
+ * [MỚI] Tạo HTML cho tab "Củng cố bài học"
+ */
+function renderConsolidationHtml(lessonDetails) {
     const hasAnswerKeys = lessonDetails.answer_keys && Object.keys(lessonDetails.answer_keys).length > 0;
-    if (!hasActivities && !hasAnswerKeys) {
+
+    if (!hasAnswerKeys) {
         return '<p class="text-center text-gray-500 p-8">Nội dung củng cố đang được cập nhật.</p>';
     }
-    let activitiesHtml = hasActivities ? `...` : ''; // Giữ nguyên cho ngắn gọn
-    let answerKeysHtml = hasAnswerKeys ? `...` : ''; // Giữ nguyên cho ngắn gọn
-    return activitiesHtml + answerKeysHtml;
+
+    let answerKeysHtml = `
+        <div class="consolidation-section">
+            <h3 class="consolidation-title">Gợi ý trả lời</h3>
+            <div class="consolidation-content space-y-2">
+                ${lessonDetails.answer_keys.luyen_tap ? `<div><p class="font-bold">Luyện tập:</p><ul class="list-disc pl-5">${lessonDetails.answer_keys.luyen_tap.map(answer => `<li>${answer}</li>`).join('')}</ul></div>` : ''}
+                ${lessonDetails.answer_keys.van_dung ? `<div><p class="font-bold">Vận dụng:</p><p class="pl-5">${lessonDetails.answer_keys.van_dung}</p></div>` : ''}
+            </div>
+        </div>`;
+
+    return answerKeysHtml;
 }
-function renderQuizHtml() { /* ... Giữ nguyên ... */ }
-function showLessonList() { /* ... Giữ nguyên ... */ }
-function selectAnswer(questionIndex, optionIndex) { /* ... Giữ nguyên ... */ }
-function checkQuiz() { /* ... Giữ nguyên ... */ }
+
+
+function renderQuizHtml() {
+    if (currentQuizData.length === 0) {
+        return '<p class="text-center text-gray-500 p-8">Không có bài trắc nghiệm cho bài học này.</p>';
+    }
+    return `
+        <div id="quiz-container" class="space-y-6">
+            ${currentQuizData.map((q, index) => `
+                <div class="quiz-question" id="question-${index}">
+                    <p class="font-semibold text-lg mb-3">${index + 1}. ${q.question}</p>
+                    <div class="quiz-options space-y-2">
+                        ${q.options.map((opt, optIndex) => `<button onclick="selectAnswer(${index}, ${optIndex})" class="quiz-option">${opt}</button>`).join('')}
+                    </div>
+                </div>`).join('')}
+        </div>
+        <div class="mt-6 text-center">
+            <button onclick="checkQuiz()" class="bg-theme-red text-white font-bold py-2 px-6 rounded-lg hover:bg-opacity-90 transition-colors">Kiểm tra đáp án</button>
+            <p id="quiz-result" class="mt-3 font-bold text-lg"></p>
+        </div>`;
+}
+
+function showLessonList() {
+    lessonDetailView.style.display = 'none';
+    lessonListView.style.display = 'block';
+    window.scrollTo(0, 0);
+}
+
+function selectAnswer(questionIndex, optionIndex) {
+    const questionDiv = document.getElementById(`question-${questionIndex}`);
+    if (!questionDiv) return;
+    questionDiv.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('selected'));
+    const selectedButton = questionDiv.querySelectorAll('.quiz-option')[optionIndex];
+    selectedButton.classList.add('selected');
+}
+
+function checkQuiz() {
+    let score = 0;
+    currentQuizData.forEach((q, index) => {
+        const questionDiv = document.getElementById(`question-${index}`);
+        const options = questionDiv.querySelectorAll('.quiz-option');
+        const selectedButton = questionDiv.querySelector('.quiz-option.selected');
+        options.forEach(btn => btn.disabled = true);
+        if (selectedButton) {
+            const selectedAnswerIndex = Array.from(options).indexOf(selectedButton);
+            if (selectedAnswerIndex === q.answer) {
+                score++;
+                selectedButton.classList.add('correct');
+            } else {
+                selectedButton.classList.add('incorrect');
+                options[q.answer].classList.add('correct');
+            }
+        } else {
+            options[q.answer].classList.add('correct');
+        }
+    });
+    const resultElement = document.getElementById('quiz-result');
+    resultElement.textContent = `Bạn đã trả lời đúng ${score} / ${currentQuizData.length} câu!`;
+    resultElement.style.color = (score === currentQuizData.length) ? '#22c55e' : '#ef4444';
+}
 
 // Chạy hàm fetchData khi trang được tải xong
 document.addEventListener('DOMContentLoaded', fetchData);
