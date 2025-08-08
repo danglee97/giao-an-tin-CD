@@ -1,194 +1,288 @@
-// Lựa chọn các phần tử DOM
+// --- LOGIC ỨNG DỤNG ---
+
+// DOM Elements
 const chaptersContainer = document.getElementById('chapters-container');
 const lessonListView = document.getElementById('lesson-list-view');
 const lessonDetailView = document.getElementById('lesson-detail-view');
+const resourceLinksContainer = document.getElementById('resource-links-container');
 
-// Biến toàn cục để theo dõi trạng thái
-let currentActivities = [];
-let activityStatus = {};
+// URL API từ Google Apps Script
+const GOOGLE_SHEET_API_URL = 'https://script.google.com/macros/s/AKfycbxKUqMQEeMgIqW-yLjWseiigbrFK23RlwyIxQy8CHG7yBn_46wIMgJOQ_CUl6OE5jQp/exec';
+
+// Global State
+let lessonsData = {};
+let allDetails = {};
+let currentQuizData = [];
+
+// --- FUNCTIONS ---
+
+function convertToEmbedUrl(url) {
+    if (!url || typeof url !== 'string') return "";
+    try {
+        const urlObj = new URL(url);
+        let videoId = null;
+        if (urlObj.hostname.includes('youtube.com') && urlObj.pathname === '/watch') {
+            videoId = urlObj.searchParams.get('v');
+        } else if (urlObj.hostname.includes('youtu.be')) {
+            videoId = urlObj.pathname.slice(1);
+        } else if (urlObj.hostname.includes('youtube.com') && urlObj.pathname.startsWith('/embed/')) {
+            return url;
+        }
+        if (videoId) { return `https://www.youtube.com/embed/${videoId}`; }
+    } catch (e) { console.error("URL video không hợp lệ:", url, e); return ""; }
+    return url;
+}
+
+function convertGoogleSlideToEmbedUrl(url) {
+    if (!url || typeof url !== 'string' || !url.includes('docs.google.com/presentation')) { return ""; }
+    if (url.includes('/embed')) { return url; }
+    const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
+    if (match && match[1]) {
+        const presentationId = match[1];
+        return `https://docs.google.com/presentation/d/${presentationId}/embed?start=false&loop=false&delayms=3000`;
+    }
+    console.error("Không thể trích xuất ID từ link Google Slides:", url);
+    return "";
+}
+
+async function fetchData() {
+    // ... (Phần này giữ nguyên, không thay đổi)
+    if (GOOGLE_SHEET_API_URL === 'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY' || !GOOGLE_SHEET_API_URL) {
+        chaptersContainer.innerHTML = `<div class="text-center p-6 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg"><h3 class="font-bold text-lg mb-2">Lỗi Cấu Hình!</h3><p>Bạn chưa cập nhật URL của Google Sheet API trong tệp <strong>app.js</strong>.</p><p class="mt-1">Vui lòng thay thế dòng chữ <code>'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY'</code> bằng URL ứng dụng web bạn đã nhận được từ Google Apps Script.</p></div>`;
+        return;
+    }
+    chaptersContainer.innerHTML = '<p class="text-center text-gray-500 animate-pulse">Đang tải dữ liệu bài học...</p>';
+    try {
+        const response = await fetch(GOOGLE_SHEET_API_URL);
+        if (!response.ok) throw new Error(`Lỗi mạng: ${response.statusText}`);
+        const data = await response.json();
+        if (data.error) throw new Error(`Lỗi từ Google Script: ${data.error}`);
+        if (!data.lessonsData) throw new Error('Dữ liệu không hợp lệ từ Google Sheet.');
+        lessonsData = data.lessonsData;
+        allDetails = data.allDetails;
+        renderLessonList();
+    } catch (error) {
+        chaptersContainer.innerHTML = `<div class="text-center p-6 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg"><h3 class="font-bold text-lg mb-2">Không thể tải dữ liệu!</h3><p>Đã xảy ra lỗi. Vui lòng kiểm tra lại URL API và cài đặt Google Sheet.</p><p class="mt-3 text-xs font-mono bg-red-50 p-2 rounded">Chi tiết lỗi: ${error.message}</p></div>`;
+        console.error("Lỗi khi lấy dữ liệu:", error);
+    }
+}
+
+function getLessonDetails(lessonId) {
+    return allDetails[lessonId] || { "objectives": ["Nội dung đang được cập nhật."], "core_content": [], "quiz": [], "answer_keys": {} };
+}
+
+function openTab(evt, tabName) {
+    const tabcontent = lessonDetailView.getElementsByClassName("tab-content");
+    for (let i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    const tablinks = lessonDetailView.getElementsByClassName("tab-button");
+    for (let i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
+function renderResourceLinks() {
+    const gradeInfo = { sgk_pdf: "SGK- Tinhoc7 - KetNoiTriThuc.pdf", sgv_pdf: "SGV- Tinhoc7 - KetNoiTriThuc.pdf" };
+    if (!resourceLinksContainer) return;
+    let linksHtml = `<div class="flex justify-center items-center gap-4 flex-wrap">
+        <a href="${gradeInfo.sgk_pdf}" target="_blank" class="bg-theme-blue text-white font-semibold py-2 px-5 rounded-md hover:bg-opacity-90 transition-colors flex items-center gap-2 border border-gray-300 shadow-sm"><i class="fas fa-book-open"></i><span>Xem Sách Giáo Khoa</span></a>
+        <a href="${gradeInfo.sgv_pdf}" target="_blank" class="bg-theme-red text-white font-semibold py-2 px-5 rounded-md hover:bg-opacity-90 transition-colors flex items-center gap-2 border border-gray-300 shadow-sm"><i class="fas fa-user-tie"></i><span>Xem Sách Giáo Viên</span></a>
+    </div>`;
+    resourceLinksContainer.innerHTML = linksHtml;
+}
+
 
 /**
- * Hiển thị danh sách các chủ đề và bài học
+ * [CẬP NHẬT] Hiển thị danh sách các chủ đề và bài học với nút xem slide
  */
 function renderLessonList() {
-    if (!chaptersContainer) return;
+    if (!chaptersContainer || Object.keys(lessonsData).length === 0) return;
+    renderResourceLinks();
     chaptersContainer.innerHTML = '';
     for (const chapterKey in lessonsData) {
         const chapter = lessonsData[chapterKey];
-        let chapterHtml = `
-            <div>
-                <h2 class="text-2xl font-bold text-theme-blue mb-4">${chapter.title}</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        `;
+        let chapterHtml = `<section><h2 class="text-2xl font-bold text-theme-blue mb-4">${chapter.title}</h2><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">`;
         chapter.lessons.forEach(lesson => {
-            // Lấy icon của chương, nếu không có thì dùng icon mặc định
-            const iconClass = chapter.icon || 'fas fa-book-open';
+            const iconClass = chapter.icon || 'fas fa-book';
+            const slideEmbedUrl = convertGoogleSlideToEmbedUrl(lesson.gdrive_embed);
 
             chapterHtml += `
-                <div onclick="renderLessonDetail('${chapterKey}', '${lesson.id}')" class="lesson-link cursor-pointer bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col items-center text-center">
+                <div onclick="renderLessonDetail('${chapterKey}', '${lesson.id}')" class="lesson-link">
                     <i class="${iconClass} text-3xl text-theme-red mb-3"></i>
                     <h4 class="font-semibold text-theme-blue">${lesson.title}</h4>
-            `;
-            if (lesson.gdrive_embed) {
-                chapterHtml += `
-                    <span onclick="event.stopPropagation(); window.open('${lesson.gdrive_embed}', '_blank');" class="slide-icon" title="Mở bài giảng Slide">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                    </span>
-                `;
-            }
-            chapterHtml += `</div>`;
+                    
+                    ${slideEmbedUrl ? `
+                        <span 
+                            class="slide-icon" 
+                            title="Xem bài giảng trình chiếu" 
+                            onclick="event.stopPropagation(); window.open('${slideEmbedUrl}', '_blank');">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </span>
+                    ` : ''}
+                </div>`;
         });
-        chapterHtml += `</div></div>`;
+        chapterHtml += `</div></section>`;
         chaptersContainer.innerHTML += chapterHtml;
     }
 }
 
 /**
- * Hiển thị chi tiết một bài học cụ thể
- * @param {string} chapterKey - Khóa của chủ đề (ví dụ: 'A')
- * @param {string} lessonId - ID của bài học (ví dụ: 'A1')
+ * [CẬP NHẬT] Hiển thị chi tiết một bài học với giao diện mới hoàn toàn
  */
 function renderLessonDetail(chapterKey, lessonId) {
     const lesson = lessonsData[chapterKey].lessons.find(l => l.id === lessonId);
     const lessonDetails = getLessonDetails(lessonId);
     if (!lesson) return;
+    
+    currentQuizData = lessonDetails.quiz || [];
+    
+    const backButtonHtml = `<a href="#" onclick="showLessonList(); return false;" class="back-button"><i class="fas fa-arrow-left mr-2"></i> Quay lại danh sách</a>`;
 
-    currentActivities = lessonDetails.activities.map((_, index) => `activity-${index + 1}`);
-    activityStatus = {};
-    currentActivities.forEach(id => activityStatus[id] = 'pending');
-
-    let contentDisplayHtml = '';
-    if (lesson.gdrive_embed) {
-        contentDisplayHtml = `
-            <div class="relative w-full mb-8 shadow-lg rounded-2xl overflow-hidden" style="padding-top: 56.25%;"> <!-- 16:9 Aspect Ratio -->
-                <iframe class="absolute top-0 left-0 w-full h-full" src="${lesson.gdrive_embed}" frameborder="0" allowfullscreen="true"></iframe>
-            </div>
-        `;
-    } else {
-        contentDisplayHtml = `<img src="${lesson.image}" alt="Hình ảnh minh họa cho ${lesson.title}" class="w-full h-64 object-cover rounded-2xl mb-8 shadow-lg">`;
-    }
-
-    let detailHtml = `
-        <button onclick="showLessonList()" class="mb-6 bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors">
-            <i class="fas fa-arrow-left mr-2"></i>Quay lại Danh sách bài học
-        </button>
-        <div class="text-center mb-8">
-            <a href="../index.html">
-                <img src="../logo.jpg" alt="Viet Anh School Logo" class="h-20 w-auto mx-auto mb-4" onerror="this.src='https://placehold.co/150x150/002060/FFFFFF?text=VA'; this.onerror=null;">
-            </a>
-            <h1 class="text-3xl sm:text-4xl font-bold text-theme-blue">${lesson.title}</h1>
+    const headerHtml = `
+        <header class="lesson-header">
+            <h1 class="text-4xl sm:text-5xl font-bold text-theme-blue">${lesson.title}</h1>
             <p class="text-lg text-gray-500 mt-2">${lessonsData[chapterKey].title}</p>
-        </div>
-        ${contentDisplayHtml}
-        <div class="mb-8">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">Tiến trình tổng thể</h3>
-            <div class="w-full bg-gray-200 rounded-full h-4">
-                <div id="progress-bar" class="bg-theme-red h-4 rounded-full progress-bar-fill" style="width: 0%"></div>
-            </div>
-        </div>
-        <div class="space-y-4 mb-8">
-             <details class="bg-gray-50 rounded-lg p-4">
-                <summary class="font-bold text-theme-blue text-lg flex justify-between items-center">
-                    <span><i class="fas fa-bullseye mr-3 text-theme-red"></i>Mục tiêu bài học</span>
-                    <i class="fas fa-chevron-right arrow"></i>
-                </summary>
-                <ul class="list-disc list-inside space-y-2 text-gray-700 mt-4 pl-5">
-                    ${lessonDetails.objectives.map(obj => `<li>${obj}</li>`).join('')}
-                </ul>
-            </details>
-            <details class="bg-gray-50 rounded-lg p-4">
-                <summary class="font-bold text-theme-blue text-lg flex justify-between items-center">
-                    <span><i class="fas fa-book-reader mr-3 text-theme-red"></i>Nội dung cốt lõi</span>
-                    <i class="fas fa-chevron-right arrow"></i>
-                </summary>
-                <ul class="list-disc list-inside space-y-2 text-gray-700 mt-4 pl-5">
-                    ${(lessonDetails.core_content && lessonDetails.core_content.length > 0) ? lessonDetails.core_content.map(content => `<li>${content}</li>`).join('') : '<li>Nội dung đang được cập nhật.</li>'}
-                </ul>
-            </details>
-            <details class="bg-gray-50 rounded-lg p-4">
-                <summary class="font-bold text-theme-blue text-lg flex justify-between items-center">
-                    <span><i class="fas fa-lightbulb mr-3 text-theme-red"></i>Gợi ý trả lời</span>
-                    <i class="fas fa-chevron-right arrow"></i>
-                </summary>
-                <div class="mt-4 pl-5 space-y-3 text-gray-700">
-                     ${(lessonDetails.answer_keys && Object.keys(lessonDetails.answer_keys).length > 0) ? `
-                        ${lessonDetails.answer_keys.luyen_tap ? `<div><h4 class="font-semibold">Luyện tập:</h4><ul class="list-decimal list-inside ml-4">${lessonDetails.answer_keys.luyen_tap.map(answer => `<li>${answer}</li>`).join('')}</ul></div>` : ''}
-                        ${lessonDetails.answer_keys.van_dung ? `<div><h4 class="font-semibold">Vận dụng:</h4><p class="ml-4">${lessonDetails.answer_keys.van_dung}</p></div>` : ''}
-                        ${lessonDetails.answer_keys.tu_kiem_tra ? `<div><h4 class="font-semibold">Tự kiểm tra:</h4><ul class="list-decimal list-inside ml-4">${lessonDetails.answer_keys.tu_kiem_tra.map(answer => `<li>${answer}</li>`).join('')}</ul></div>` : ''}
-                    ` : '<p>Nội dung đang được cập nhật.</p>'}
+        </header>`;
+
+    const imageHtml = lesson.image ? `<div class="my-8 rounded-lg overflow-hidden shadow-lg"><img src="${lesson.image}" alt="Hình ảnh bài học: ${lesson.title}" class="w-full h-auto max-h-96 object-cover"></div>` : '';
+
+    const objectivesHtml = `
+        <details class="knowledge-section" open>
+            <summary class="knowledge-summary">
+                <div class="summary-title">
+                    <span class="summary-icon bg-blue-100 text-blue-600"><i class="fas fa-bullseye-pointer"></i></span>
+                    Mục tiêu bài học
                 </div>
-            </details>
-        </div>
-        <div>
-            <h2 class="text-2xl font-bold text-theme-blue mb-6 border-b-2 pb-2 border-theme-blue">Chi tiết các Hoạt động</h2>
-            <div class="space-y-6">
-                ${lessonDetails.activities.map((activity, index) => `
-                    <div id="activity-${index + 1}" class="activity-card status-pending bg-white p-6 rounded-lg shadow-md">
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-                            <h3 class="text-xl font-bold text-gray-900">${activity.name}</h3>
-                            <span class="text-sm font-semibold text-gray-500 mt-2 sm:mt-0"><i class="far fa-clock mr-1"></i>Thời lượng: ${activity.duration} phút</span>
-                        </div>
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <div>
-                                <h4 class="font-semibold text-gray-700 mb-2"><i class="fas fa-chalkboard-teacher mr-2"></i>Nhiệm vụ của Giáo viên</h4>
-                                <ul class="space-y-2 text-sm">${activity.teacher_tasks.map(task => `<li class="flex items-start"><input type="checkbox" class="mr-2 mt-1 flex-shrink-0"><span>${task}</span></li>`).join('')}</ul>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-700 mb-2"><i class="fas fa-user-graduate mr-2"></i>Hoạt động của Học sinh</h4>
-                                <ul class="space-y-2 text-sm">${activity.student_tasks.map(task => `<li class="flex items-start"><input type="checkbox" class="mr-2 mt-1 flex-shrink-0"><span>${task}</span></li>`).join('')}</ul>
-                            </div>
-                        </div>
-                        <div class="mt-6 text-right space-x-2">
-                            <button onclick="updateStatus('activity-${index + 1}', 'pending')" class="px-3 py-1 text-xs font-medium text-gray-700 bg-gray-200 rounded-full">Chưa bắt đầu</button>
-                            <button onclick="updateStatus('activity-${index + 1}', 'in-progress')" class="px-3 py-1 text-xs font-medium text-amber-800 bg-amber-100 rounded-full">Đang diễn ra</button>
-                            <button onclick="updateStatus('activity-${index + 1}', 'completed')" class="px-3 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">Hoàn thành</button>
-                        </div>
-                    </div>
-                `).join('')}
+                <i class="fas fa-chevron-down arrow"></i>
+            </summary>
+            <div class="knowledge-content"><ul class="list-disc list-inside space-y-2">${lessonDetails.objectives.map(obj => `<li>${obj}</li>`).join('')}</ul></div>
+        </details>`;
+    
+    const coreContentHtml = `
+        <details class="knowledge-section">
+            <summary class="knowledge-summary">
+                <div class="summary-title">
+                    <span class="summary-icon bg-green-100 text-green-600"><i class="fas fa-book-sparkles"></i></span>
+                    Nội dung cốt lõi
+                </div>
+                <i class="fas fa-chevron-down arrow"></i>
+            </summary>
+            <div class="knowledge-content"><ul class="list-disc list-inside space-y-2">${(lessonDetails.core_content && lessonDetails.core_content.length > 0) ? lessonDetails.core_content.map(content => `<li>${content}</li>`).join('') : '<li>Nội dung đang được cập nhật.</li>'}</ul></div>
+        </details>`;
+
+    const gdriveEmbedUrl = convertGoogleSlideToEmbedUrl(lesson.gdrive_embed);
+    const videoEmbedUrl = convertToEmbedUrl(lesson.video_embed);
+
+    const tabsHtml = `
+        <div class="w-full mt-10">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="openTab(event, 'tab-slideshow')"><i class="fas fa-chalkboard-teacher mr-2"></i>Bài giảng trình chiếu</button>
+                <button class="tab-button" onclick="openTab(event, 'tab-video')"><i class="fab fa-youtube mr-2"></i>Video bài giảng</button>
+                <button class="tab-button" onclick="openTab(event, 'tab-quiz')"><i class="fas fa-tasks mr-2"></i>Luyện tập trắc nghiệm</button>
+                <button class="tab-button" onclick="openTab(event, 'tab-consolidation')"><i class="fas fa-star mr-2"></i>Củng cố bài học</button>
             </div>
-        </div>
-    `;
-    lessonDetailView.innerHTML = detailHtml;
+            <div id="tab-slideshow" class="tab-content active">${gdriveEmbedUrl ? `<div class="video-container"><iframe src="${gdriveEmbedUrl}" frameborder="0" allowfullscreen="true"></iframe></div>` : `<p class="text-center text-gray-500 p-8">Không có bài giảng cho bài học này.</p>`}</div>
+            <div id="tab-video" class="tab-content">${videoEmbedUrl ? `<div class="video-container"><iframe src="${videoEmbedUrl}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>` : `<p class="text-center text-gray-500 p-8">Không có video cho bài học này.</p>`}</div>
+            <div id="tab-quiz" class="tab-content">${renderQuizHtml()}</div>
+            <div id="tab-consolidation" class="tab-content">${renderConsolidationHtml(lessonDetails)}</div>
+        </div>`;
+
+    const fullDetailHtml = `
+        ${backButtonHtml}
+        ${headerHtml}
+        <main class="space-y-4">
+            ${imageHtml}
+            ${objectivesHtml}
+            ${coreContentHtml}
+            ${tabsHtml}
+            <div class="mt-12">
+                ${backButtonHtml}
+            </div>
+        </main>`;
+
+    lessonDetailView.innerHTML = fullDetailHtml;
     lessonListView.style.display = 'none';
     lessonDetailView.style.display = 'block';
     window.scrollTo(0, 0);
 }
 
-/**
- * Quay lại màn hình danh sách bài học
- */
+
+function renderConsolidationHtml(lessonDetails) { 
+    const hasAnswerKeys = lessonDetails.answer_keys && Object.keys(lessonDetails.answer_keys).length > 0;
+    if (!hasAnswerKeys) {
+        return '<p class="text-center text-gray-500 p-8">Nội dung củng cố đang được cập nhật.</p>';
+    }
+    return `
+        <div class="consolidation-section">
+            <h3 class="consolidation-title">Gợi ý trả lời</h3>
+            <div class="consolidation-content space-y-4">
+                ${lessonDetails.answer_keys.luyen_tap ? `<div><p class="font-bold text-gray-800">Luyện tập:</p><ul class="list-decimal list-inside ml-4 mt-1">${lessonDetails.answer_keys.luyen_tap.map(answer => `<li>${answer}</li>`).join('')}</ul></div>` : ''}
+                ${lessonDetails.answer_keys.van_dung ? `<div><p class="font-bold text-gray-800">Vận dụng:</p><p class="ml-4 mt-1">${lessonDetails.answer_keys.van_dung}</p></div>` : ''}
+            </div>
+        </div>`;
+}
+
+function renderQuizHtml() {
+    if (currentQuizData.length === 0) {
+        return '<p class="text-center text-gray-500 p-8">Không có bài trắc nghiệm cho bài học này.</p>';
+    }
+    return `
+        <div id="quiz-container" class="space-y-6">
+            ${currentQuizData.map((q, index) => `
+                <div class="quiz-question" id="question-${index}">
+                    <p class="font-semibold text-lg mb-3">${index + 1}. ${q.question}</p>
+                    <div class="quiz-options space-y-2">
+                        ${q.options.map((opt, optIndex) => `<button onclick="selectAnswer(${index}, ${optIndex})" class="quiz-option">${opt}</button>`).join('')}
+                    </div>
+                </div>`).join('')}
+        </div>
+        <div class="mt-6 text-center">
+            <button onclick="checkQuiz()" class="bg-theme-red text-white font-bold py-2 px-6 rounded-lg hover:bg-opacity-90 transition-colors">Kiểm tra đáp án</button>
+            <p id="quiz-result" class="mt-3 font-bold text-lg"></p>
+        </div>`;
+}
+
 function showLessonList() {
     lessonDetailView.style.display = 'none';
     lessonListView.style.display = 'block';
     window.scrollTo(0, 0);
 }
 
-/**
- * Cập nhật trạng thái của một hoạt động
- * @param {string} activityId - ID của thẻ hoạt động
- * @param {string} newStatus - Trạng thái mới ('pending', 'in-progress', 'completed')
- */
-function updateStatus(activityId, newStatus) {
-    const card = document.getElementById(activityId);
-    if (!card) return;
-    activityStatus[activityId] = newStatus;
-    card.classList.remove('status-pending', 'status-in-progress', 'status-completed');
-    card.classList.add(`status-${newStatus}`);
-    updateProgressBar();
+function selectAnswer(questionIndex, optionIndex) {
+    const questionDiv = document.getElementById(`question-${questionIndex}`);
+    if (!questionDiv) return;
+    questionDiv.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('selected'));
+    const selectedButton = questionDiv.querySelectorAll('.quiz-option')[optionIndex];
+    selectedButton.classList.add('selected');
 }
 
-/**
- * Cập nhật thanh tiến trình tổng thể
- */
-function updateProgressBar() {
-    if (currentActivities.length === 0) return;
-    const completedCount = Object.values(activityStatus).filter(status => status === 'completed').length;
-    const progressPercentage = (completedCount / currentActivities.length) * 100;
-    const progressBar = document.getElementById('progress-bar');
-    if (progressBar) {
-        progressBar.style.width = `${progressPercentage}%`;
-    }
+function checkQuiz() {
+    let score = 0;
+    currentQuizData.forEach((q, index) => {
+        const questionDiv = document.getElementById(`question-${index}`);
+        const options = questionDiv.querySelectorAll('.quiz-option');
+        const selectedButton = questionDiv.querySelector('.quiz-option.selected');
+        options.forEach(btn => btn.disabled = true);
+        if (selectedButton) {
+            const selectedAnswerIndex = Array.from(options).indexOf(selectedButton);
+            if (selectedAnswerIndex === q.answer) {
+                score++;
+                selectedButton.classList.add('correct');
+            } else {
+                selectedButton.classList.add('incorrect');
+                options[q.answer].classList.add('correct');
+            }
+        } else {
+            options[q.answer].classList.add('correct');
+        }
+    });
+    const resultElement = document.getElementById('quiz-result');
+    resultElement.textContent = `Bạn đã trả lời đúng ${score} / ${currentQuizData.length} câu!`;
+    resultElement.style.color = (score === currentQuizData.length) ? '#22c55e' : '#ef4444';
 }
 
-// Lắng nghe sự kiện khi trang đã tải xong và hiển thị danh sách bài học
-document.addEventListener('DOMContentLoaded', renderLessonList);
+// Chạy hàm fetchData khi trang được tải xong
+document.addEventListener('DOMContentLoaded', fetchData);
