@@ -131,7 +131,7 @@ function renderLessonDetail(chapterKey, lessonId) {
     
     currentQuizData = lessonDetails.quiz || [];
     
-    const backButtonHtml = `<a href="#" onclick="showLessonList(); return false;" class="back-button"><i class="fas fa-arrow-left mr-2"></i> Quay lại danh sách</a>`;
+    const backButtonHtml = `<a href="#" onclick="showLessonList(); return false;" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-800 font-semibold rounded-lg shadow-sm hover:bg-gray-200 transition-colors mb-6"><i class="fas fa-arrow-left"></i><span>Quay lại Danh sách bài học</span></a>`;
 
     // [CẬP NHẬT] Thêm class 'text-center' và màu chữ cho tiêu đề
     const headerHtml = `
