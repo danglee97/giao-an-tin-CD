@@ -60,21 +60,19 @@ function convertGoogleSlideToEmbedUrl(url) {
     if (!url || typeof url !== 'string' || !url.includes('docs.google.com/presentation')) {
         return ""; // Trả về rỗng nếu không phải link Google Slides hợp lệ
     }
+    // Nếu đã là link embed thì giữ nguyên
     if (url.includes('/embed')) {
-        return url; // Nếu đã là link embed thì giữ nguyên
+        return url;
     }
-    
-    // [SỬA LỖI] Cải tiến biểu thức chính quy (regex) để trích xuất ID từ nhiều loại link chia sẻ,
-    // bao gồm cả link không có /edit ở cuối.
-    const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
+    // Trích xuất ID của bài trình chiếu từ link
+    const match = url.match(/\/d\/(.*?)\//);
     if (match && match[1]) {
         const presentationId = match[1];
         return `https://docs.google.com/presentation/d/${presentationId}/embed?start=false&loop=false&delayms=3000`;
     }
-
-    console.error("Không thể trích xuất ID từ link Google Slides:", url);
     return ""; // Trả về rỗng nếu không thể trích xuất ID
 }
+
 
 
 async function fetchData() {
