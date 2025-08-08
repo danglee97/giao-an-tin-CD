@@ -251,7 +251,8 @@ function showLessonList() {
 }
 
 function selectAnswer(questionIndex, optionIndex) {
-    const questionDiv = document.getElementById(`question-${index}`);
+    // Sửa lỗi: Thay thế `index` bằng `questionIndex`
+    const questionDiv = document.getElementById(`question-${questionIndex}`); 
     if (!questionDiv) return;
     questionDiv.querySelectorAll('.quiz-option').forEach(btn => btn.classList.remove('selected'));
     const selectedButton = questionDiv.querySelectorAll('.quiz-option')[optionIndex];
