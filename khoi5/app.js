@@ -46,7 +46,6 @@ function convertGoogleSlideToEmbedUrl(url) {
 }
 
 async function fetchData() {
-    // ... (Phần này giữ nguyên, không thay đổi)
     if (GOOGLE_SHEET_API_URL === 'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY' || !GOOGLE_SHEET_API_URL) {
         chaptersContainer.innerHTML = `<div class="text-center p-6 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg"><h3 class="font-bold text-lg mb-2">Lỗi Cấu Hình!</h3><p>Bạn chưa cập nhật URL của Google Sheet API trong tệp <strong>app.js</strong>.</p><p class="mt-1">Vui lòng thay thế dòng chữ <code>'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY'</code> bằng URL ứng dụng web bạn đã nhận được từ Google Apps Script.</p></div>`;
         return;
@@ -125,8 +124,8 @@ function renderLessonDetail(chapterKey, lessonId) {
 
     const headerHtml = `
         <header class="lesson-header">
-            <h1 class="lesson-title-main">${lesson.title}</h1>
-            <p class="lesson-subtitle">${lessonsData[chapterKey].title}</p>
+            <h1 class="text-4xl sm:text-5xl font-bold text-theme-blue">${lesson.title}</h1>
+            <p class="text-lg text-gray-500 mt-2">${lessonsData[chapterKey].title}</p>
         </header>`;
 
     const imageHtml = lesson.image ? `<div class="my-8 rounded-lg overflow-hidden shadow-lg"><img src="${lesson.image}" alt="Hình ảnh bài học: ${lesson.title}" class="w-full h-auto max-h-96 object-cover"></div>` : '';
