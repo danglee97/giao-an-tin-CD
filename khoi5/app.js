@@ -94,10 +94,6 @@ function renderResourceLinks() {
     resourceLinksContainer.innerHTML = linksHtml;
 }
 
-
-/**
- * [CẬP NHẬT] Hiển thị danh sách các chủ đề và bài học với nút xem slide
- */
 function renderLessonList() {
     if (!chaptersContainer || Object.keys(lessonsData).length === 0) return;
     renderResourceLinks();
@@ -107,27 +103,13 @@ function renderLessonList() {
         let chapterHtml = `<section><h2 class="text-2xl font-bold text-theme-blue mb-4">${chapter.title}</h2><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">`;
         chapter.lessons.forEach(lesson => {
             const iconClass = chapter.icon || 'fas fa-book';
-            const slideEmbedUrl = convertGoogleSlideToEmbedUrl(lesson.gdrive_embed);
-
-            chapterHtml += `
-                <div onclick="renderLessonDetail('${chapterKey}', '${lesson.id}')" class="lesson-link">
-                    <i class="${iconClass} text-3xl text-theme-red mb-3"></i>
-                    <h4 class="font-semibold text-theme-blue">${lesson.title}</h4>
-                    
-                    ${slideEmbedUrl ? `
-                        <span 
-                            class="slide-icon" 
-                            title="Xem bài giảng trình chiếu" 
-                            onclick="event.stopPropagation(); window.open('${slideEmbedUrl}', '_blank');">
-                            <i class="fas fa-chalkboard-teacher"></i>
-                        </span>
-                    ` : ''}
-                </div>`;
+            chapterHtml += `<div onclick="renderLessonDetail('${chapterKey}', '${lesson.id}')" class="lesson-link"><i class="${iconClass} text-3xl text-theme-red mb-3"></i><h4 class="font-semibold text-theme-blue">${lesson.title}</h4></div>`;
         });
         chapterHtml += `</div></section>`;
         chaptersContainer.innerHTML += chapterHtml;
     }
 }
+
 
 /**
  * [CẬP NHẬT] Hiển thị chi tiết một bài học với giao diện mới hoàn toàn
@@ -143,8 +125,8 @@ function renderLessonDetail(chapterKey, lessonId) {
 
     const headerHtml = `
         <header class="lesson-header">
-            <h1 class="text-4xl sm:text-5xl font-bold text-theme-blue">${lesson.title}</h1>
-            <p class="text-lg text-gray-500 mt-2">${lessonsData[chapterKey].title}</p>
+            <h1 class="lesson-title-main">${lesson.title}</h1>
+            <p class="lesson-subtitle">${lessonsData[chapterKey].title}</p>
         </header>`;
 
     const imageHtml = lesson.image ? `<div class="my-8 rounded-lg overflow-hidden shadow-lg"><img src="${lesson.image}" alt="Hình ảnh bài học: ${lesson.title}" class="w-full h-auto max-h-96 object-cover"></div>` : '';
