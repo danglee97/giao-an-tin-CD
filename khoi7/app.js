@@ -146,7 +146,7 @@ function renderLessonDetail(chapterKey, lessonId) {
     const objectivesHtml = `
         <details class="info-card" open>
             <summary class="info-card-header">
-                <i class="fas fa-bullseye-pointer text-lg text-theme-red"></i>
+                <i class="fas fa-paper-plane text-lg text-theme-red"></i>
                 <span class="font-bold text-theme-blue">Mục tiêu bài học</span>
                 <i class="fas fa-chevron-right arrow ml-auto"></i>
             </summary>
