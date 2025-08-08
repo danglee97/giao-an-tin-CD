@@ -17,8 +17,7 @@ body {
 .border-theme-blue { border-color: var(--theme-blue); }
 
 
-/* === THIẾT KẾ THẺ CHỌN LỚP (GRADE CARD) - NÂNG CẤP === */
-
+/* === THIẾT KẾ THẺ CHỌN LỚP (GRADE CARD) === */
 .grade-card {
     display: flex;
     flex-direction: column;
@@ -26,146 +25,74 @@ body {
     justify-content: center;
     padding: 2rem 1rem;
     background-color: white;
-    border-radius: 1rem; /* bo tròn hơn */
-    border: 1px solid #e5e7eb; /* viền xám nhạt */
+    border-radius: 1rem;
+    border: 1px solid #e5e7eb;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
     text-decoration: none;
     position: relative;
     overflow: hidden;
-    /* [HIỆU ỨNG] Thêm transition cho thẻ */
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
-
-/* Hiệu ứng khi di chuột vào thẻ */
 .grade-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
     border-color: var(--theme-blue);
 }
-
-/* Biểu tượng trong thẻ */
 .grade-card-icon {
-    font-size: 3.5rem; /* to hơn */
+    font-size: 3.5rem;
     color: var(--theme-blue);
     margin-bottom: 1rem;
-    /* [HIỆU ỨNG] Thêm transition cho biểu tượng */
     transition: transform 0.3s ease-in-out, color 0.3s ease;
 }
-
-/* Hiệu ứng khi di chuột vào biểu tượng */
 .grade-card:hover .grade-card-icon {
-    transform: scale(1.15) rotate(-5deg); /* Phóng to và xoay nhẹ */
-    color: var(--theme-red); /* Đổi sang màu đỏ */
+    transform: scale(1.15) rotate(-5deg);
+    color: var(--theme-red);
 }
-
-/* Tiêu đề trong thẻ */
 .grade-card-title {
-    font-size: 1.5rem; /* 24px */
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--theme-blue);
     transition: color 0.3s ease;
 }
 
-/* Thẻ bị vô hiệu hóa (Sắp có) */
-.grade-card.is-disabled {
-    background-color: #f3f4f6;
-    cursor: not-allowed;
-    opacity: 0.7;
-}
 
-.grade-card.is-disabled .grade-card-icon,
-.grade-card.is-disabled .grade-card-title {
-    color: var(--text-light);
-}
-
-/* Hiệu ứng hover cho thẻ bị vô hiệu hóa */
-.grade-card.is-disabled:hover {
-    transform: none;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
-    border-color: #e5e7eb;
-}
-
-.grade-card.is-disabled:hover .grade-card-icon {
-    transform: none;
-    color: var(--text-light);
-}
-
-/* Nhãn "Sắp có" */
-.coming-soon-badge {
-    font-size: 0.75rem;
-    color: var(--text-light);
-    margin-top: 0.25rem;
-}
-
-
-/* === [CẬP NHẬT] THIẾT KẾ CHI TIẾT BÀI HỌC === */
-
-/* Header mới với hiệu ứng gradient */
-.lesson-header-pro {
-    background: linear-gradient(135deg, var(--theme-blue) 0%, #0048aa 100%);
-    color: white;
-    padding: 3rem 2rem;
-    border-radius: 1rem;
-    text-align: center;
-    box-shadow: 0 10px 20px rgba(0, 32, 96, 0.2);
-    margin-bottom: 2rem;
-}
-
-/* Cải tiến cho phần Mục tiêu & Nội dung (dạng accordion) */
-.knowledge-section {
-    background-color: #ffffff;
+/* === [CẬP NHẬT] THIẾT KẾ THẺ THÔNG TIN (Mục tiêu, Nội dung) === */
+.info-card {
+    background-color: #ffffff; /* Nền trắng */
     border: 1px solid #e5e7eb;
-    border-radius: 1rem; /* Bo tròn hơn */
-    overflow: hidden;
-    transition: box-shadow 0.3s ease;
-    margin-bottom: 1.5rem; /* Thêm khoảng cách giữa các section */
-}
-.knowledge-section:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
 }
 
-.knowledge-summary {
+.info-card-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 1.25rem; /* Tăng padding */
+    gap: 0.75rem;
+    padding: 1rem;
     cursor: pointer;
-    list-style: none; /* Bỏ dấu chấm tròn mặc định */
-    transition: background-color 0.2s ease;
-}
-.knowledge-summary:hover {
-    background-color: #f9fafb;
+    list-style: none; /* Bỏ dấu chấm tròn mặc định của summary */
 }
 
-/* Bỏ dấu mũi tên mặc định của <details> */
-.knowledge-summary::-webkit-details-marker { 
-    display: none; 
+.info-card-header::-webkit-details-marker {
+    display: none;
 }
 
-/* Icon trong summary */
-.summary-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
+.info-card-header .arrow {
+    transition: transform 0.2s ease-in-out;
+    color: #9ca3af; /* Màu mũi tên xám hơn */
 }
 
-/* Mũi tên chỉ hướng */
-.knowledge-summary .arrow { 
-    transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1); 
-}
-.knowledge-section[open] > .knowledge-summary .arrow { 
-    transform: rotate(180deg); 
+.info-card[open] > .info-card-header .arrow {
+    transform: rotate(90deg);
 }
 
-/* Nội dung bên trong */
-.knowledge-content {
-    padding: 0 1.5rem 1.5rem 5.25rem; /* Căn lề với tiêu đề */
+.info-card-content {
+    padding: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e5e7eb;
     color: #374151;
-    line-height: 1.75; /* Tăng khoảng cách dòng */
+    line-height: 1.6;
 }
 
 

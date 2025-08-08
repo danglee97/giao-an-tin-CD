@@ -124,9 +124,6 @@ function renderLessonList() {
     }
 }
 
-/**
- * [CẬP NHẬT] Hiển thị chi tiết một bài học với giao diện mới hoàn toàn
- */
 function renderLessonDetail(chapterKey, lessonId) {
     const lesson = lessonsData[chapterKey].lessons.find(l => l.id === lessonId);
     const lessonDetails = getLessonDetails(lessonId);
@@ -149,7 +146,7 @@ function renderLessonDetail(chapterKey, lessonId) {
         <details class="info-card" open>
             <summary class="info-card-header">
                 <i class="fas fa-bullseye-pointer text-lg text-theme-red"></i>
-                <span class="font-bold text-gray-800">Mục tiêu bài học</span>
+                <span class="font-bold text-theme-blue">Mục tiêu bài học</span>
                 <i class="fas fa-chevron-right arrow ml-auto"></i>
             </summary>
             <div class="info-card-content">
@@ -164,7 +161,7 @@ function renderLessonDetail(chapterKey, lessonId) {
         <details class="info-card">
             <summary class="info-card-header">
                  <i class="fas fa-book-open-reader text-lg text-theme-red"></i>
-                <span class="font-bold text-gray-800">Nội dung cốt lõi</span>
+                <span class="font-bold text-theme-blue">Nội dung cốt lõi</span>
                 <i class="fas fa-chevron-right arrow ml-auto"></i>
             </summary>
             <div class="info-card-content">
