@@ -16,67 +16,43 @@ let currentQuizData = [];
 
 // --- FUNCTIONS ---
 
-/**
- * Chuyển đổi link YouTube thông thường sang link nhúng (embed)
- * @param {string} url - Link YouTube gốc
- * @returns {string} - Link YouTube đã được chuyển đổi
- */
 function convertToEmbedUrl(url) {
     if (!url || typeof url !== 'string') return "";
     try {
         const urlObj = new URL(url);
         let videoId = null;
-
-        // Xử lý link dạng: https://www.youtube.com/watch?v=VIDEO_ID
         if (urlObj.hostname.includes('youtube.com') && urlObj.pathname === '/watch') {
             videoId = urlObj.searchParams.get('v');
-        }
-        // Xử lý link dạng rút gọn: https://youtu.be/VIDEO_ID
-        else if (urlObj.hostname.includes('youtu.be')) {
+        } else if (urlObj.hostname.includes('youtu.be')) {
             videoId = urlObj.pathname.slice(1);
-        }
-        // Nếu đã là link embed thì giữ nguyên
-        else if (urlObj.hostname.includes('youtube.com') && urlObj.pathname.startsWith('/embed/')) {
+        } else if (urlObj.hostname.includes('youtube.com') && urlObj.pathname.startsWith('/embed/')) {
             return url;
         }
-
         if (videoId) {
             return `https://www.youtube.com/embed/${videoId}`;
         }
     } catch (e) {
         console.error("URL video không hợp lệ:", url, e);
-        return ""; // Trả về chuỗi rỗng nếu URL không hợp lệ
+        return "";
     }
-    // Trả về URL gốc nếu không thể chuyển đổi
     return url;
 }
 
-/**
- * [MỚI] Chuyển đổi link Google Slides thông thường sang link nhúng (embed)
- * @param {string} url - Link Google Slides gốc
- * @returns {string} - Link Google Slides đã được chuyển đổi
- */
 function convertGoogleSlideToEmbedUrl(url) {
     if (!url || typeof url !== 'string' || !url.includes('docs.google.com/presentation')) {
-        return ""; // Trả về rỗng nếu không phải link Google Slides hợp lệ
+        return "";
     }
     if (url.includes('/embed')) {
-        return url; // Nếu đã là link embed thì giữ nguyên
+        return url;
     }
-    
-    // [SỬA LỖI] Cải tiến biểu thức chính quy (regex) để trích xuất ID từ nhiều loại link chia sẻ,
-    // bao gồm cả link không có /edit hoặc /viewer ở cuối.
     const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
     if (match && match[1]) {
         const presentationId = match[1];
         return `https://docs.google.com/presentation/d/${presentationId}/embed?start=false&loop=false&delayms=3000`;
     }
-
     console.error("Không thể trích xuất ID từ link Google Slides:", url);
-    return ""; // Trả về rỗng nếu không thể trích xuất ID
+    return "";
 }
-
-
 
 async function fetchData() {
     if (GOOGLE_SHEET_API_URL === 'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY' || !GOOGLE_SHEET_API_URL) {
@@ -126,6 +102,10 @@ function renderResourceLinks() {
     resourceLinksContainer.innerHTML = linksHtml;
 }
 
+
+/**
+ * [CẬP NHẬT] Hiển thị danh sách các chủ đề và bài học với nút xem slide
+ */
 function renderLessonList() {
     if (!chaptersContainer || Object.keys(lessonsData).length === 0) return;
     renderResourceLinks();
@@ -135,7 +115,22 @@ function renderLessonList() {
         let chapterHtml = `<section><h2 class="text-2xl font-bold text-theme-blue mb-4">${chapter.title}</h2><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">`;
         chapter.lessons.forEach(lesson => {
             const iconClass = chapter.icon || 'fas fa-book';
-            chapterHtml += `<div onclick="renderLessonDetail('${chapterKey}', '${lesson.id}')" class="lesson-link cursor-pointer bg-white border border-gray-200 rounded-lg shadow-sm p-4 flex flex-col items-center text-center hover:shadow-lg hover:border-theme-blue"><i class="${iconClass} text-3xl text-theme-red mb-3"></i><h4 class="font-semibold text-theme-blue">${lesson.title}</h4></div>`;
+            const slideEmbedUrl = convertGoogleSlideToEmbedUrl(lesson.gdrive_embed);
+
+            chapterHtml += `
+                <div onclick="renderLessonDetail('${chapterKey}', '${lesson.id}')" class="lesson-link">
+                    <i class="${iconClass} text-3xl text-theme-red mb-3"></i>
+                    <h4 class="font-semibold text-theme-blue">${lesson.title}</h4>
+                    
+                    ${slideEmbedUrl ? `
+                        <span 
+                            class="slide-icon" 
+                            title="Xem bài giảng trình chiếu" 
+                            onclick="event.stopPropagation(); window.open('${slideEmbedUrl}', '_blank');">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </span>
+                    ` : ''}
+                </div>`;
         });
         chapterHtml += `</div></section>`;
         chaptersContainer.innerHTML += chapterHtml;
@@ -151,7 +146,6 @@ function renderLessonDetail(chapterKey, lessonId) {
     
     const imageHtml = lesson.image ? `<div class="mb-8 rounded-lg overflow-hidden shadow-lg"><img src="${lesson.image}" alt="Hình ảnh bài học: ${lesson.title}" class="w-full h-auto max-h-96 object-cover"></div>` : '';
     
-    // [CẬP NHẬT] Gọi hàm chuyển đổi cho cả hai loại link
     const gdriveEmbedUrl = convertGoogleSlideToEmbedUrl(lesson.gdrive_embed);
     const videoEmbedUrl = convertToEmbedUrl(lesson.video_embed);
 
@@ -184,7 +178,6 @@ function renderLessonDetail(chapterKey, lessonId) {
     lessonDetailView.style.display = 'block';
     window.scrollTo(0, 0);
 }
-
 /**
  * [MỚI] Tạo HTML cho tab "Củng cố bài học"
  */
