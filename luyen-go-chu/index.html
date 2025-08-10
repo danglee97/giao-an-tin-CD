@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trình Luyện Gõ Phím - Lưu Kết Quả</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .finger.active { fill: #34d399; transition: fill 0.1s ease-in-out; }
+        .key.active { background-color: #34d399; color: white; transform: scale(0.95); }
+        .key { transition: all 0.1s ease-in-out; }
+        #hands-svg { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+        #text-to-type span { font-size: 1.25rem; line-height: 2rem; }
+        .correct { color: #10b981; }
+        .incorrect { color: #ef4444; text-decoration: underline; }
+        .current { background-color: #dbeafe; border-radius: 2px; }
+        /* Kiểu cho Modal */
+        dialog::backdrop {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen p-4">
+
+    <!-- Modal Nhập Tên -->
+    <dialog id="name-modal" class="p-8 bg-white rounded-xl shadow-2xl w-full max-w-sm">
+        <h2 class="text-2xl font-bold text-slate-800 mb-4 text-center">Chào mừng bạn!</h2>
+        <p class="text-slate-600 mb-6 text-center">Vui lòng nhập tên của bạn để bắt đầu và lưu lại kết quả.</p>
+        <form id="name-form">
+            <input type="text" id="student-name-input" placeholder="Nhập tên của bạn..." class="w-full px-4 py-3 border-2 border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition" required>
+            <button type="submit" class="w-full mt-4 bg-emerald-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-emerald-600 transition-colors">Bắt đầu</button>
+        </form>
+    </dialog>
+
+    <div class="w-full max-w-5xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-8">
+        <div class="text-center mb-4">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-800">Luyện Gõ Phím Chuyên Nghiệp</h1>
+            <p id="welcome-message" class="text-slate-500 mt-2">Gõ đoạn văn bản dưới đây và cải thiện kỹ năng của bạn!</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 text-center">
+            <div class="bg-slate-100 p-4 rounded-lg"><p class="text-sm text-slate-500">Tốc độ (WPM)</p><p id="wpm" class="text-3xl font-bold text-slate-800">0</p></div>
+            <div class="bg-slate-100 p-4 rounded-lg"><p class="text-sm text-slate-500">Chính xác (%)</p><p id="accuracy" class="text-3xl font-bold text-slate-800">100</p></div>
+            <div class="bg-slate-100 p-4 rounded-lg"><p class="text-sm text-slate-500">Thời gian</p><p id="timer" class="text-3xl font-bold text-slate-800">0s</p></div>
+        </div>
+
+        <div id="text-to-type" class="bg-slate-50 p-4 rounded-lg mb-4 text-slate-400 select-none tracking-wider"></div>
+        <textarea id="typing-input" class="absolute opacity-0 w-0 h-0"></textarea>
+
+        <div class="text-center mb-6 space-x-4">
+            <button id="reset-btn" class="bg-blue-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-600 transition-colors">Bài mới</button>
+            <button id="save-btn" class="bg-emerald-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-emerald-600 transition-colors disabled:bg-slate-400 disabled:cursor-not-allowed" disabled>Lưu kết quả</button>
+        </div>
+        <p id="save-status" class="text-center text-sm text-slate-500 h-5"></p>
+
+        <!-- Bàn tay và bàn phím (giữ nguyên không đổi) -->
+        <div class="flex flex-col items-center">
+            <div id="hands-container" class="mb-6 flex justify-center">
+                <svg id="hands-svg" width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+                    <g id="left-hand"><path id="left-pinky" class="finger" fill="#a7a7a7" d="M60,100 C40,110 30,140 40,160 C50,180 65,170 70,150 L60,100 Z"/><path id="left-ring" class="finger" fill="#a7a7a7" d="M80,80 C60,90 55,130 65,150 C75,170 90,160 95,140 L80,80 Z"/><path id="left-middle" class="finger" fill="#a7a7a7" d="M105,70 C85,80 80,125 90,145 C100,165 115,155 120,135 L105,70 Z"/><path id="left-index" class="finger" fill="#a7a7a7" d="M130,75 C110,85 105,130 115,150 C125,170 140,160 145,140 L130,75 Z"/><path id="left-thumb" class="finger" fill="#a7a7a7" d="M155,110 C165,130 180,140 190,130 C200,120 195,100 180,100 C165,100 155,110 155,110 Z"/></g>
+                    <g id="right-hand"><path id="right-pinky" class="finger" fill="#a7a7a7" d="M340,100 C360,110 370,140 360,160 C350,180 335,170 330,150 L340,100 Z"/><path id="right-ring" class="finger" fill="#a7a7a7" d="M320,80 C340,90 345,130 335,150 C325,170 310,160 305,140 L320,80 Z"/><path id="right-middle" class="finger" fill="#a7a7a7" d="M295,70 C315,80 320,125 310,145 C300,165 285,155 280,135 L295,70 Z"/><path id="right-index" class="finger" fill="#a7a7a7" d="M270,75 C290,85 295,130 285,150 C275,170 260,160 255,140 L270,75 Z"/><path id="right-thumb" class="finger" fill="#a7a7a7" d="M245,110 C235,130 220,140 210,130 C200,120 205,100 220,100 C235,100 245,110 245,110 Z"/></g>
+                </svg>
+            </div>
+            <div id="keyboard" class="bg-slate-200 p-2 md:p-4 rounded-lg space-y-1 md:space-y-1.5 text-xs md:text-base">
+                <div class="flex justify-center space-x-1 md:space-x-1.5"><div data-key="`" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">`</div><div data-key="1" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">1</div><div data-key="2" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">2</div><div data-key="3" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">3</div><div data-key="4" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">4</div><div data-key="5" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">5</div><div data-key="6" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">6</div><div data-key="7" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">7</div><div data-key="8" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">8</div><div data-key="9" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">9</div><div data-key="0" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">0</div><div data-key="-" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">-</div><div data-key="=" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">=</div><div data-key="Backspace" class="key w-16 md:w-24 h-10 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Back</div></div><div class="flex justify-center space-x-1 md:space-x-1.5"><div data-key="Tab" class="key w-14 md:w-20 h-10 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Tab</div><div data-key="q" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Q</div><div data-key="w" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">W</div><div data-key="e" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">E</div><div data-key="r" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">R</div><div data-key="t" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">T</div><div data-key="y" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Y</div><div data-key="u" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">U</div><div data-key="i" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">I</div><div data-key="o" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">O</div><div data-key="p" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">P</div><div data-key="[" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">[</div><div data-key="]" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">]</div><div data-key="\" class="key w-10 h-10 md:w-16 md:h-12 flex items-center justify-center bg-white rounded-md shadow">\</div></div><div class="flex justify-center space-x-1 md:space-x-1.5 ml-4"><div data-key="CapsLock" class="key w-16 md:w-24 h-10 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Caps</div><div data-key="a" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">A</div><div data-key="s" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">S</div><div data-key="d" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">D</div><div data-key="f" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">F</div><div data-key="g" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">G</div><div data-key="h" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">H</div><div data-key="j" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">J</div><div data-key="k" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">K</div><div data-key="l" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">L</div><div data-key=";" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">;</div><div data-key="'" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">'</div><div data-key="Enter" class="key w-16 md:w-28 h-10 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Enter</div></div><div class="flex justify-center space-x-1 md:space-x-1.5 ml-10"><div data-key="ShiftLeft" class="key w-20 md:w-32 h-10 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Shift</div><div data-key="z" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Z</div><div data-key="x" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">X</div><div data-key="c" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">C</div><div data-key="v" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">V</div><div data-key="b" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">B</div><div data-key="n" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">N</div><div data-key="m" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">M</div><div data-key="," class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">,</div><div data-key="." class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">.</div><div data-key="/" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">/</div><div data-key="ShiftRight" class="key w-20 md:w-36 h-10 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Shift</div></div><div class="flex justify-center space-x-1 md:space-x-1.5"><div data-key="ControlLeft" class="key w-16 h-10 md:w-20 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Ctrl</div><div data-key="MetaLeft" class="key w-16 h-10 md:w-20 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Win</div><div data-key="AltLeft" class="key w-16 h-10 md:w-20 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Alt</div><div data-key=" " class="key flex-grow h-10 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Space</div><div data-key="AltRight" class="key w-16 h-10 md:w-20 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Alt</div><div data-key="ControlRight" class="key w-16 h-10 md:w-20 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Ctrl</div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // !!! QUAN TRỌNG: Dán URL ứng dụng web của bạn vào đây
+        const SCRIPT_URL = 'DÁN_URL_BẠN_SAO_CHÉP_Ở_BƯỚC_1_VÀO_ĐÂY';
+
+        // DOM Elements
+        const textToTypeEl = document.getElementById('text-to-type');
+        const typingInputEl = document.getElementById('typing-input');
+        const wpmEl = document.getElementById('wpm');
+        const accuracyEl = document.getElementById('accuracy');
+        const timerEl = document.getElementById('timer');
+        const resetBtn = document.getElementById('reset-btn');
+        const saveBtn = document.getElementById('save-btn');
+        const saveStatusEl = document.getElementById('save-status');
+        const nameModal = document.getElementById('name-modal');
+        const nameForm = document.getElementById('name-form');
+        const studentNameInput = document.getElementById('student-name-input');
+        const welcomeMessageEl = document.getElementById('welcome-message');
+
+        const textSamples = ["Bầu trời xanh thẳm không một gợn mây. Nắng vàng rực rỡ nhảy múa trên những tán lá cây xanh mướt.", "Con đường làng quanh co uốn lượn như một dải lụa mềm. Hai bên đường là những cánh đồng lúa chín vàng trĩu hạt.", "Trong lập trình, sự kiên nhẫn và logic là hai yếu tố quan trọng nhất để tạo ra một chương trình hoàn hảo.", "Việc học gõ mười ngón không chỉ giúp tăng tốc độ làm việc mà còn bảo vệ sức khỏe cho đôi tay và cột sống."];
+        
+        let state = {
+            studentName: '', text: '', input: '', startTime: 0,
+            timerInterval: null, errors: 0, isTyping: false, isCompleted: false
+        };
+
+        const keyToFingerMap = {'q':'left-pinky','a':'left-pinky','z':'left-pinky','1':'left-pinky','`':'left-pinky','Tab':'left-pinky','ShiftLeft':'left-pinky','ControlLeft':'left-pinky','w':'left-ring','s':'left-ring','x':'left-ring','2':'left-ring','e':'left-middle','d':'left-middle','c':'left-middle','3':'left-middle','r':'left-index','f':'left-index','v':'left-index','4':'left-index','t':'left-index','g':'left-index','b':'left-index','5':'left-index','p':'right-pinky',';':'right-pinky','/':'right-pinky','[':'right-pinky',"'":'right-pinky',']':'right-pinky','\\':'right-pinky','Enter':'right-pinky','ShiftRight':'right-pinky','Backspace':'right-pinky','-':'right-pinky','=':'right-pinky','ControlRight':'right-pinky','o':'right-ring','l':'right-ring','.':'right-ring','9':'right-ring','0':'right-ring','i':'right-middle','k':'right-middle',',':'right-middle','8':'right-middle','u':'right-index','j':'right-index','m':'right-index','7':'right-index','y':'right-index','h':'right-index','n':'right-index','6':'right-index',' ':'left-thumb','AltLeft':'left-thumb','AltRight':'right-thumb','MetaLeft':'left-thumb'};
+        const highlight=key=>{let a=key.toLowerCase();key.length>1&&" "!==key&&(a=key);const t=keyToFingerMap[a];if(t){const e=document.getElementById(t);e&&(e.classList.add("active")," "===a&&document.getElementById("right-thumb").classList.add("active"))}const e=document.querySelector(`.key[data-key="${a}"]`)||document.querySelector(`.key[data-key="${key}"]`);e&&e.classList.add("active")};
+        const unhighlight=key=>{let a=key.toLowerCase();key.length>1&&" "!==key&&(a=key);const t=keyToFingerMap[a];if(t){const e=document.getElementById(t);e&&(e.classList.remove("active")," "===a&&document.getElementById("right-thumb").classList.remove("active"))}const e=document.querySelector(`.key[data-key="${a}"]`)||document.querySelector(`.key[data-key="${key}"]`);e&&e.classList.remove("active")};
+
+        function updateTextDisplay() {
+            const textChars = state.text.split('');
+            const inputChars = state.input.split('');
+            state.errors = 0;
+            const html = textChars.map((char, index) => {
+                let className = '';
+                if (index < inputChars.length) {
+                    if (char === inputChars[index]) {
+                        className = 'correct';
+                    } else {
+                        className = 'incorrect';
+                        state.errors++;
+                    }
+                }
+                if (index === inputChars.length) className += ' current';
+                return `<span class="${className}">${char}</span>`;
+            }).join('');
+            textToTypeEl.innerHTML = html;
+        }
+
+        function resetGame() {
+            clearInterval(state.timerInterval);
+            state.isTyping = false;
+            state.isCompleted = false;
+            state.startTime = 0;
+            state.errors = 0;
+            state.input = '';
+            state.text = textSamples[Math.floor(Math.random() * textSamples.length)];
+            
+            updateTextDisplay();
+            typingInputEl.value = '';
+            typingInputEl.focus();
+
+            wpmEl.textContent = '0';
+            accuracyEl.textContent = '100';
+            timerEl.textContent = '0s';
+            saveBtn.disabled = true;
+            saveStatusEl.textContent = '';
+        }
+
+        function handleInput() {
+            if (state.isCompleted) return;
+            if (!state.isTyping) {
+                state.isTyping = true;
+                state.startTime = Date.now();
+                state.timerInterval = setInterval(updateTimer, 1000);
+            }
+            state.input = typingInputEl.value;
+            updateTextDisplay();
+            calculateMetrics();
+
+            if (state.input.length === state.text.length) {
+                clearInterval(state.timerInterval);
+                state.isTyping = false;
+                state.isCompleted = true;
+                saveBtn.disabled = false;
+            }
+        }
+
+        function updateTimer() {
+            const elapsedTime = Math.floor((Date.now() - state.startTime) / 1000);
+            timerEl.textContent = `${elapsedTime}s`;
+            if (state.isTyping) calculateMetrics();
+        }
+
+        function calculateMetrics() {
+            if (state.startTime === 0) return;
+            const elapsedTimeInMinutes = (Date.now() - state.startTime) / 1000 / 60;
+            if (elapsedTimeInMinutes === 0) return;
+            const wordsTyped = state.input.length / 5;
+            const wpm = Math.round(wordsTyped / elapsedTimeInMinutes);
+            wpmEl.textContent = wpm;
+            const correctChars = state.input.length - state.errors;
+            const accuracy = state.input.length > 0 ? Math.round((correctChars / state.input.length) * 100) : 100;
+            accuracyEl.textContent = accuracy;
+        }
+
+        function handleSave() {
+            if (SCRIPT_URL.startsWith('DÁN_URL')) {
+                saveStatusEl.textContent = "Lỗi: Vui lòng cấu hình URL của Google Apps Script.";
+                saveStatusEl.style.color = 'red';
+                return;
+            }
+            saveBtn.disabled = true;
+            saveStatusEl.textContent = "Đang lưu...";
+            saveStatusEl.style.color = '#64748b';
+
+            const dataToSave = {
+                name: state.studentName,
+                wpm: wpmEl.textContent,
+                accuracy: accuracyEl.textContent
+            };
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded', },
+                body: JSON.stringify(dataToSave)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    saveStatusEl.textContent = "Đã lưu thành công!";
+                    saveStatusEl.style.color = '#10b981';
+                } else {
+                    throw new Error(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Lỗi khi lưu:', error);
+                saveStatusEl.textContent = `Lỗi: ${error.message}`;
+                saveStatusEl.style.color = '#ef4444';
+                saveBtn.disabled = false;
+            });
+        }
+
+        // Khởi tạo
+        window.addEventListener('load', () => {
+            nameModal.showModal();
+        });
+
+        nameForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = studentNameInput.value.trim();
+            if (name) {
+                state.studentName = name;
+                welcomeMessageEl.textContent = `Xin chào, ${name}! Chúc bạn luyện tập vui vẻ.`;
+                nameModal.close();
+                resetGame();
+            }
+        });
+
+        typingInputEl.addEventListener('input', handleInput);
+        resetBtn.addEventListener('click', resetGame);
+        saveBtn.addEventListener('click', handleSave);
+        textToTypeEl.addEventListener('click', () => typingInputEl.focus());
+        document.addEventListener('keydown', (e) => { if (document.activeElement === typingInputEl) { if (['Tab', ' '].includes(e.key)) e.preventDefault(); const key = e.key === ' ' ? ' ' : e.code.startsWith('Key') ? e.key : e.code; highlight(key); } });
+        document.addEventListener('keyup', (e) => { const key = e.key === ' ' ? ' ' : e.code.startsWith('Key') ? e.key : e.code; unhighlight(key); });
+    </script>
+</body>
+</html>
