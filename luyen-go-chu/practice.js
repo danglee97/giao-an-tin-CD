@@ -24,15 +24,15 @@ const nameModal = document.getElementById('name-modal');
 const nameForm = document.getElementById('name-form');
 const studentNameInput = document.getElementById('student-name-input');
 const welcomeMessageEl = document.getElementById('welcome-message');
-const lessonSelectorContainer = document.getElementById('lesson-selector-container'); // Container cho các nút chọn bài
+const lessonSelectorContainer = document.getElementById('lesson-selector-container');
 
 // =================================================================
 // BIẾN TRẠNG THÁI CỦA ỨNG DỤNG (Application State)
 // =================================================================
 
-let typingLessons = {}; // Dữ liệu các bài học sẽ được tải vào đây
+let typingLessons = {};
 let state = {
-    studentName: localStorage.getItem('studentName') || '', // Lấy tên từ cache nếu có
+    studentName: localStorage.getItem('studentName') || '',
     text: '',
     input: '',
     timerInterval: null,
@@ -45,24 +45,15 @@ let state = {
 };
 
 // =================================================================
-// ⭐ PHẦN NÂNG CẤP: TẢI DỮ LIỆU VÀ KHỞI TẠO ỨNG DỤNG ⭐
+// TẢI DỮ LIỆU VÀ KHỞI TẠO ỨNG DỤNG
 // =================================================================
 
-/**
- * Hàm chính để khởi tạo ứng dụng:
- * 1. Thử tải bài học từ bộ nhớ đệm (localStorage).
- * 2. Nếu không có, tải từ Google Script rồi lưu vào bộ nhớ đệm.
- * 3. Khởi tạo giao diện người dùng.
- */
 async function loadLessonsAndInit() {
     showLoadingState(true, 'Đang tải dữ liệu bài học...');
     
-    // Kiểm tra và yêu cầu nhập tên nếu chưa có
-    if (!state.studentName) {
-        if (nameModal && typeof nameModal.showModal === 'function') {
-            nameModal.showModal();
-        }
-    } else {
+    if (!state.studentName && nameModal) {
+        nameModal.showModal();
+    } else if (welcomeMessageEl) {
         welcomeMessageEl.textContent = `Xin chào, ${state.studentName}!`;
     }
 
@@ -81,25 +72,20 @@ async function loadLessonsAndInit() {
         }
 
         populateLessonSelector();
-        // Tự động bắt đầu bài học đầu tiên trong danh sách
-        const firstLessonId = Object.keys(typingLessons)[0];
-        if (firstLessonId) {
-            resetGame(firstLessonId);
-        }
+        const urlParams = new URLSearchParams(window.location.search);
+        const lessonFromUrl = urlParams.get('lesson');
+        resetGame(lessonFromUrl || Object.keys(typingLessons)[0]);
 
     } catch (error) {
         console.error("Không thể tải dữ liệu bài học:", error);
-        textToTypeEl.innerHTML = `<span class="error">Lỗi: Không thể tải được dữ liệu bài học. Vui lòng kiểm tra lại đường truyền hoặc URL của Script và thử lại.</span>`;
+        textToTypeEl.innerHTML = `<span class="error-message">Lỗi: Không thể tải dữ liệu. Vui lòng kiểm tra lại đường truyền và thử lại.</span>`;
     } finally {
         showLoadingState(false);
     }
 }
 
-/**
- * Tạo các nút chọn bài học dựa trên dữ liệu đã tải
- */
 function populateLessonSelector() {
-    lessonSelectorContainer.innerHTML = ''; // Xóa các nút cũ
+    lessonSelectorContainer.innerHTML = '';
     for (const lessonId in typingLessons) {
         const button = document.createElement('button');
         button.textContent = typingLessons[lessonId].title;
@@ -108,28 +94,30 @@ function populateLessonSelector() {
     }
 }
 
-
 // =================================================================
 // LOGIC CỐT LÕI CỦA TRÒ CHƠI (Core Game Logic)
 // =================================================================
 
 /**
- * Bắt đầu hoặc khởi động lại trò chơi với một bài học cụ thể
+ * [⭐ NÂNG CẤP] Bắt đầu hoặc khởi động lại trò chơi với một bài học cụ thể
  * @param {string} lessonId - ID của bài học để bắt đầu
  */
 function resetGame(lessonId) {
+    if (state.timerInterval) clearInterval(state.timerInterval);
+
+    // [SỬA LỖI] Xử lý trường hợp không tìm thấy bài học, hiển thị thông báo cho người dùng.
     if (!lessonId || !typingLessons[lessonId]) {
-        console.error("Bài học không hợp lệ!");
+        console.error("Yêu cầu bài học không hợp lệ. lessonId:", lessonId);
+        lessonTitleEl.textContent = 'Lỗi';
+        textToTypeEl.innerHTML = `<span class="error-message">Không tìm thấy bài học được yêu cầu. Vui lòng chọn một bài học từ danh sách.</span>`;
+        typingInputEl.value = '';
+        typingInputEl.disabled = true;
         return;
     }
 
-    // Dừng bộ đếm giờ cũ nếu có
-    if (state.timerInterval) clearInterval(state.timerInterval);
-
-    // Thiết lập lại trạng thái
     const lesson = typingLessons[lessonId];
     state = {
-        ...state, // Giữ lại tên học sinh
+        ...state,
         text: lesson.text,
         input: '',
         timerInterval: null,
@@ -141,14 +129,12 @@ function resetGame(lessonId) {
         lessonTitle: lesson.title
     };
 
-    // Cập nhật giao diện
     lessonTitleEl.textContent = state.lessonTitle;
     typingInputEl.value = '';
     typingInputEl.disabled = false;
     typingInputEl.focus();
     renderTextToType();
     
-    // Reset các chỉ số
     timerEl.textContent = '0:00';
     wpmEl.textContent = '0';
     accuracyEl.textContent = '100%';
@@ -157,7 +143,7 @@ function resetGame(lessonId) {
 }
 
 /**
- * Hiển thị văn bản cần gõ với màu sắc tương ứng
+ * [⭐ NÂNG CẤP] Hiển thị văn bản cần gõ với màu sắc và khoảng cách rõ ràng hơn
  */
 function renderTextToType() {
     textToTypeEl.innerHTML = '';
@@ -167,25 +153,33 @@ function renderTextToType() {
     textChars.forEach((char, index) => {
         const span = document.createElement('span');
         span.textContent = char;
+
+        // Thêm class đặc biệt cho ký tự dấu cách để tăng khoảng cách
+        if (char === ' ') {
+            span.classList.add('word-separator');
+        }
+
         if (inputChars[index] == null) {
-            span.className = 'char-pending';
+            span.classList.add('char-pending');
         } else if (inputChars[index] === char) {
-            span.className = 'char-correct';
+            span.classList.add('char-correct');
         } else {
-            span.className = 'char-incorrect';
+            span.classList.add('char-incorrect');
+            // Nếu ký tự lẽ ra là dấu cách nhưng gõ sai
+            if (char === ' ') {
+                span.innerHTML = '&nbsp;'; // Để đảm bảo background-color hiển thị
+                span.classList.add('incorrect-space');
+            }
         }
         textToTypeEl.appendChild(span);
     });
 }
 
-/**
- * Xử lý mỗi khi người dùng gõ chữ
- */
+
 function handleInput() {
     state.input = typingInputEl.value;
     
-    // Bắt đầu đếm giờ khi gõ ký tự đầu tiên
-    if (!state.startTime) {
+    if (!state.startTime && state.input.length > 0) {
         state.startTime = new Date();
         state.timerInterval = setInterval(updateTimer, 1000);
     }
@@ -193,7 +187,6 @@ function handleInput() {
     renderTextToType();
     updateMetrics();
 
-    // Kiểm tra nếu đã hoàn thành
     if (state.input.length === state.text.length) {
         state.endTime = new Date();
         clearInterval(state.timerInterval);
@@ -202,16 +195,14 @@ function handleInput() {
     }
 }
 
-/**
- * Cập nhật các chỉ số WPM và Độ chính xác
- */
 function updateMetrics() {
+    if (!state.startTime) return;
     const currentTime = new Date();
     const elapsedTime = (currentTime - state.startTime) / 1000 / 60; // phút
     if (elapsedTime === 0) return;
 
     const typedChars = state.input.length;
-    const wordsTyped = typedChars / 5; // WPM chuẩn hóa với 5 ký tự/từ
+    const wordsTyped = typedChars / 5;
     const wpm = Math.round(wordsTyped / elapsedTime);
 
     let errors = 0;
@@ -228,10 +219,6 @@ function updateMetrics() {
     accuracyEl.textContent = `${accuracy}%`;
 }
 
-
-/**
- * Cập nhật đồng hồ đếm giờ
- */
 function updateTimer() {
     const currentTime = new Date();
     const elapsedTime = Math.floor((currentTime - state.startTime) / 1000); // giây
@@ -240,14 +227,11 @@ function updateTimer() {
     timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
-/**
- * Xử lý lưu kết quả vào Google Sheets
- */
 async function handleSave() {
     saveBtn.disabled = true;
     saveStatusEl.textContent = 'Đang lưu...';
 
-    const duration = (state.endTime - state.startTime) / 1000; // giây
+    const duration = (state.endTime - state.startTime) / 1000;
     const wpm = wpmEl.textContent;
     const accuracy = accuracyEl.textContent.replace('%', '');
 
@@ -278,13 +262,10 @@ async function handleSave() {
         console.error('Lỗi khi lưu kết quả:', error);
         saveStatusEl.textContent = 'Lỗi! Không thể lưu.';
         saveStatusEl.style.color = 'red';
-        saveBtn.disabled = false; // Cho phép thử lại
+        saveBtn.disabled = false;
     }
 }
 
-/**
- * Hiển thị/ẩn thông báo tải
- */
 function showLoadingState(isLoading, message = '') {
     if (loadingState) {
         loadingState.style.display = isLoading ? 'flex' : 'none';
@@ -296,39 +277,31 @@ function showLoadingState(isLoading, message = '') {
 }
 
 // =================================================================
-// ⭐ PHẦN SỬA LỖI: CÁC BỘ LẮNG NGHE SỰ KIỆN (Event Listeners) ⭐
+// CÁC BỘ LẮNG NGHE SỰ KIỆN (Event Listeners)
 // =================================================================
 
 function setupEventListeners() {
-    // Sự kiện nhập tên
     nameForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const name = studentNameInput.value.trim();
         if (name) {
             state.studentName = name;
-            localStorage.setItem('studentName', name); // Lưu tên vào cache
+            localStorage.setItem('studentName', name);
             welcomeMessageEl.textContent = `Xin chào, ${name}! Chúc bạn luyện tập vui vẻ.`;
             nameModal.close();
             typingInputEl.focus();
         }
     });
 
-    // Các sự kiện chính của game
     typingInputEl.addEventListener('input', handleInput);
-    resetBtn.addEventListener('click', () => resetGame(state.lessonId)); // Reset bài hiện tại
+    resetBtn.addEventListener('click', () => resetGame(state.lessonId));
     saveBtn.addEventListener('click', handleSave);
     textToTypeEl.addEventListener('click', () => typingInputEl.focus());
     
-    // [⭐ SỬA LỖI PHÍM CÁCH ⭐]
-    // Chỉ chặn phím 'Tab' để không bị nhảy focus.
-    // Phím cách (' ') được phép hoạt động bình thường để có thể nhập vào.
     document.addEventListener('keydown', (e) => {
         if (document.activeElement === typingInputEl) {
-            if (e.key === 'Tab') {
-                e.preventDefault();
-            }
-            // Logic làm nổi bật phím ảo (nếu có)
-            const key = e.key === ' ' ? 'Space' : e.code; // Dùng 'Space' cho phím cách để dễ map với CSS
+            if (e.key === 'Tab') e.preventDefault();
+            const key = e.key === ' ' ? 'Space' : e.code;
             const keyEl = document.querySelector(`.key[data-key="${key}"]`);
             if (keyEl) keyEl.classList.add('active');
         }
@@ -343,12 +316,10 @@ function setupEventListeners() {
     });
 }
 
-
 // =================================================================
 // KHỞI CHẠY ỨNG DỤNG
-// =================================================================
+// =================================e=================================
 
-// Bắt đầu toàn bộ quá trình khi trang đã tải xong
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     loadLessonsAndInit();

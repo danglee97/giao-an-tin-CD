@@ -121,3 +121,23 @@ body {
     font-size: 1.25rem;
     color: #ffc107; /* Màu vàng cho icon ngôi sao, đồng hồ */
 }
+/* === Thêm vào cuối file style.css === */
+
+/* Giúp phân tách các từ rõ ràng hơn */
+.word-separator {
+    display: inline-block; /* Cần thiết để margin có hiệu lực */
+    margin: 0 3px;         /* Tạo khoảng cách 3px ở hai bên của dấu cách */
+    padding: 0 1px;        /* Thêm một chút đệm bên trong */
+}
+
+/* Tô nền cho dấu cách bị gõ sai để người dùng nhận biết */
+.incorrect-space {
+    background-color: #fee2e2; /* Màu nền đỏ rất nhạt */
+    border-radius: 4px;
+}
+
+/* CSS cho thông báo lỗi chung */
+.error-message {
+    color: #ef4444; /* Màu đỏ */
+    font-weight: 500;
+}
