@@ -16,10 +16,21 @@
         .key.active { background-color: #34d399; color: white; transform: scale(0.95); }
         .key { transition: all 0.1s ease-in-out; }
         #hands-svg { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
-        #text-to-type span { font-size: 1.5rem; line-height: 2.5rem; letter-spacing: 0.1em; }
+        
+        /* [CẬP NHẬT] Chữ to và rõ ràng hơn */
+        #text-to-type span {
+            font-size: 2rem; /* Tăng kích thước chữ */
+            line-height: 3rem;
+            letter-spacing: 0.15em; /* Tăng khoảng cách giữa các ký tự */
+            margin-right: 0.2em; /* Thêm khoảng cách nhỏ sau mỗi ký tự */
+        }
+        #text-to-type span.space-char {
+             margin-right: 0.5em; /* Tăng khoảng cách cho dấu cách */
+        }
+
         .correct { color: #10b981; }
-        .incorrect { color: #ef4444; background-color: #fee2e2; border-radius: 2px; }
-        .current { background-color: #dbeafe; border-radius: 2px; }
+        .incorrect { color: #ef4444; background-color: #fee2e2; border-radius: 3px; }
+        .current { background-color: #dbeafe; border-radius: 3px; padding: 0 0.1em; }
         dialog::backdrop { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(3px); }
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -54,7 +65,7 @@
         </div>
 
         <!-- Text and Input Area -->
-        <div id="text-to-type" class="bg-slate-50 p-4 rounded-lg mb-4 text-slate-500 select-none tracking-wider font-mono min-h-[120px] flex items-center justify-center"></div>
+        <div id="text-to-type" class="bg-slate-50 p-6 rounded-lg mb-4 text-slate-500 select-none tracking-wider font-mono min-h-[120px] flex items-center justify-center flex-wrap"></div>
         <textarea id="typing-input" class="absolute opacity-0 w-0 h-0" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>
 
         <!-- Action Buttons -->
