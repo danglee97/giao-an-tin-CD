@@ -142,3 +142,74 @@ body {
     font-weight: 500;
 }
 
+/* ================================================================ */
+/* === CẬP NHẬT GIAO DIỆN CHO BÀN PHÍM ẢO                      === */
+/* ================================================================ */
+
+/* Định nghĩa các biến màu để dễ dàng thay đổi sau này */
+:root {
+    --key-bg: #ffffff; /* Màu nền phím */
+    --key-text: #374151; /* Màu chữ trên phím */
+    --key-border: #d1d5db; /* Màu viền phím */
+    --key-shadow: 0 3px 0 #a3a3a3; /* Hiệu ứng đổ bóng 3D */
+
+    --key-active-bg: #10b981; /* Màu nền phím khi nhấn */
+    --key-active-text: #ffffff; /* Màu chữ khi nhấn */
+    --key-active-shadow: 0 1px 0 #059669; /* Bóng khi nhấn */
+}
+
+/* Container chính của bàn phím */
+#keyboard {
+    background-color: #e5e7eb; /* Nền xám nhạt */
+    padding: 1rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* Tùy chỉnh cho từng phím */
+.key {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--key-bg);
+    color: var(--key-text);
+    border: 1px solid var(--key-border);
+    border-radius: 0.5rem; /* Bo góc mềm mại hơn */
+    padding: 0.75rem; /* Tăng padding để phím to hơn */
+    font-size: 1rem;
+    font-weight: 500;
+    min-width: 48px; /* Chiều rộng tối thiểu cho mỗi phím */
+    height: 48px; /* Chiều cao cố định */
+    text-transform: uppercase;
+    box-shadow: var(--key-shadow);
+    transition: all 0.07s ease-in-out;
+}
+
+/* Loại bỏ một số class của Tailwind để CSS này được ưu tiên */
+.key[class*="flex-grow"] {
+    flex-grow: 1; /* Thay thế các class flex-grow-* của Tailwind */
+}
+
+/* Style cho các phím đặc biệt (Tab, Shift, Enter...) */
+.key[data-key="Backspace"],
+.key[data-key="Tab"],
+.key[data-key="CapsLock"],
+.key[data-key="Enter"],
+.key[data-key="ShiftLeft"],
+.key[data-key="ShiftRight"] {
+    font-size: 0.8rem;
+    flex-grow: 2; /* Cho các phím này dài hơn một chút */
+}
+
+/* Style cho phím Space */
+.key[data-key="Space"] {
+    flex-grow: 5;
+}
+
+/* Trạng thái khi phím được nhấn (active) */
+.key.active {
+    background-color: var(--key-active-bg);
+    color: var(--key-active-text);
+    box-shadow: var(--key-active-shadow);
+    transform: translateY(2px); /* Hiệu ứng lún xuống khi nhấn */
+}

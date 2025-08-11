@@ -14,6 +14,11 @@
         .key.active { background-color: #10b981; color: white; transform: scale(0.95); box-shadow: 0 2px 10px rgba(16, 185, 129, 0.5); }
         .key { transition: all 0.07s ease-in-out; text-transform: uppercase; }
         #text-to-type { user-select: none; }
+        /* Style cho backdrop của dialog */
+        dialog::backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+        }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
@@ -69,7 +74,15 @@
         </div>
     </main>
 
-    <dialog id="name-modal" class="p-8 rounded-lg shadow-xl"><h2 class="text-2xl font-bold mb-4">Chào mừng bạn!</h2><p class="mb-6">Vui lòng nhập tên của bạn để bắt đầu và lưu kết quả.</p><form id="name-form"><input type="text" id="student-name-input" placeholder="Nhập tên của bạn..." class="w-full px-4 py-2 border rounded-md" required><button type="submit" class="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-md">Bắt đầu</button></form></dialog>
+    <dialog id="name-modal" class="p-8 rounded-lg shadow-xl backdrop:bg-black backdrop:bg-opacity-50">
+        <h2 class="text-2xl font-bold mb-4">Chào mừng bạn!</h2>
+        <p class="mb-6 text-gray-600">Vui lòng nhập tên của bạn để bắt đầu và lưu kết quả.</p>
+        <form id="name-form">
+            <input type="text" id="student-name-input" placeholder="Nhập tên của bạn..." class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
+            <button type="submit" class="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">Bắt đầu</button>
+        </form>
+    </dialog>
+
     <script src="practice.js"></script>
 </body>
 </html>
