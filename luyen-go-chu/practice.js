@@ -260,10 +260,24 @@ document.addEventListener('DOMContentLoaded', () => {
     resetBtn.addEventListener('click', resetGame);
     saveBtn.addEventListener('click', handleSave);
     textToTypeEl.addEventListener('click', () => typingInputEl.focus());
+    // [SỬA LỖI] Bổ sung lại logic làm sáng bàn phím và ngón tay
     document.addEventListener('keydown', (e) => {
         if (document.activeElement === typingInputEl) {
-            if (e.key === 'Tab') e.preventDefault();
+            if (e.key === 'Tab') {
+                e.preventDefault();
+            }
+            // Gọi hàm làm sáng mới
+            highlightKeyAndFinger(e.code);
         }
+    });
+
+    // [SỬA LỖI] Thêm lại bộ lắng nghe sự kiện keyup để tắt làm sáng
+    document.addEventListener('keyup', (e) => {
+         if (document.activeElement === typingInputEl) {
+            // Gọi hàm tắt làm sáng mới
+            unhighlightKeyAndFinger(e.code);
+        }
+    });
     });
     
     // Start the application
