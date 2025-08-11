@@ -141,3 +141,50 @@ body {
     color: #ef4444; /* Màu đỏ */
     font-weight: 500;
 }
+
+/* Lớp phủ toàn màn hình khi tải */
+#loading-state {
+    position: fixed; /* Hiển thị đè lên trên tất cả các nội dung khác */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9); /* Nền trắng hơi mờ */
+    z-index: 9999; /* Đảm bảo nó nằm trên cùng */
+    
+    /* Sử dụng Flexbox để căn giữa nội dung */
+    display: flex; /* Đã có trong JS, nhưng thêm vào CSS để rõ ràng */
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Xếp spinner và chữ theo chiều dọc */
+    gap: 20px; /* Khoảng cách giữa spinner và chữ */
+    
+    /* Hiệu ứng mờ dần khi xuất hiện/biến mất */
+    transition: opacity 0.3s ease;
+}
+
+/* Thêm một spinner (vòng xoay) để trực quan hơn */
+#loading-state::before {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 5px solid #f3f3f3; /* Màu nền của vòng xoay */
+    border-top-color: #3498db; /* Màu của phần đang xoay */
+    animation: spin 1s linear infinite; /* Gọi animation tên là 'spin' */
+}
+
+/* Định nghĩa animation 'spin' */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Tùy chỉnh phong cách cho dòng chữ "Đang tải..." */
+#loading-state {
+    color: #333;
+    font-size: 1.2em;
+    font-weight: 500;
+}

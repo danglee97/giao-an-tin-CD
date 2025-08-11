@@ -1,5 +1,5 @@
 // =================================================================
-// PHẦN CẤU HÌNH VÀ CÁC BIẾN HIỆN CÓ CỦA BẠN (GIỮ NGUYÊN)
+// PHẦN CẤU HÌNH VÀ BIẾN (GIỮ NGUYÊN CỦA BẠN)
 // =================================================================
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydBN4Jidb1wMD4uWVlwyBnQQQMLh0ycd28eLnI1HoEhbnupiBDkwpAjn5SheFPe8le/exec';
 
@@ -81,7 +81,7 @@ function unhighlightKeyAndFinger(keyCode) {
 }
 
 // =================================================================
-// TOÀN BỘ CÁC HÀM CŨ CỦA BẠN (GIỮ NGUYÊN)
+// CÁC HÀM XỬ LÝ GAME CỦA BẠN (GIỮ NGUYÊN HOÀN TOÀN)
 // =================================================================
 
 function showLoadingState(isLoading, message = '') {
@@ -199,14 +199,19 @@ function updateTimer() {
 async function handleSave() {
     saveBtn.disabled = true;
     saveStatusEl.textContent = 'Đang lưu...';
-    const dataToSave = {
-        studentName: state.studentName, lessonId: state.lessonId, lessonTitle: state.lessonTitle,
-        wpm: wpmEl.textContent, accuracy: accuracyEl.textContent.replace('%', ''),
-        duration: (state.endTime - state.startTime) / 1000, errors: state.errors
-    };
+    // [KHÔI PHỤC] Giữ nguyên cách bạn gọi hàm lưu kết quả
     try {
         const response = await fetch(`${SCRIPT_URL}?action=saveResult`, {
-            method: 'POST', body: JSON.stringify(dataToSave)
+            method: 'POST',
+            body: JSON.stringify({
+                 studentName: state.studentName,
+                 lessonId: state.lessonId,
+                 lessonTitle: state.lessonTitle,
+                 wpm: wpmEl.textContent,
+                 accuracy: accuracyEl.textContent.replace('%', ''),
+                 duration: (state.endTime - state.startTime) / 1000,
+                 errors: state.errors
+            })
         });
         const result = await response.json();
         if (!result.success) throw new Error(result.message);
@@ -221,7 +226,7 @@ async function handleSave() {
 
 
 // =================================================================
-// PHẦN KHỞI CHẠY VÀ LẮNG NGHE SỰ KIỆN CỦA BẠN (ĐÃ ĐƯỢC CẬP NHẬT)
+// PHẦN KHỞI CHẠY VÀ LẮNG NGHE SỰ KIỆN (GIỮ NGUYÊN CỦA BẠN + THÊM HIGHLIGHT)
 // =================================================================
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -229,8 +234,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!state.studentName && nameModal) nameModal.showModal();
     else if (welcomeMessageEl) welcomeMessageEl.textContent = `Xin chào, ${state.studentName}!`;
 
+    // [KHÔI PHỤC] - SỬ DỤNG ĐÚNG CÁCH TẢI DỮ LIỆU CỦA BẠN
     try {
-        const response = await fetch(SCRIPT_URL);
+        const response = await fetch(SCRIPT_URL); // <--- Giữ nguyên fetch() đơn giản
         if (!response.ok) throw new Error(`Lỗi mạng: ${response.statusText}`);
         typingLessons = await response.json();
         
@@ -241,11 +247,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } catch (error) {
         console.error("Không thể tải dữ liệu bài học:", error);
-        textToTypeEl.innerHTML = `<span class="error-message">Lỗi: Không thể tải dữ liệu. Vui lòng kiểm tra lại đường truyền và thử lại.</span>`;
+        textToTypeEl.innerHTML = `<span class="error-message">Lỗi: Không thể tải dữ liệu. Vui lòng kiểm tra lại đường truyền và URL Script.</span>`;
     } finally {
         showLoadingState(false);
     }
     
+    // Giữ nguyên các event listener khác của bạn
     nameForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const name = studentNameInput.value.trim();
@@ -263,10 +270,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     saveBtn.addEventListener('click', handleSave);
     textToTypeEl.addEventListener('click', () => typingInputEl.focus());
     
-    // [CẬP NHẬT] - Sửa lại bộ lắng nghe sự kiện keydown và thêm keyup
+    // [CẬP NHẬT] - CHỈ THÊM LOGIC HIGHLIGHT VÀO ĐÂY
     document.addEventListener('keydown', (e) => {
         if (document.activeElement === typingInputEl) {
-            // Chỉ chặn phím Tab để không mất focus, phím cách hoạt động bình thường
             if (e.key === 'Tab') {
                 e.preventDefault();
             }
