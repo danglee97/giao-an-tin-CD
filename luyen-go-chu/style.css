@@ -152,7 +152,6 @@ body {
     --key-text: #374151; /* Màu chữ trên phím */
     --key-border: #d1d5db; /* Màu viền phím */
     --key-shadow: 0 3px 0 #a3a3a3; /* Hiệu ứng đổ bóng 3D */
-
     --key-active-bg: #10b981; /* Màu nền phím khi nhấn */
     --key-active-text: #ffffff; /* Màu chữ khi nhấn */
     --key-active-shadow: 0 1px 0 #059669; /* Bóng khi nhấn */
@@ -183,6 +182,10 @@ body {
     text-transform: uppercase;
     box-shadow: var(--key-shadow);
     transition: all 0.07s ease-in-out;
+    -webkit-user-select: none; /* Ngăn chọn chữ trên phím */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 /* Loại bỏ một số class của Tailwind để CSS này được ưu tiên */
@@ -190,26 +193,4 @@ body {
     flex-grow: 1; /* Thay thế các class flex-grow-* của Tailwind */
 }
 
-/* Style cho các phím đặc biệt (Tab, Shift, Enter...) */
-.key[data-key="Backspace"],
-.key[data-key="Tab"],
-.key[data-key="CapsLock"],
-.key[data-key="Enter"],
-.key[data-key="ShiftLeft"],
-.key[data-key="ShiftRight"] {
-    font-size: 0.8rem;
-    flex-grow: 2; /* Cho các phím này dài hơn một chút */
-}
-
-/* Style cho phím Space */
-.key[data-key="Space"] {
-    flex-grow: 5;
-}
-
-/* Trạng thái khi phím được nhấn (active) */
-.key.active {
-    background-color: var(--key-active-bg);
-    color: var(--key-active-text);
-    box-shadow: var(--key-active-shadow);
-    transform: translateY(2px); /* Hiệu ứng lún xuống khi nhấn */
-}
+/* Style cho
