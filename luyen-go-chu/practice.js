@@ -278,7 +278,6 @@ document.addEventListener('DOMContentLoaded', () => {
             unhighlightKeyAndFinger(e.code);
         }
     });
-    });
     
     // Start the application
     initializeApp();
