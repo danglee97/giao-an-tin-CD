@@ -1,0 +1,123 @@
+/* === CÀI ĐẶT CHUNG & BIẾN MÀU === */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc; /* Màu nền xám nhạt */
+}
+
+:root {
+    --theme-blue: #002060;
+    --theme-red: #C00000;
+    --text-light: #6b7280; /* Màu chữ xám nhạt */
+}
+
+.text-theme-blue { color: var(--theme-blue); }
+.bg-theme-red { background-color: var(--theme-red); }
+.text-theme-red { color: var(--theme-red); }
+.bg-theme-blue { background-color: var(--theme-blue); }
+.border-theme-blue { border-color: var(--theme-blue); }
+
+
+/* === THIẾT KẾ THẺ CHỌN LỚP (GRADE CARD) - TRANG CHỦ === */
+.grade-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background-color: white;
+    border-radius: 1rem;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.grade-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    border-color: var(--theme-blue);
+}
+.grade-card-icon {
+    font-size: 3.5rem;
+    color: var(--theme-blue);
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease-in-out, color 0.3s ease;
+}
+.grade-card:hover .grade-card-icon {
+    transform: scale(1.15) rotate(-5deg);
+    color: var(--theme-red);
+}
+.grade-card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--theme-blue);
+    transition: color 0.3s ease;
+}
+
+/* === CSS CHO TRANG LUYỆN GÕ CHỮ === */
+.breadcrumb a {
+    transition: color 0.2s ease-in-out;
+}
+.level-section {
+    margin-bottom: 3.5rem;
+}
+.level-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--theme-blue);
+    border-bottom: 3px solid #e5e7eb;
+    padding-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+}
+.lesson-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 1.25rem 0.5rem;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.lesson-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--theme-blue);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+.lesson-number {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 0.25rem;
+}
+.lesson-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #374151;
+}
+.lesson-card:hover .lesson-title {
+    color: var(--theme-red);
+}
+
+/* Thẻ đặc biệt: Luyện tập / Kiểm tra */
+.lesson-card.is-practice, .lesson-card.is-test {
+    background-color: var(--theme-blue);
+}
+.lesson-card.is-practice:hover, .lesson-card.is-test:hover {
+    background-color: var(--theme-red);
+}
+.lesson-card.is-practice .lesson-title, .lesson-card.is-test .lesson-title {
+    color: white;
+    font-weight: 700;
+    margin-top: 0.25rem;
+}
+.lesson-card.is-practice i, .lesson-card.is-test i {
+    font-size: 1.25rem;
+    color: #ffc107; /* Màu vàng cho icon ngôi sao, đồng hồ */
+}
