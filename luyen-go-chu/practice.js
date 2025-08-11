@@ -1,11 +1,8 @@
 // =================================================================
-// PHẦN CẤU HÌNH
+// PHẦN CẤU HÌNH VÀ CÁC BIẾN HIỆN CÓ CỦA BẠN (GIỮ NGUYÊN)
 // =================================================================
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydBN4Jidb1wMD4uWVlwyBnQQQMLh0ycd28eLnI1HoEhbnupiBDkwpAjn5SheFPe8le/exec';
 
-// =================================================================
-// TRUY XUẤT CÁC THÀNH PHẦN GIAO DIỆN (DOM Elements)
-// =================================================================
 const appContainer = document.getElementById('app-container');
 const loadingState = document.getElementById('loading-state');
 const lessonTitleEl = document.getElementById('lesson-title');
@@ -23,9 +20,6 @@ const studentNameInput = document.getElementById('student-name-input');
 const welcomeMessageEl = document.getElementById('welcome-message');
 const lessonSelectorContainer = document.getElementById('lesson-selector-container');
 
-// =================================================================
-// BIẾN TRẠNG THÁI CỦA ỨNG DỤNG
-// =================================================================
 let typingLessons = {};
 let state = {
     studentName: localStorage.getItem('studentName') || '',
@@ -41,8 +35,9 @@ let state = {
 };
 
 // =================================================================
-// [TÍNH NĂNG] BẢN ĐỒ PHÍM VÀ NGÓN TAY
+// [PHẦN ĐƯỢC THÊM VÀO] - LOGIC HIGHLIGHT PHÍM VÀ NGÓN TAY
 // =================================================================
+
 const keyToFingerMap = {
     // Tay Trái
     'Backquote': 'finger-left-pinky', 'Tab': 'finger-left-pinky', 'CapsLock': 'finger-left-pinky', 'ShiftLeft': 'finger-left-pinky',
@@ -86,35 +81,16 @@ function unhighlightKeyAndFinger(keyCode) {
 }
 
 // =================================================================
-// TẢI DỮ LIỆU VÀ KHỞI TẠO ỨNG DỤNG
+// TOÀN BỘ CÁC HÀM CŨ CỦA BẠN (GIỮ NGUYÊN)
 // =================================================================
 
-async function loadLessonsAndInit() {
-    showLoadingState(true, 'Đang tải dữ liệu bài học...');
-    if (!state.studentName && nameModal) nameModal.showModal();
-    else if (welcomeMessageEl) welcomeMessageEl.textContent = `Xin chào, ${state.studentName}!`;
-
-    try {
-        const cachedLessons = localStorage.getItem('typingLessons');
-        if (cachedLessons) {
-            typingLessons = JSON.parse(cachedLessons);
-        } else {
-            const response = await fetch(`${SCRIPT_URL}?action=getLessons`);
-            if (!response.ok) throw new Error(`Lỗi mạng: ${response.statusText}`);
-            typingLessons = await response.json();
-            localStorage.setItem('typingLessons', JSON.stringify(typingLessons));
-        }
-
-        populateLessonSelector();
-        const urlParams = new URLSearchParams(window.location.search);
-        const lessonFromUrl = urlParams.get('lesson');
-        resetGame(lessonFromUrl || Object.keys(typingLessons)[0]);
-
-    } catch (error) {
-        console.error("Không thể tải dữ liệu bài học:", error);
-        textToTypeEl.innerHTML = `<span class="error-message">Lỗi: Không thể tải dữ liệu. Vui lòng kiểm tra lại đường truyền và thử lại.</span>`;
-    } finally {
-        showLoadingState(false);
+function showLoadingState(isLoading, message = '') {
+    if (loadingState) {
+        loadingState.style.display = isLoading ? 'flex' : 'none';
+        loadingState.textContent = message;
+    }
+    if (appContainer) {
+       appContainer.style.display = isLoading ? 'none' : 'block';
     }
 }
 
@@ -128,10 +104,6 @@ function populateLessonSelector() {
         lessonSelectorContainer.appendChild(button);
     }
 }
-
-// =================================================================
-// LOGIC CỐT LÕI CỦA TRÒ CHƠI
-// =================================================================
 
 function resetGame(lessonId) {
     if (state.timerInterval) clearInterval(state.timerInterval);
@@ -247,17 +219,33 @@ async function handleSave() {
     }
 }
 
-function showLoadingState(isLoading, message = '') {
-    if (loadingState) loadingState.style.display = isLoading ? 'flex' : 'none';
-    if (loadingState) loadingState.textContent = message;
-    if (appContainer) appContainer.style.display = isLoading ? 'none' : 'block';
-}
 
 // =================================================================
-// CÁC BỘ LẮNG NGHE SỰ KIỆN (Event Listeners)
+// PHẦN KHỞI CHẠY VÀ LẮNG NGHE SỰ KIỆN CỦA BẠN (ĐÃ ĐƯỢC CẬP NHẬT)
 // =================================================================
 
-function setupEventListeners() {
+document.addEventListener('DOMContentLoaded', async () => {
+    showLoadingState(true, 'Đang tải dữ liệu bài học...');
+    if (!state.studentName && nameModal) nameModal.showModal();
+    else if (welcomeMessageEl) welcomeMessageEl.textContent = `Xin chào, ${state.studentName}!`;
+
+    try {
+        const response = await fetch(SCRIPT_URL);
+        if (!response.ok) throw new Error(`Lỗi mạng: ${response.statusText}`);
+        typingLessons = await response.json();
+        
+        populateLessonSelector();
+        const urlParams = new URLSearchParams(window.location.search);
+        const lessonFromUrl = urlParams.get('lesson');
+        resetGame(lessonFromUrl || Object.keys(typingLessons)[0]);
+
+    } catch (error) {
+        console.error("Không thể tải dữ liệu bài học:", error);
+        textToTypeEl.innerHTML = `<span class="error-message">Lỗi: Không thể tải dữ liệu. Vui lòng kiểm tra lại đường truyền và thử lại.</span>`;
+    } finally {
+        showLoadingState(false);
+    }
+    
     nameForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const name = studentNameInput.value.trim();
@@ -274,10 +262,14 @@ function setupEventListeners() {
     resetBtn.addEventListener('click', () => resetGame(state.lessonId));
     saveBtn.addEventListener('click', handleSave);
     textToTypeEl.addEventListener('click', () => typingInputEl.focus());
-
+    
+    // [CẬP NHẬT] - Sửa lại bộ lắng nghe sự kiện keydown và thêm keyup
     document.addEventListener('keydown', (e) => {
         if (document.activeElement === typingInputEl) {
-            if (e.key === 'Tab') e.preventDefault();
+            // Chỉ chặn phím Tab để không mất focus, phím cách hoạt động bình thường
+            if (e.key === 'Tab') {
+                e.preventDefault();
+            }
             // Gọi hàm làm sáng phím và ngón tay
             highlightKeyAndFinger(e.code);
         }
@@ -289,12 +281,4 @@ function setupEventListeners() {
             unhighlightKeyAndFinger(e.code);
         }
     });
-}
-
-// =================================================================
-// KHỞI CHẠY ỨNG DỤNG
-// =================================================================
-document.addEventListener('DOMContentLoaded', () => {
-    setupEventListeners();
-    loadLessonsAndInit();
 });
