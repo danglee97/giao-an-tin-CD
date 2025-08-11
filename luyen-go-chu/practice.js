@@ -44,9 +44,15 @@ async function loadLessonsFromSheet(url) {
     try {
         const response = await fetch(url);
         if (!response.ok) {
-            throw new Error(`Network response was not ok: ${response.statusText}`);
+            // Throw an error with the HTTP status to give more context
+            throw new Error(`Lỗi mạng khi tải: ${response.status} ${response.statusText}`);
         }
         const csvText = await response.text();
+        
+        // Check if the CSV text is empty or just headers
+        if (!csvText || csvText.trim().split(/\r?\n/).length <= 1) {
+            throw new Error("File CSV trống hoặc không có dữ liệu.");
+        }
         
         // A more robust CSV parser that handles quotes and commas inside text
         const rows = csvText.trim().split(/\r?\n/);
@@ -77,8 +83,18 @@ async function loadLessonsFromSheet(url) {
         return lessons;
 
     } catch (error) {
-        console.error('Failed to load lessons from Google Sheet:', error);
-        loadingState.innerHTML = `<p class="text-red-500 font-bold">Lỗi tải dữ liệu bài học!</p><p class="text-slate-500 mt-2">Vui lòng kiểm tra lại đường dẫn Google Sheet và chắc chắn rằng bạn đã xuất bản nó lên web.</p>`;
+        console.error('Chi tiết lỗi tải Google Sheet:', error);
+        // Display a more detailed error message to the user
+        loadingState.innerHTML = `<div class="text-center">
+                                    <p class="text-red-500 font-bold">Lỗi tải dữ liệu bài học!</p>
+                                    <p class="text-slate-500 mt-2">Không thể kết nối tới Google Sheet. Vui lòng kiểm tra lại các bước sau:</p>
+                                    <ul class="text-left text-sm text-slate-600 list-disc list-inside mt-2">
+                                        <li>Đảm bảo bạn đã dán đúng link <strong>.csv</strong> (từ "Xuất bản lên web").</li>
+                                        <li>Kiểm tra lại xem file Google Sheet có đang được xuất bản hay không.</li>
+                                        <li>Thử làm mới trang bằng <strong>Ctrl+Shift+R</strong> để xóa cache.</li>
+                                    </ul>
+                                    <p class="text-xs text-gray-400 mt-4">Chi tiết lỗi (dành cho debug): ${error.message}</p>
+                                  </div>`;
         return null;
     }
 }
@@ -270,5 +286,3 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start the application
     initializeApp();
 });
-
-
