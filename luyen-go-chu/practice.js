@@ -45,14 +45,22 @@ async function loadLessonsFromScript(url) {
         if (!response.ok) {
             throw new Error(`Lỗi mạng khi tải: ${response.status} ${response.statusText}`);
         }
-        const lessons = await response.json();
+        const lessonsData = await response.json();
         
         // Check if the script returned an error message
-        if (lessons.status === 'error') {
-            throw new Error(lessons.message);
+        if (lessonsData.status === 'error') {
+            throw new Error(lessonsData.message);
         }
         
-        return lessons;
+        // [SỬA LỖI] Làm sạch dữ liệu, loại bỏ ký tự vô hình \r
+        Object.keys(lessonsData).forEach(lessonId => {
+            const lesson = lessonsData[lessonId];
+            if (lesson.texts && Array.isArray(lesson.texts)) {
+                lesson.texts = lesson.texts.map(text => text.replace(/\r/g, ''));
+            }
+        });
+        
+        return lessonsData;
 
     } catch (error) {
         console.error('Chi tiết lỗi tải bài học:', error);
