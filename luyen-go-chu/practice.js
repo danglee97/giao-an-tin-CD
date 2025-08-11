@@ -115,49 +115,48 @@ function resetGame() {
 
 // --- UI AND EVENT HANDLERS ---
 
-// =================================================================
-// [DÁN VÀO ĐÂY] - LOGIC HIGHLIGHT PHÍM VÀ NGÓN TAY
-// =================================================================
-
-const keyToFingerMap = {
-    // Tay Trái
-    'Backquote': 'finger-left-pinky', 'Tab': 'finger-left-pinky', 'CapsLock': 'finger-left-pinky', 'ShiftLeft': 'finger-left-pinky',
-    'KeyQ': 'finger-left-pinky', 'KeyA': 'finger-left-pinky', 'KeyZ': 'finger-left-pinky', 'Digit1': 'finger-left-pinky',
-    'KeyW': 'finger-left-ring', 'KeyS': 'finger-left-ring', 'KeyX': 'finger-left-ring', 'Digit2': 'finger-left-ring',
-    'KeyE': 'finger-left-middle', 'KeyD': 'finger-left-middle', 'KeyC': 'finger-left-middle', 'Digit3': 'finger-left-middle',
-    'KeyR': 'finger-left-index', 'KeyF': 'finger-left-index', 'KeyV': 'finger-left-index', 'Digit4': 'finger-left-index',
-    'KeyT': 'finger-left-index', 'KeyG': 'finger-left-index', 'KeyB': 'finger-left-index', 'Digit5': 'finger-left-index',
-    
-    // Tay Phải
-    'KeyY': 'finger-right-index', 'KeyH': 'finger-right-index', 'KeyN': 'finger-right-index', 'Digit6': 'finger-right-index',
-    'KeyU': 'finger-right-index', 'KeyJ': 'finger-right-index', 'KeyM': 'finger-right-index', 'Digit7': 'finger-right-index',
-    'KeyI': 'finger-right-middle', 'KeyK': 'finger-right-middle', 'Comma': 'finger-right-middle', 'Digit8': 'finger-right-middle',
-    'KeyO': 'finger-right-ring', 'KeyL': 'finger-right-ring', 'Period': 'finger-right-ring', 'Digit9': 'finger-right-ring',
-    'KeyP': 'finger-right-pinky', 'Semicolon': 'finger-right-pinky', 'Slash': 'finger-right-pinky', 'Digit0': 'finger-right-pinky',
-    'BracketLeft': 'finger-right-pinky', 'Quote': 'finger-right-pinky', 'Minus': 'finger-right-pinky', 'Equal': 'finger-right-pinky',
-    'BracketRight': 'finger-right-pinky', 'Backslash': 'finger-right-pinky', 'ShiftRight': 'finger-right-pinky', 'Enter': 'finger-right-pinky',
-
-    // Ngón cái
-    'Space': 'finger-left-thumb',
-};
-
+const keyToFingerMap = {'q':'left-pinky','a':'left-pinky','z':'left-pinky','1':'left-pinky','`':'left-pinky','Tab':'left-pinky','ShiftLeft':'left-pinky','ControlLeft':'left-pinky','w':'left-ring','s':'left-ring','x':'left-ring','2':'left-ring','e':'left-middle','d':'left-middle','c':'left-middle','3':'left-middle','r':'left-index','f':'left-index','v':'left-index','4':'left-index','t':'left-index','g':'left-index','b':'left-index','5':'left-index','p':'right-pinky',';':'right-pinky','/':'right-pinky','[':'right-pinky',"'":'right-pinky',']':'right-pinky','\\':'right-pinky','Enter':'right-pinky','ShiftRight':'right-pinky','Backspace':'right-pinky','-':'right-pinky','=':'right-pinky','ControlRight':'right-pinky','o':'right-ring','l':'right-ring','.':'right-ring','9':'right-ring','0':'right-ring','i':'right-middle','k':'right-middle',',':'right-middle','8':'right-middle','u':'right-index','j':'right-index','m':'right-index','7':'right-index','y':'right-index','h':'right-index','n':'right-index','6':'right-index',' ':'left-thumb','AltLeft':'left-thumb','AltRight':'right-thumb','MetaLeft':'left-thumb'};
+const highlight=key=>{let a=key.toLowerCase();key.length>1&&" "!==key&&(a=key);const t=keyToFingerMap[a];if(t){const e=document.getElementById(t);e&&(e.classList.add("active")," "===a&&document.getElementById("right-thumb").classList.add("active"))}const e=document.querySelector(`.key[data-key="${a}"]`)||document.querySelector(`.key[data-key="${key}"]`);e&&e.classList.add("active")};
+const unhighlight=key=>{let a=key.toLowerCase();key.length>1&&" "!==key&&(a=key);const t=keyToFingerMap[a];if(t){const e=document.getElementById(t);e&&(e.classList.remove("active")," "===a&&document.getElementById("right-thumb").classList.remove("active"))}const e=document.querySelector(`.key[data-key="${a}"]`)||document.querySelector(`.key[data-key="${key}"]`);e&&e.classList.remove("active")};
+/**
+ * Hàm làm sáng phím và ngón tay tương ứng
+ * @param {string} keyCode - Mã của phím (ví dụ: 'KeyA', 'Space')
+ */
 function highlightKeyAndFinger(keyCode) {
+    // 1. Làm sáng phím trên bàn phím ảo
     const keyEl = document.querySelector(`.key[data-key="${keyCode}"]`);
-    if (keyEl) keyEl.classList.add('active');
+    if (keyEl) {
+        keyEl.classList.add('active');
+    }
+
+    // 2. Làm sáng ngón tay tương ứng trên hình vẽ
     const fingerId = keyToFingerMap[keyCode];
     if (fingerId) {
         const fingerEl = document.getElementById(fingerId);
-        if (fingerEl) fingerEl.classList.add('active');
+        if (fingerEl) {
+            fingerEl.classList.add('active');
+        }
     }
 }
 
+/**
+ * Hàm tắt làm sáng phím và ngón tay
+ * @param {string} keyCode - Mã của phím
+ */
 function unhighlightKeyAndFinger(keyCode) {
+    // 1. Tắt làm sáng phím
     const keyEl = document.querySelector(`.key[data-key="${keyCode}"]`);
-    if (keyEl) keyEl.classList.remove('active');
+    if (keyEl) {
+        keyEl.classList.remove('active');
+    }
+
+    // 2. Tắt làm sáng ngón tay
     const fingerId = keyToFingerMap[keyCode];
     if (fingerId) {
         const fingerEl = document.getElementById(fingerId);
-        if (fingerEl) fingerEl.classList.remove('active');
+        if (fingerEl) {
+            fingerEl.classList.remove('active');
+        }
     }
 }
 
