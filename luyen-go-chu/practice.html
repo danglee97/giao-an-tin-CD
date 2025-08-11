@@ -4,92 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trình Luyện Gõ Phím</title>
-    <link rel="icon" type="image/png" href="../favicon.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: 'Be Vietnam Pro', sans-serif; background-color: #f0f2f5; }
-        .finger.active { fill: #34d399; transition: fill 0.1s ease-in-out; }
-        .key.active { background-color: #34d399; color: white; transform: scale(0.95); }
-        .key { transition: all 0.1s ease-in-out; }
-        #hands-svg { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
-        
-        /* [CẬP NHẬT] Chữ to và rõ ràng hơn */
-        #text-to-type span {
-            font-size: 2rem; /* Tăng kích thước chữ */
-            line-height: 3rem;
-            letter-spacing: 0.15em; /* Tăng khoảng cách giữa các ký tự */
-            margin-right: 0.2em; /* Thêm khoảng cách nhỏ sau mỗi ký tự */
-        }
-        #text-to-type span.space-char {
-             margin-right: 0.5em; /* Tăng khoảng cách cho dấu cách */
-        }
-
-        .correct { color: #10b981; }
-        .incorrect { color: #ef4444; background-color: #fee2e2; border-radius: 3px; }
-        .current { background-color: #dbeafe; border-radius: 3px; padding: 0 0.1em; }
-        dialog::backdrop { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(3px); }
-        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-100 flex items-center justify-center min-h-screen p-4">
+<body class="flex items-center justify-center min-h-screen">
 
-    <!-- Name Input Modal -->
-    <dialog id="name-modal" class="p-8 bg-white rounded-xl shadow-2xl w-full max-w-sm">
-        <h2 class="text-2xl font-bold text-slate-800 mb-4 text-center">Chào mừng bạn!</h2>
-        <p class="text-slate-600 mb-6 text-center">Vui lòng nhập tên của bạn để bắt đầu và lưu lại kết quả.</p>
+    <div id="loading-state" class="fixed top-0 left-0 w-full h-full bg-white z-50 flex-col items-center justify-center" style="display: none;">
+        <div class="loader"></div>
+        <p id="loading-message" class="mt-4 text-lg text-gray-600">Đang tải dữ liệu...</p>
+    </div>
+
+    <main id="app-container" class="app-wrapper">
+        <header class="app-header">
+            <h1 id="lesson-title" class="lesson-title">Trình Luyện Gõ Phím</h1>
+            <a href="index.html" class="link-back">
+                <i class="fas fa-list-ul"></i>&nbsp;Chọn bài học khác
+            </a>
+        </header>
+
+        <div id="lesson-selector-container" class="lesson-selector"></div>
+
+        <div class="stats-grid">
+            <div class="stat-card"><p class="stat-label">Tốc độ (WPM)</p><p id="wpm" class="stat-value">0</p></div>
+            <div class="stat-card"><p class="stat-label">Chính xác</p><p id="accuracy" class="stat-value">100%</p></div>
+            <div class="stat-card"><p class="stat-label">Thời gian</p><p id="timer" class="stat-value">0:00</p></div>
+        </div>
+
+        <div class="typing-area-wrapper">
+            <div id="text-to-type" class="text-to-type"></div>
+            <input type="text" id="typing-input" class="typing-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        </div>
+        
+        <div class="controls-area">
+            <p id="save-status"></p>
+            <div>
+                <button id="reset-btn" class="btn btn-secondary"><i class="fas fa-sync-alt"></i>&nbsp;Làm lại</button>
+                <button id="save-btn" class="btn btn-primary" disabled><i class="fas fa-save"></i>&nbsp;Lưu kết quả</button>
+            </div>
+        </div>
+
+        <div id="virtual-keyboard-container" class="keyboard-wrapper">
+            <div class="hands-container">
+                <svg id="hands-svg" viewBox="0 0 1000 300" class="hands-svg">
+                    <g id="left-hand"><path id="finger-left-pinky" class="finger" d="M220,280 C200,200 200,120 220,80 S240,40 250,80 S270,200 250,280 Z" /><path id="finger-left-ring" class="finger" d="M280,280 C260,180 260,100 280,60 S300,20 310,60 S330,180 310,280 Z" /><path id="finger-left-middle" class="finger" d="M340,280 C320,160 320,80 340,40 S360,0 370,40 S390,160 370,280 Z" /><path id="finger-left-index" class="finger" d="M400,280 C380,180 380,100 400,60 S420,20 430,60 S450,180 430,280 Z" /><path id="finger-left-thumb" class="finger" d="M430,280 C460,260 490,240 500,200 S490,150 460,180 S430,220 430,280 Z" /></g>
+                    <g id="right-hand"><path id="finger-right-pinky" class="finger" d="M780,280 C800,200 800,120 780,80 S760,40 750,80 S730,200 750,280 Z" /><path id="finger-right-ring" class="finger" d="M720,280 C740,180 740,100 720,60 S700,20 690,60 S670,180 690,280 Z" /><path id="finger-right-middle" class="finger" d="M660,280 C680,160 680,80 660,40 S640,0 630,40 S610,160 630,280 Z" /><path id="finger-right-index" class="finger" d="M600,280 C620,180 620,100 600,60 S580,20 570,60 S550,180 570,280 Z" /><path id="finger-right-thumb" class="finger" d="M570,280 C540,260 510,240 500,200 S510,150 540,180 S570,220 570,280 Z" /></g>
+                </svg>
+            </div>
+            <div id="keyboard" class="keyboard">
+                <div class="keyboard-row"><div class="key" data-key="Backquote">`</div><div class="key" data-key="Digit1">1</div><div class="key" data-key="Digit2">2</div><div class="key" data-key="Digit3">3</div><div class="key" data-key="Digit4">4</div><div class="key" data-key="Digit5">5</div><div class="key" data-key="Digit6">6</div><div class="key" data-key="Digit7">7</div><div class="key" data-key="Digit8">8</div><div class="key" data-key="Digit9">9</div><div class="key" data-key="Digit0">0</div><div class="key" data-key="Minus">-</div><div class="key" data-key="Equal">=</div><div class="key key-long" data-key="Backspace">Backspace</div></div>
+                <div class="keyboard-row"><div class="key key-med" data-key="Tab">Tab</div><div class="key" data-key="KeyQ">Q</div><div class="key" data-key="KeyW">W</div><div class="key" data-key="KeyE">E</div><div class="key" data-key="KeyR">R</div><div class="key" data-key="KeyT">T</div><div class="key" data-key="KeyY">Y</div><div class="key" data-key="KeyU">U</div><div class="key" data-key="KeyI">I</div><div class="key" data-key="KeyO">O</div><div class="key" data-key="KeyP">P</div><div class="key" data-key="BracketLeft">[</div><div class="key" data-key="BracketRight">]</div><div class="key key-med" data-key="Backslash">\</div></div>
+                <div class="keyboard-row"><div class="key key-long" data-key="CapsLock">Caps Lock</div><div class="key" data-key="KeyA">A</div><div class="key" data-key="KeyS">S</div><div class="key" data-key="KeyD">D</div><div class="key" data-key="KeyF">F</div><div class="key" data-key="KeyG">G</div><div class="key" data-key="KeyH">H</div><div class="key" data-key="KeyJ">J</div><div class="key" data-key="KeyK">K</div><div class="key" data-key="KeyL">L</div><div class="key" data-key="Semicolon">;</div><div class="key" data-key="Quote">'</div><div class="key key-long" data-key="Enter">Enter</div></div>
+                <div class="keyboard-row"><div class="key key-longest" data-key="ShiftLeft">Shift</div><div class="key" data-key="KeyZ">Z</div><div class="key" data-key="KeyX">X</div><div class="key" data-key="KeyC">C</div><div class="key" data-key="KeyV">V</div><div class="key" data-key="KeyB">B</div><div class="key" data-key="KeyN">N</div><div class="key" data-key="KeyM">M</div><div class="key" data-key="Comma">,</div><div class="key" data-key="Period">.</div><div class="key" data-key="Slash">/</div><div class="key key-longest" data-key="ShiftRight">Shift</div></div>
+                <div class="keyboard-row"><div class="key" data-key="ControlLeft">Ctrl</div><div class="key" data-key="MetaLeft">Win</div><div class="key" data-key="AltLeft">Alt</div><div class="key key-space" data-key="Space"></div><div class="key" data-key="AltRight">Alt</div><div class="key" data-key="ContextMenu">Menu</div><div class="key" data-key="ControlRight">Ctrl</div></div>
+            </div>
+        </div>
+    </main>
+
+    <dialog id="name-modal" class="modal">
+        <h2 class="modal-title">Chào mừng bạn!</h2>
+        <p class="modal-text">Vui lòng nhập tên của bạn để bắt đầu.</p>
         <form id="name-form">
-            <input type="text" id="student-name-input" placeholder="Nhập tên của bạn..." class="w-full px-4 py-3 border-2 border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 transition" required>
-            <button type="submit" class="w-full mt-4 bg-emerald-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-emerald-600 transition-colors">Bắt đầu</button>
+            <input type="text" id="student-name-input" placeholder="Nhập tên của bạn..." class="modal-input" required>
+            <button type="submit" class="btn btn-primary modal-btn">Bắt đầu</button>
         </form>
     </dialog>
 
-    <!-- Main Application -->
-    <div id="app-container" class="w-full max-w-5xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-8 hidden">
-        <a href="index.html" class="inline-block text-blue-600 hover:text-blue-800 mb-4"><i class="fas fa-arrow-left mr-2"></i>Quay lại chọn bài</a>
-        
-        <div class="text-center mb-4">
-            <h1 id="lesson-title" class="text-3xl md:text-4xl font-bold text-slate-800">Luyện Gõ Phím</h1>
-            <p id="welcome-message" class="text-slate-500 mt-2">Gõ đoạn văn bản dưới đây và cải thiện kỹ năng của bạn!</p>
-        </div>
-
-        <!-- Stats Display -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 text-center">
-            <div class="bg-slate-100 p-4 rounded-lg"><p class="text-sm text-slate-500">Tốc độ (WPM)</p><p id="wpm" class="text-3xl font-bold text-slate-800">0</p></div>
-            <div class="bg-slate-100 p-4 rounded-lg"><p class="text-sm text-slate-500">Chính xác (%)</p><p id="accuracy" class="text-3xl font-bold text-slate-800">100</p></div>
-            <div class="bg-slate-100 p-4 rounded-lg"><p class="text-sm text-slate-500">Thời gian</p><p id="timer" class="text-3xl font-bold text-slate-800">0s</p></div>
-        </div>
-
-        <!-- Text and Input Area -->
-        <div id="text-to-type" class="bg-slate-50 p-6 rounded-lg mb-4 text-slate-500 select-none tracking-wider font-mono min-h-[120px] flex items-center justify-center flex-wrap"></div>
-        <textarea id="typing-input" class="absolute opacity-0 w-0 h-0" spellcheck="false" autocorrect="off" autocapitalize="off"></textarea>
-
-        <!-- Action Buttons -->
-        <div class="text-center mb-6 space-x-4">
-            <button id="reset-btn" class="bg-blue-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-600 transition-colors">Thử lại bài này</button>
-            <button id="save-btn" class="bg-emerald-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-emerald-600 transition-colors disabled:bg-slate-400 disabled:cursor-not-allowed" disabled>Lưu kết quả</button>
-        </div>
-        <p id="save-status" class="text-center text-sm text-slate-500 h-5"></p>
-
-        <!-- Hands and Keyboard Visualizer (HTML is unchanged) -->
-        <div class="flex flex-col items-center">
-            <div id="hands-container" class="mb-6 flex justify-center"><svg id="hands-svg" width="400" height="200" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg"><g id="left-hand"><path id="left-pinky" class="finger" fill="#a7a7a7" d="M60,100 C40,110 30,140 40,160 C50,180 65,170 70,150 L60,100 Z"/><path id="left-ring" class="finger" fill="#a7a7a7" d="M80,80 C60,90 55,130 65,150 C75,170 90,160 95,140 L80,80 Z"/><path id="left-middle" class="finger" fill="#a7a7a7" d="M105,70 C85,80 80,125 90,145 C100,165 115,155 120,135 L105,70 Z"/><path id="left-index" class="finger" fill="#a7a7a7" d="M130,75 C110,85 105,130 115,150 C125,170 140,160 145,140 L130,75 Z"/><path id="left-thumb" class="finger" fill="#a7a7a7" d="M155,110 C165,130 180,140 190,130 C200,120 195,100 180,100 C165,100 155,110 155,110 Z"/></g><g id="right-hand"><path id="right-pinky" class="finger" fill="#a7a7a7" d="M340,100 C360,110 370,140 360,160 C350,180 335,170 330,150 L340,100 Z"/><path id="right-ring" class="finger" fill="#a7a7a7" d="M320,80 C340,90 345,130 335,150 C325,170 310,160 305,140 L320,80 Z"/><path id="right-middle" class="finger" fill="#a7a7a7" d="M295,70 C315,80 320,125 310,145 C300,165 285,155 280,135 L295,70 Z"/><path id="right-index" class="finger" fill="#a7a7a7" d="M270,75 C290,85 295,130 285,150 C275,170 260,160 255,140 L270,75 Z"/><path id="right-thumb" class="finger" fill="#a7a7a7" d="M245,110 C235,130 220,140 210,130 C200,120 205,100 220,100 C235,100 245,110 245,110 Z"/></g></svg></div>
-            <div id="keyboard" class="bg-slate-200 p-2 md:p-4 rounded-lg space-y-1 md:space-y-1.5 text-xs md:text-base"><div class="flex justify-center space-x-1 md:space-x-1.5"><div data-key="`" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">`</div><div data-key="1" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">1</div><div data-key="2" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">2</div><div data-key="3" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">3</div><div data-key="4" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">4</div><div data-key="5" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">5</div><div data-key="6" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">6</div><div data-key="7" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">7</div><div data-key="8" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">8</div><div data-key="9" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">9</div><div data-key="0" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">0</div><div data-key="-" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">-</div><div data-key="=" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">=</div><div data-key="Backspace" class="key w-16 md:w-24 h-10 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Back</div></div><div class="flex justify-center space-x-1 md:space-x-1.5"><div data-key="Tab" class="key w-14 md:w-20 h-10 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Tab</div><div data-key="q" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Q</div><div data-key="w" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">W</div><div data-key="e" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">E</div><div data-key="r" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">R</div><div data-key="t" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">T</div><div data-key="y" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Y</div><div data-key="u" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">U</div><div data-key="i" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">I</div><div data-key="o" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">O</div><div data-key="p" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">P</div><div data-key="[" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">[</div><div data-key="]" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">]</div><div data-key="\" class="key w-10 h-10 md:w-16 md:h-12 flex items-center justify-center bg-white rounded-md shadow">\</div></div><div class="flex justify-center space-x-1 md:space-x-1.5 ml-4"><div data-key="CapsLock" class="key w-16 md:w-24 h-10 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Caps</div><div data-key="a" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">A</div><div data-key="s" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">S</div><div data-key="d" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">D</div><div data-key="f" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">F</div><div data-key="g" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">G</div><div data-key="h" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">H</div><div data-key="j" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">J</div><div data-key="k" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">K</div><div data-key="l" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">L</div><div data-key=";" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">;</div><div data-key="'" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">'</div><div data-key="Enter" class="key w-16 md:w-28 h-10 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Enter</div></div><div class="flex justify-center space-x-1 md:space-x-1.5 ml-10"><div data-key="ShiftLeft" class="key w-20 md:w-32 h-10 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Shift</div><div data-key="z" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Z</div><div data-key="x" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">X</div><div data-key="c" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">C</div><div data-key="v" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">V</div><div data-key="b" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">B</div><div data-key="n" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">N</div><div data-key="m" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">M</div><div data-key="," class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">,</div><div data-key="." class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">.</div><div data-key="/" class="key w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white rounded-md shadow">/</div><div data-key="ShiftRight" class="key w-20 md:w-36 h-10 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Shift</div></div><div class="flex justify-center space-x-1 md:space-x-1.5"><div data-key="ControlLeft" class="key w-16 h-10 md:w-20 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Ctrl</div><div data-key="MetaLeft" class="key w-16 h-10 md:w-20 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Win</div><div data-key="AltLeft" class="key w-16 h-10 md:w-20 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Alt</div><div data-key=" " class="key flex-grow h-10 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Space</div><div data-key="AltRight" class="key w-16 h-10 md:w-20 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Alt</div><div data-key="ControlRight" class="key w-16 h-10 md:w-20 md:h-12 flex items-center justify-center bg-white rounded-md shadow">Ctrl</div></div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Loading/Error State -->
-    <div id="loading-state" class="text-center">
-        <div class="loader mx-auto"></div>
-        <p class="mt-4 text-slate-600">Đang tải dữ liệu bài học...</p>
-    </div>
-
-    <!-- Main application script -->
-    <script src="practice.js" defer></script>
+    <script src="practice.js"></script>
 </body>
 </html>
