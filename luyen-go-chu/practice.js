@@ -1,7 +1,7 @@
 // =================================================================
 // PHẦN CẤU HÌNH
 // =================================================================
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydBN4Jidb1wMD4uWVlwyBnQQQMLh0ycd28eLnI1HoEhbnupiBDkwpAjn5SheFPe8le/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydBN4Jidb1wMD4uWVlwyBnQQQMLhh0ycd28eLnI1HoEhbnupiBDkwpAjn5SheFPe8le/exec';
 
 // =================================================================
 // TRUY XUẤT CÁC THÀNH PHẦN GIAO DIỆN (DOM Elements)
@@ -79,7 +79,9 @@ function unhighlightKeyAndFinger(keyCode) {
 // =================================================================
 
 function showLoadingState(isLoading, message = '') {
+    const loadingMessageEl = document.getElementById('loading-message');
     if (loadingState) loadingState.style.display = isLoading ? 'flex' : 'none';
+    if (loadingMessageEl && message) loadingMessageEl.textContent = message;
     if (appContainer) appContainer.style.display = isLoading ? 'block' : 'none';
 }
 
@@ -87,7 +89,7 @@ function populateLessonSelector() {
     lessonSelectorContainer.innerHTML = '';
     for (const lessonId in typingLessons) {
         const button = document.createElement('button');
-        button.className = 'px-3 py-1 text-sm border rounded-full hover:bg-blue-100 hover:border-blue-500';
+        button.className = 'px-3 py-1 text-sm border rounded-full hover:bg-blue-100 hover:border-blue-500 transition-all';
         button.textContent = typingLessons[lessonId].title;
         button.onclick = () => resetGame(lessonId);
         lessonSelectorContainer.appendChild(button);
@@ -111,10 +113,7 @@ function resetGame(lessonId) {
     lessonTitleEl.textContent = state.lessonTitle;
     typingInputEl.value = '';
     typingInputEl.disabled = false;
-    
-    // [SỬA LỖI KẾT THÚC SỚM] Đặt độ dài tối đa cho ô input
     typingInputEl.maxLength = state.text.length;
-
     typingInputEl.focus();
     renderTextToType();
     
@@ -132,12 +131,12 @@ function renderTextToType() {
         span.textContent = char;
         const typedChar = state.input[index];
         if (typedChar == null) {
-            if (char === ' ') span.className = 'bg-gray-200';
+            if (char === ' ') span.className = 'bg-gray-200 rounded-sm';
         } else if (typedChar === char) {
             span.className = 'text-green-500';
         } else {
             span.className = 'text-red-500';
-            if (char === ' ') span.className += ' bg-red-200';
+            if (char === ' ') span.className += ' bg-red-200 rounded-sm';
             else span.style.textDecoration = 'underline';
         }
         textToTypeEl.appendChild(span);
@@ -163,7 +162,11 @@ function handleInput() {
 function updateMetrics() {
     if (!state.startTime) return;
     const elapsedTime = (new Date() - state.startTime) / 60000;
-    if (elapsedTime === 0 && state.input.length > 0) return;
+    if (elapsedTime === 0 && state.input.length > 0) {
+        wpmEl.textContent = '...';
+        return;
+    }
+    if (elapsedTime === 0) return;
 
     const typedChars = state.input.length;
     let errors = 0;
@@ -171,7 +174,7 @@ function updateMetrics() {
         if (state.input[i] !== state.text[i]) errors++;
     }
     state.errors = errors;
-    wpmEl.textContent = elapsedTime > 0 ? Math.round((typedChars / 5) / elapsedTime) : 0;
+    wpmEl.textContent = Math.round((typedChars / 5) / elapsedTime);
     accuracyEl.textContent = `${typedChars > 0 ? Math.round(((typedChars - errors) / typedChars) * 100) : 100}%`;
 }
 
@@ -200,35 +203,38 @@ async function handleSave() {
 }
 
 // =================================================================
-// KHỞI CHẠY ỨNG DỤNG VÀ LẮNG NGHE SỰ KIỆN
+// [SỬA LỖI] KHỞI CHẠY ỨNG DỤNG VÀ LẮNG NGHE SỰ KIỆN
 // =================================================================
-async function main() {
-    showLoadingState(true, 'Đang tải dữ liệu...');
-    if (!state.studentName && nameModal) {
-        if (typeof nameModal.showModal === "function") {
-             nameModal.showModal();
+
+// Đợi cho toàn bộ cây HTML được tải xong rồi mới chạy JavaScript
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // Hàm chính để tải dữ liệu và bắt đầu game
+    async function main() {
+        showLoadingState(true, 'Đang tải dữ liệu bài học...');
+        if (!state.studentName && nameModal) {
+            if (typeof nameModal.showModal === "function") {
+                 nameModal.showModal();
+            }
+        }
+    
+        try {
+            const response = await fetch(SCRIPT_URL);
+            if (!response.ok) throw new Error(`Lỗi mạng khi tải bài học`);
+            typingLessons = await response.json();
+            populateLessonSelector();
+            const urlParams = new URLSearchParams(window.location.search);
+            resetGame(urlParams.get('lesson') || Object.keys(typingLessons)[0]);
+        } catch (error) {
+            console.error("Lỗi:", error);
+            lessonTitleEl.textContent = 'Lỗi Tải Dữ Liệu';
+            textToTypeEl.innerHTML = `<span class="text-red-500">Không thể kết nối. Vui lòng kiểm tra lại URL Script và cài đặt.</span>`;
+        } finally {
+            showLoadingState(false);
         }
     }
 
-    try {
-        const response = await fetch(SCRIPT_URL);
-        if (!response.ok) throw new Error('Lỗi mạng khi tải bài học');
-        typingLessons = await response.json();
-        populateLessonSelector();
-        const urlParams = new URLSearchParams(window.location.search);
-        resetGame(urlParams.get('lesson') || Object.keys(typingLessons)[0]);
-    } catch (error) {
-        console.error("Lỗi:", error);
-        lessonTitleEl.textContent = 'Lỗi Tải Dữ Liệu';
-        textToTypeEl.innerHTML = `<span class="text-red-500">Không thể kết nối. Vui lòng kiểm tra lại URL Script và cài đặt.</span>`;
-    } finally {
-        showLoadingState(false);
-    }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    main();
-
+    // Gắn tất cả các sự kiện vào đây, bên trong DOMContentLoaded
     nameForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const name = studentNameInput.value.trim();
@@ -258,4 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
             unhighlightKeyAndFinger(e.code);
         }
     });
+
+    // Chạy hàm chính để bắt đầu
+    main();
 });
