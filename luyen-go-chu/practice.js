@@ -1,9 +1,7 @@
 // --- CONFIGURATION ---
-// IMPORTANT: Paste your Google Sheet CSV URL here. This URL comes from "File > Share > Publish to web" and selecting "CSV".
-const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQCQoay5fefKoxYkIIeRuinvpy5uBUzul42A6jSxFUlq4bBvvYnm3y95vn7VFexFaNuhkjWPaLhDUuy/pub?gid=623755159&single=true&output=csv';
-
-// IMPORTANT: Paste your NEW Google Apps Script URL for saving results here. This URL comes from "Deploy > New deployment".
+// IMPORTANT: Paste your Google Apps Script URL here. This URL is used for BOTH fetching lessons and saving results.
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydBN4Jidb1wMD4uWVlwyBnQQQMLh0ycd28eLnI1HoEhbnupiBDkwpAjn5SheFPe8le/exec';
+
 
 // --- DOM Elements ---
 const appContainer = document.getElementById('app-container');
@@ -34,66 +32,40 @@ let state = {
 
 // --- CORE FUNCTIONS ---
 
-// Function to fetch and parse CSV data from Google Sheets
-async function loadLessonsFromSheet(url) {
-    if (!url || !url.includes('spreadsheets.google.com')) {
-         console.error('Invalid Google Sheet URL provided.');
-         loadingState.innerHTML = `<p class="text-red-500 font-bold">Lỗi cấu hình!</p><p class="text-slate-500 mt-2">Vui lòng cung cấp URL Google Sheet hợp lệ.</p>`;
+// Function to fetch and parse JSON data from our Google Apps Script
+async function loadLessonsFromScript(url) {
+    if (!url || url === 'URL_APPS_SCRIPT_MOI_CUA_BAN') {
+         console.error('Invalid Apps Script URL provided.');
+         loadingState.innerHTML = `<p class="text-red-500 font-bold">Lỗi cấu hình!</p><p class="text-slate-500 mt-2">Vui lòng cung cấp URL Apps Script hợp lệ.</p>`;
          return null;
     }
     try {
+        // We now fetch directly from our script, which returns JSON
         const response = await fetch(url);
         if (!response.ok) {
-            // Throw an error with the HTTP status to give more context
             throw new Error(`Lỗi mạng khi tải: ${response.status} ${response.statusText}`);
         }
-        const csvText = await response.text();
+        const lessons = await response.json();
         
-        // Check if the CSV text is empty or just headers
-        if (!csvText || csvText.trim().split(/\r?\n/).length <= 1) {
-            throw new Error("File CSV trống hoặc không có dữ liệu.");
+        // Check if the script returned an error message
+        if (lessons.status === 'error') {
+            throw new Error(lessons.message);
         }
         
-        // A more robust CSV parser that handles quotes and commas inside text
-        const rows = csvText.trim().split(/\r?\n/);
-        const headers = rows.shift().split(',');
-        
-        const data = rows.map(row => {
-            // This regex helps parse CSV rows correctly, even with commas in text
-            const values = row.match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g) || [];
-            return headers.reduce((obj, header, index) => {
-                obj[header.trim()] = values[index] ? values[index].trim() : '';
-                return obj;
-            }, {});
-        });
-        
-        const lessons = {};
-        data.forEach(item => {
-            const id = item.lesson_id;
-            if (!id) return;
-            if (!lessons[id]) {
-                lessons[id] = { title: item.title, texts: [] };
-            }
-            // Clean the text by removing potential surrounding quotes
-            const cleanText = item.text.startsWith('"') && item.text.endsWith('"') 
-                ? item.text.slice(1, -1).replace(/""/g, '"') // Handle double quotes inside
-                : item.text;
-            lessons[id].texts.push(cleanText);
-        });
         return lessons;
 
     } catch (error) {
-        console.error('Chi tiết lỗi tải Google Sheet:', error);
+        console.error('Chi tiết lỗi tải bài học:', error);
         // Display a more detailed error message to the user
         loadingState.innerHTML = `<div class="text-center">
                                     <p class="text-red-500 font-bold">Lỗi tải dữ liệu bài học!</p>
-                                    <p class="text-slate-500 mt-2">Không thể kết nối tới Google Sheet. Vui lòng kiểm tra lại các bước sau:</p>
+                                    <p class="text-slate-500 mt-2">Không thể lấy dữ liệu từ Apps Script. Vui lòng kiểm tra lại:</p>
                                     <ul class="text-left text-sm text-slate-600 list-disc list-inside mt-2">
-                                        <li>Đảm bảo bạn đã dán đúng link <strong>.csv</strong> (từ "Xuất bản lên web").</li>
-                                        <li>Kiểm tra lại xem file Google Sheet có đang được xuất bản hay không.</li>
-                                        <li>Thử làm mới trang bằng <strong>Ctrl+Shift+R</strong> để xóa cache.</li>
+                                        <li>Đảm bảo bạn đã dán đúng URL <strong>Ứng dụng web</strong>.</li>
+                                        <li>Kiểm tra lại xem Apps Script đã được triển khai lại với code mới nhất chưa.</li>
+                                        <li>Chắc chắn rằng ID Google Sheet trong file Code.gs là chính xác.</li>
                                     </ul>
-                                    <p class="text-xs text-gray-400 mt-4">Chi tiết lỗi (dành cho debug): ${error.message}</p>
+                                    <p class="text-xs text-gray-400 mt-4">Chi tiết lỗi: ${error.message}</p>
                                   </div>`;
         return null;
     }
@@ -225,7 +197,7 @@ function handleSave() {
 
     fetch(SCRIPT_URL, { 
         method: 'POST', 
-        mode: 'no-cors', // Use no-cors for simple one-way requests to Apps Script
+        mode: 'no-cors', 
         cache: 'no-cache', 
         headers: { 'Content-Type': 'application/json' }, 
         body: JSON.stringify(dataToSave) 
@@ -244,7 +216,8 @@ function handleSave() {
 
 // --- INITIALIZATION ---
 async function initializeApp() {
-    const lessons = await loadLessonsFromSheet(GOOGLE_SHEET_URL);
+    // We now call the Apps Script URL to get lessons
+    const lessons = await loadLessonsFromScript(SCRIPT_URL);
     if (lessons) {
         typingLessons = lessons;
         loadingState.classList.add('hidden');
@@ -255,7 +228,6 @@ async function initializeApp() {
 
 // Attach event listeners after the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Re-assign DOM elements in case the script is loaded before the DOM is ready
     const nameForm = document.getElementById('name-form');
     const typingInputEl = document.getElementById('typing-input');
     const resetBtn = document.getElementById('reset-btn');
