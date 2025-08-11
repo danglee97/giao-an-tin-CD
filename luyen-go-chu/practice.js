@@ -63,7 +63,7 @@ async function loadLessonsFromScript(url) {
                                     <ul class="text-left text-sm text-slate-600 list-disc list-inside mt-2">
                                         <li>Đảm bảo bạn đã dán đúng URL <strong>Ứng dụng web</strong>.</li>
                                         <li>Kiểm tra lại xem Apps Script đã được triển khai lại với code mới nhất chưa.</li>
-                                        <li>Chắc chắn rằng ID Google Sheet trong file Code.gs là chính xác.</li>
+                                        <li>Chắc chắn rằng tên các trang tính trong file Code.gs là chính xác ("Lessons", "NhatKyHocTap").</li>
                                     </ul>
                                     <p class="text-xs text-gray-400 mt-4">Chi tiết lỗi: ${error.message}</p>
                                   </div>`;
