@@ -1,6 +1,6 @@
 // --- CONFIGURATION ---
 // IMPORTANT: Paste your Google Sheet CSV URL here. This URL comes from "File > Share > Publish to web" and selecting "CSV".
-const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQCQoay5fefKoxYkIIeRuinvpy5uBUzul42A6jSxFUlq4bBvvYnm3y95vn7VFexFaNuhkjWPaLhDUuy/pub?output=tsv';
+const GOOGLE_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQCQoay5fefKoxYkIIeRuinvpy5uBUzul42A6jSxFUlq4bBvvYnm3y95vn7VFexFaNuhkjWPaLhDUuy/pub?gid=623755159&single=true&output=csv';
 
 // IMPORTANT: Paste your NEW Google Apps Script URL for saving results here. This URL comes from "Deploy > New deployment".
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbydBN4Jidb1wMD4uWVlwyBnQQQMLh0ycd28eLnI1HoEhbnupiBDkwpAjn5SheFPe8le/exec';
