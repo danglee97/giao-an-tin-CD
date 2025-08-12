@@ -132,16 +132,17 @@ const keyToFingerMap = {
 
 // Hàm làm sáng phím và ngón tay khi nhấn
 const highlightKeyAndFinger = (keyCode) => {
-    // Chuyển keyCode sang chữ thường để khớp với data-key, trừ các phím đặc biệt
-    let keyIdentifier = keyCode.toLowerCase();
-    if (keyCode.length > 1 && keyCode !== "Space") { // Giữ nguyên mã nếu là phím đặc biệt (ví dụ: KeyA, Digit1)
-        keyIdentifier = keyCode;
-    } else if (keyCode === "Space") { // Xử lý phím cách đặc biệt
-        keyIdentifier = " ";
-    } else if (keyCode.startsWith("Key")) { // Chuyển "KeyA" thành "a"
-        keyIdentifier = keyCode.substring(3).toLowerCase();
-    } else if (keyCode.startsWith("Digit")) { // Chuyển "Digit1" thành "1"
-        keyIdentifier = keyCode.substring(5);
+    let keyIdentifier;
+
+    // Chuyển đổi keyCode (ví dụ: "KeyA", "Digit1") thành ký tự tương ứng ("a", "1")
+    if (keyCode.startsWith("Key")) {
+        keyIdentifier = keyCode.substring(3).toLowerCase(); // Ví dụ: "KeyA" -> "a"
+    } else if (keyCode.startsWith("Digit")) {
+        keyIdentifier = keyCode.substring(5); // Ví dụ: "Digit1" -> "1"
+    } else if (keyCode === "Space") {
+        keyIdentifier = " "; // Xử lý phím cách riêng
+    } else {
+        keyIdentifier = keyCode; // Giữ nguyên mã cho các phím đặc biệt khác (ShiftLeft, Backspace, v.v.)
     }
 
     // Làm sáng ngón tay
@@ -159,9 +160,8 @@ const highlightKeyAndFinger = (keyCode) => {
     }
 
     // Làm sáng phím trên bàn phím ảo
-    // Tìm kiếm bằng data-key trực tiếp (ví dụ: "ShiftLeft") hoặc giá trị chữ thường (ví dụ: "q")
-    const keyEl = document.querySelector(`.key[data-key="${keyIdentifier}"]`) || 
-                  document.querySelector(`.key[data-key="${keyCode}"]`); // Thử với keyCode gốc
+    // Tìm kiếm phần tử phím dựa trên keyIdentifier đã chuyển đổi
+    const keyEl = document.querySelector(`.key[data-key="${keyIdentifier}"]`);
     if (keyEl) {
         keyEl.classList.add("active");
     }
@@ -169,16 +169,17 @@ const highlightKeyAndFinger = (keyCode) => {
 
 // Hàm tắt sáng phím và ngón tay khi nhả
 const unhighlightKeyAndFinger = (keyCode) => {
-    // Tương tự như hàm highlight, chuyển keyCode để tìm đúng phần tử
-    let keyIdentifier = keyCode.toLowerCase();
-    if (keyCode.length > 1 && keyCode !== "Space") {
-        keyIdentifier = keyCode;
-    } else if (keyCode === "Space") {
-        keyIdentifier = " ";
-    } else if (keyCode.startsWith("Key")) {
+    let keyIdentifier;
+
+    // Chuyển đổi keyCode tương tự như hàm highlight
+    if (keyCode.startsWith("Key")) {
         keyIdentifier = keyCode.substring(3).toLowerCase();
     } else if (keyCode.startsWith("Digit")) {
         keyIdentifier = keyCode.substring(5);
+    } else if (keyCode === "Space") {
+        keyIdentifier = " ";
+    } else {
+        keyIdentifier = keyCode;
     }
 
     // Tắt sáng ngón tay
@@ -196,8 +197,7 @@ const unhighlightKeyAndFinger = (keyCode) => {
     }
 
     // Tắt sáng phím trên bàn phím ảo
-    const keyEl = document.querySelector(`.key[data-key="${keyIdentifier}"]`) || 
-                  document.querySelector(`.key[data-key="${keyCode}"]`);
+    const keyEl = document.querySelector(`.key[data-key="${keyIdentifier}"]`);
     if (keyEl) {
         keyEl.classList.remove("active");
     }
