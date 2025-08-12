@@ -234,7 +234,9 @@ function handleInput() {
     updateTextDisplay();
     calculateMetrics();
 
-    if (state.input.length === state.text.length) {
+    // [FIX] Bài tập chỉ kết thúc khi toàn bộ văn bản được gõ đúng, bao gồm cả ký tự cuối cùng.
+    // Kiểm tra nếu tất cả các ký tự đã được gõ và không có lỗi (tức là độ chính xác 100% cho đến ký tự hiện tại)
+    if (state.input.length === state.text.length && state.errors === 0) {
         clearInterval(state.timerInterval);
         state.isTyping = false;
         state.isCompleted = true;
