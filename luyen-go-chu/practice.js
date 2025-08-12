@@ -284,17 +284,17 @@ function handleInput() {
     updateTextDisplay();
     calculateMetrics();
 
-    // [FIX] Bài tập chỉ kết thúc khi toàn bộ văn bản được gõ đúng, bao gồm cả ký tự cuối cùng.
-    // Kiểm tra nếu tất cả các ký tự đã được gõ và không có lỗi (tức là độ chính xác 100% cho đến ký tự hiện tại)
-    if (state.input.length === state.text.length && state.errors === 0) {
+    // [FIX] Nút lưu sẽ được kích hoạt khi người dùng gõ hết văn bản, bất kể có lỗi hay không.
+    // Điều kiện kết thúc bài tập vẫn giữ nguyên (gõ hết và không có lỗi để đạt 100%)
+    if (state.input.length === state.text.length) { // Chỉ cần kiểm tra đã gõ hết văn bản
         clearInterval(state.timerInterval);
         state.isTyping = false;
-        state.isCompleted = true;
+        state.isCompleted = true; // Bài tập được xem là hoàn thành
         state.endTime = new Date(); // Record end time
-        saveBtn.disabled = false; // Kích hoạt nút lưu khi hoàn thành
+        saveBtn.disabled = false; // Kích hoạt nút lưu
         typingInputEl.blur();
     } else {
-        saveBtn.disabled = true; // Vô hiệu hóa nút lưu nếu chưa hoàn thành hoặc có lỗi
+        saveBtn.disabled = true; // Vô hiệu hóa nút lưu nếu chưa gõ hết văn bản
     }
 }
 
