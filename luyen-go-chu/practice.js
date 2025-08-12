@@ -141,7 +141,32 @@ const highlightKeyAndFinger = (keyCode) => {
         keyIdentifier = keyCode.substring(5); // Ví dụ: "Digit1" -> "1"
     } else if (keyCode === "Space") {
         keyIdentifier = " "; // Xử lý phím cách riêng
-    } else {
+    } 
+    // [FIX] Xử lý các ký tự đặc biệt
+    else if (keyCode === "Semicolon") {
+        keyIdentifier = ";";
+    } else if (keyCode === "Quote") {
+        keyIdentifier = "'";
+    } else if (keyCode === "Comma") {
+        keyIdentifier = ",";
+    } else if (keyCode === "Period") {
+        keyIdentifier = ".";
+    } else if (keyCode === "Slash") {
+        keyIdentifier = "/";
+    } else if (keyCode === "BracketLeft") {
+        keyIdentifier = "[";
+    } else if (keyCode === "BracketRight") {
+        keyIdentifier = "]";
+    } else if (keyCode === "Backslash") {
+        keyIdentifier = "\\";
+    } else if (keyCode === "Minus") {
+        keyIdentifier = "-";
+    } else if (keyCode === "Equal") {
+        keyIdentifier = "=";
+    } else if (keyCode === "Backquote") { // Phím `
+        keyIdentifier = "`";
+    }
+    else {
         keyIdentifier = keyCode; // Giữ nguyên mã cho các phím đặc biệt khác (ShiftLeft, Backspace, v.v.)
     }
 
@@ -178,7 +203,32 @@ const unhighlightKeyAndFinger = (keyCode) => {
         keyIdentifier = keyCode.substring(5);
     } else if (keyCode === "Space") {
         keyIdentifier = " ";
-    } else {
+    } 
+    // [FIX] Xử lý các ký tự đặc biệt
+    else if (keyCode === "Semicolon") {
+        keyIdentifier = ";";
+    } else if (keyCode === "Quote") {
+        keyIdentifier = "'";
+    } else if (keyCode === "Comma") {
+        keyIdentifier = ",";
+    } else if (keyCode === "Period") {
+        keyIdentifier = ".";
+    } else if (keyCode === "Slash") {
+        keyIdentifier = "/";
+    } else if (keyCode === "BracketLeft") {
+        keyIdentifier = "[";
+    } else if (keyCode === "BracketRight") {
+        keyIdentifier = "]";
+    } else if (keyCode === "Backslash") {
+        keyIdentifier = "\\";
+    } else if (keyCode === "Minus") {
+        keyIdentifier = "-";
+    } else if (keyCode === "Equal") {
+        keyIdentifier = "=";
+    } else if (keyCode === "Backquote") {
+        keyIdentifier = "`";
+    }
+    else {
         keyIdentifier = keyCode;
     }
 
@@ -241,8 +291,10 @@ function handleInput() {
         state.isTyping = false;
         state.isCompleted = true;
         state.endTime = new Date(); // Record end time
-        saveBtn.disabled = false;
+        saveBtn.disabled = false; // Kích hoạt nút lưu khi hoàn thành
         typingInputEl.blur();
+    } else {
+        saveBtn.disabled = true; // Vô hiệu hóa nút lưu nếu chưa hoàn thành hoặc có lỗi
     }
 }
 
