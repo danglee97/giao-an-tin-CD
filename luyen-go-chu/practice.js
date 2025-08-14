@@ -237,16 +237,26 @@ function handleInput() {
     updateTextDisplay();
     calculateMetrics();
     
+    // [FIX] Đoạn mã MỚI - Sửa lỗi kết thúc sớm khi gõ VNI
+// Kiểm tra hoàn thành bài học
     if (state.input.length === state.text.length) {
-        clearInterval(state.timerInterval);
-        state.isTyping = false;
-        state.isCompleted = true; // Bài tập được xem là hoàn thành
-        state.endTime = new Date(); // Record end time
-        saveBtn.disabled = false; // Kích hoạt nút lưu
-        typingInputEl.blur();
+    // Khi độ dài bằng nhau, phải kiểm tra thêm nội dung có khớp 100% không
+    // để tránh trường hợp kết thúc bài sớm khi gõ VNI (vd: "vong5" so với "vọng.")
+        if (state.input === state.text) {
+            clearInterval(state.timerInterval);
+            state.isTyping = false;
+            state.isCompleted = true;
+            state.endTime = new Date();
+            saveBtn.disabled = false; // Kích hoạt nút Lưu
+            typingInputEl.blur();
+        } else {
+        // Độ dài đúng nhưng nội dung sai, không kết thúc bài
+            saveBtn.disabled = true;
+        }
     } else {
-        saveBtn.disabled = true; // Vô hiệu hóa nút lưu nếu chưa gõ hết văn bản
-    }
+    // Độ dài chưa bằng, chắc chắn chưa xong bài
+        saveBtn.disabled = true;
+}
 }
 
 function updateTimer() {
