@@ -22,10 +22,12 @@ const lessonTitleEl = document.getElementById('lesson-title');
 
 // --- Application State ---
 let typingLessons = {}; // This will be populated from Google Sheets
+// --- Application State ---
 let state = {
     studentName: '', text: '', input: '',
     timerInterval: null, errors: 0, isTyping: false, isCompleted: false,
-    isComposing: false, // [FIX] Thêm trạng thái để theo dõi bộ gõ (IME)
+    isComposing: false,
+    completionTimeout: null, // [FIX] Thêm biến để quản lý bộ đếm giờ hoàn thành
     // Detailed logging state
     startTime: null, 
     endTime: null
@@ -225,38 +227,42 @@ function updateTextDisplay() {
 }
 
 function handleInput() {
-    // [FIX] Nếu đang gõ ký tự phức hợp (ví dụ: gõ dấu), không xử lý
+    // [FIX] Xóa bộ đếm giờ kiểm tra hoàn thành đang chờ (nếu có)
+    clearTimeout(state.completionTimeout);
+
+    // Nếu bài đã xong hoặc đang gõ tiếng Việt thì không xử lý
     if (state.isCompleted || state.isComposing) return;
 
+    // Bắt đầu gõ và tính giờ
     if (!state.isTyping && typingInputEl.value.length > 0) {
         state.isTyping = true;
-        state.startTime = new Date(); // Record start time
+        state.startTime = new Date();
         state.timerInterval = setInterval(updateTimer, 1000);
     }
     state.input = typingInputEl.value;
     updateTextDisplay();
     calculateMetrics();
-    
-    // [FIX] Đoạn mã MỚI - Sửa lỗi kết thúc sớm khi gõ VNI
-// Kiểm tra hoàn thành bài học
+
+    // [FIX] Logic hoàn thành bài mới, có độ trễ để xử lý VNI và cho phép lưu khi có lỗi
     if (state.input.length === state.text.length) {
-    // Khi độ dài bằng nhau, phải kiểm tra thêm nội dung có khớp 100% không
-    // để tránh trường hợp kết thúc bài sớm khi gõ VNI (vd: "vong5" so với "vọng.")
-        if (state.input === state.text) {
-            clearInterval(state.timerInterval);
-            state.isTyping = false;
-            state.isCompleted = true;
-            state.endTime = new Date();
-            saveBtn.disabled = false; // Kích hoạt nút Lưu
-            typingInputEl.blur();
-        } else {
-        // Độ dài đúng nhưng nội dung sai, không kết thúc bài
-            saveBtn.disabled = true;
-        }
+        // Khi độ dài khớp, đặt một bộ đếm giờ ngắn để chờ bộ gõ xử lý.
+        state.completionTimeout = setTimeout(() => {
+            // Sau độ trễ, kiểm tra lại lần cuối trực tiếp từ ô nhập liệu.
+            if (typingInputEl.value.length === state.text.length) {
+                // Nếu độ dài vẫn không đổi, xác nhận bài đã kết thúc.
+                // Dừng bộ đếm giờ và cho phép lưu, bất kể có lỗi sai hay không.
+                clearInterval(state.timerInterval);
+                state.isTyping = false;
+                state.isCompleted = true;
+                state.endTime = new Date();
+                saveBtn.disabled = false; // Kích hoạt nút lưu
+                typingInputEl.blur();
+            }
+        }, 150); // Chờ 150ms
     } else {
-    // Độ dài chưa bằng, chắc chắn chưa xong bài
+        // Nếu độ dài chưa khớp, nút lưu vẫn bị vô hiệu hóa.
         saveBtn.disabled = true;
-}
+    }
 }
 
 function updateTimer() {
