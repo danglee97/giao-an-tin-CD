@@ -25,6 +25,7 @@ let typingLessons = {}; // This will be populated from Google Sheets
 let state = {
     studentName: '', text: '', input: '',
     timerInterval: null, errors: 0, isTyping: false, isCompleted: false,
+    isComposing: false, // [FIX] Thêm trạng thái để theo dõi bộ gõ (IME)
     // Detailed logging state
     startTime: null, 
     endTime: null
@@ -84,6 +85,7 @@ function resetGame() {
     clearInterval(state.timerInterval);
     state.isTyping = false;
     state.isCompleted = false;
+    state.isComposing = false;
     state.startTime = null; // Reset start time
     state.endTime = null;   // Reset end time
     state.errors = 0;
@@ -133,124 +135,69 @@ const keyToFingerMap = {
 // Hàm làm sáng phím và ngón tay khi nhấn
 const highlightKeyAndFinger = (keyCode) => {
     let keyIdentifier;
+    if (keyCode.startsWith("Key")) { keyIdentifier = keyCode.substring(3).toLowerCase(); } 
+    else if (keyCode.startsWith("Digit")) { keyIdentifier = keyCode.substring(5); } 
+    else if (keyCode === "Space") { keyIdentifier = " "; } 
+    else if (keyCode === "Semicolon") { keyIdentifier = ";"; } 
+    else if (keyCode === "Quote") { keyIdentifier = "'"; } 
+    else if (keyCode === "Comma") { keyIdentifier = ","; } 
+    else if (keyCode === "Period") { keyIdentifier = "."; } 
+    else if (keyCode === "Slash") { keyIdentifier = "/"; } 
+    else if (keyCode === "BracketLeft") { keyIdentifier = "["; } 
+    else if (keyCode === "BracketRight") { keyIdentifier = "]"; } 
+    else if (keyCode === "Backslash") { keyIdentifier = "\\"; } 
+    else if (keyCode === "Minus") { keyIdentifier = "-"; } 
+    else if (keyCode === "Equal") { keyIdentifier = "="; } 
+    else if (keyCode === "Backquote") { keyIdentifier = "`"; }
+    else { keyIdentifier = keyCode; }
 
-    // Chuyển đổi keyCode (ví dụ: "KeyA", "Digit1") thành ký tự tương ứng ("a", "1")
-    if (keyCode.startsWith("Key")) {
-        keyIdentifier = keyCode.substring(3).toLowerCase(); // Ví dụ: "KeyA" -> "a"
-    } else if (keyCode.startsWith("Digit")) {
-        keyIdentifier = keyCode.substring(5); // Ví dụ: "Digit1" -> "1"
-    } else if (keyCode === "Space") {
-        keyIdentifier = " "; // Xử lý phím cách riêng
-    } 
-    // [FIX] Xử lý các ký tự đặc biệt
-    else if (keyCode === "Semicolon") {
-        keyIdentifier = ";";
-    } else if (keyCode === "Quote") {
-        keyIdentifier = "'";
-    } else if (keyCode === "Comma") {
-        keyIdentifier = ",";
-    } else if (keyCode === "Period") {
-        keyIdentifier = ".";
-    } else if (keyCode === "Slash") {
-        keyIdentifier = "/";
-    } else if (keyCode === "BracketLeft") {
-        keyIdentifier = "[";
-    } else if (keyCode === "BracketRight") {
-        keyIdentifier = "]";
-    } else if (keyCode === "Backslash") {
-        keyIdentifier = "\\";
-    } else if (keyCode === "Minus") {
-        keyIdentifier = "-";
-    } else if (keyCode === "Equal") {
-        keyIdentifier = "=";
-    } else if (keyCode === "Backquote") { // Phím `
-        keyIdentifier = "`";
-    }
-    else {
-        keyIdentifier = keyCode; // Giữ nguyên mã cho các phím đặc biệt khác (ShiftLeft, Backspace, v.v.)
-    }
-
-    // Làm sáng ngón tay
     const fingerId = keyToFingerMap[keyIdentifier];
     if (fingerId) {
         const fingerEl = document.getElementById(fingerId);
         if (fingerEl) {
             fingerEl.classList.add("active");
-            // Đặc biệt cho phím Space, làm sáng cả hai ngón cái
             if (keyIdentifier === " ") {
                 document.getElementById("right-thumb").classList.add("active");
                 document.getElementById("left-thumb").classList.add("active");
             }
         }
     }
-
-    // Làm sáng phím trên bàn phím ảo
-    // Tìm kiếm phần tử phím dựa trên keyIdentifier đã chuyển đổi
     const keyEl = document.querySelector(`.key[data-key="${keyIdentifier}"]`);
-    if (keyEl) {
-        keyEl.classList.add("active");
-    }
+    if (keyEl) keyEl.classList.add("active");
 };
 
 // Hàm tắt sáng phím và ngón tay khi nhả
 const unhighlightKeyAndFinger = (keyCode) => {
     let keyIdentifier;
+    if (keyCode.startsWith("Key")) { keyIdentifier = keyCode.substring(3).toLowerCase(); } 
+    else if (keyCode.startsWith("Digit")) { keyIdentifier = keyCode.substring(5); } 
+    else if (keyCode === "Space") { keyIdentifier = " "; } 
+    else if (keyCode === "Semicolon") { keyIdentifier = ";"; } 
+    else if (keyCode === "Quote") { keyIdentifier = "'"; } 
+    else if (keyCode === "Comma") { keyIdentifier = ","; } 
+    else if (keyCode === "Period") { keyIdentifier = "."; } 
+    else if (keyCode === "Slash") { keyIdentifier = "/"; } 
+    else if (keyCode === "BracketLeft") { keyIdentifier = "["; } 
+    else if (keyCode === "BracketRight") { keyIdentifier = "]"; } 
+    else if (keyCode === "Backslash") { keyIdentifier = "\\"; } 
+    else if (keyCode === "Minus") { keyIdentifier = "-"; } 
+    else if (keyCode === "Equal") { keyIdentifier = "="; } 
+    else if (keyCode === "Backquote") { keyIdentifier = "`"; }
+    else { keyIdentifier = keyCode; }
 
-    // Chuyển đổi keyCode tương tự như hàm highlight
-    if (keyCode.startsWith("Key")) {
-        keyIdentifier = keyCode.substring(3).toLowerCase();
-    } else if (keyCode.startsWith("Digit")) {
-        keyIdentifier = keyCode.substring(5);
-    } else if (keyCode === "Space") {
-        keyIdentifier = " ";
-    } 
-    // [FIX] Xử lý các ký tự đặc biệt
-    else if (keyCode === "Semicolon") {
-        keyIdentifier = ";";
-    } else if (keyCode === "Quote") {
-        keyIdentifier = "'";
-    } else if (keyCode === "Comma") {
-        keyIdentifier = ",";
-    } else if (keyCode === "Period") {
-        keyIdentifier = ".";
-    } else if (keyCode === "Slash") {
-        keyIdentifier = "/";
-    } else if (keyCode === "BracketLeft") {
-        keyIdentifier = "[";
-    } else if (keyCode === "BracketRight") {
-        keyIdentifier = "]";
-    } else if (keyCode === "Backslash") {
-        keyIdentifier = "\\";
-    } else if (keyCode === "Minus") {
-        keyIdentifier = "-";
-    } else if (keyCode === "Equal") {
-        keyIdentifier = "=";
-    } else if (keyCode === "Backquote") {
-        keyIdentifier = "`";
-    }
-    else {
-        keyIdentifier = keyCode;
-    }
-
-    // Tắt sáng ngón tay
     const fingerId = keyToFingerMap[keyIdentifier];
     if (fingerId) {
         const fingerEl = document.getElementById(fingerId);
         if (fingerEl) {
             fingerEl.classList.remove("active");
-            // Tắt sáng cả hai ngón cái cho phím Space
             if (keyIdentifier === " ") {
                 document.getElementById("right-thumb").classList.remove("active");
                 document.getElementById("left-thumb").classList.remove("active");
             }
         }
     }
-
-    // Tắt sáng phím trên bàn phím ảo
     const keyEl = document.querySelector(`.key[data-key="${keyIdentifier}"]`);
-    if (keyEl) {
-        keyEl.classList.remove("active");
-    }
+    if (keyEl) keyEl.classList.remove("active");
 };
 
 
@@ -268,13 +215,19 @@ function updateTextDisplay() {
             }
         }
         if (index === state.input.length) className += ' current';
+        // Xử lý hiển thị dấu cách để dễ nhìn hơn
+        if (char === ' ') {
+            return `<span class="space-char ${className}">&nbsp;</span>`;
+        }
         return `<span class="${className}">${char}</span>`;
     }).join('');
     textToTypeEl.innerHTML = html;
 }
 
 function handleInput() {
-    if (state.isCompleted) return;
+    // [FIX] Nếu đang gõ ký tự phức hợp (ví dụ: gõ dấu), không xử lý
+    if (state.isCompleted || state.isComposing) return;
+
     if (!state.isTyping && typingInputEl.value.length > 0) {
         state.isTyping = true;
         state.startTime = new Date(); // Record start time
@@ -283,10 +236,8 @@ function handleInput() {
     state.input = typingInputEl.value;
     updateTextDisplay();
     calculateMetrics();
-
-    // [FIX] Nút lưu sẽ được kích hoạt khi người dùng gõ hết văn bản, bất kể có lỗi hay không.
-    // Điều kiện kết thúc bài tập vẫn giữ nguyên (gõ hết và không có lỗi để đạt 100%)
-    if (state.input.length === state.text.length) { // Chỉ cần kiểm tra đã gõ hết văn bản
+    
+    if (state.input.length === state.text.length) {
         clearInterval(state.timerInterval);
         state.isTyping = false;
         state.isCompleted = true; // Bài tập được xem là hoàn thành
@@ -329,7 +280,6 @@ function handleSave() {
     saveStatusEl.textContent = "Đang lưu...";
     saveStatusEl.style.color = '#64748b';
 
-    // Construct detailed data payload
     const durationInSeconds = state.endTime ? Math.round((state.endTime - state.startTime) / 1000) : 0;
     const dataToSave = { 
         studentName: state.studentName, 
@@ -363,7 +313,6 @@ function handleSave() {
 
 // --- INITIALIZATION ---
 async function initializeApp() {
-    // We now call the Apps Script URL to get lessons
     const lessons = await loadLessonsFromScript(SCRIPT_URL);
     if (lessons) {
         typingLessons = lessons;
@@ -373,8 +322,8 @@ async function initializeApp() {
     }
 }
 
-// Attach event listeners after the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Lấy các element một lần để tái sử dụng
     const nameForm = document.getElementById('name-form');
     const typingInputEl = document.getElementById('typing-input');
     const resetBtn = document.getElementById('reset-btn');
@@ -399,20 +348,32 @@ document.addEventListener('DOMContentLoaded', () => {
     resetBtn.addEventListener('click', resetGame);
     saveBtn.addEventListener('click', handleSave);
     textToTypeEl.addEventListener('click', () => typingInputEl.focus());
-    // Lắng nghe sự kiện keydown để làm sáng bàn phím và ngón tay
+    
+    // [FIX] Thêm các sự kiện để xử lý bộ gõ Tiếng Việt (IME)
+    typingInputEl.addEventListener('compositionstart', () => {
+        state.isComposing = true;
+    });
+
+    typingInputEl.addEventListener('compositionend', () => {
+        state.isComposing = false;
+        // Gọi lại handleInput sau khi quá trình gõ kết thúc
+        // để đảm bảo ký tự cuối cùng được cập nhật và kiểm tra.
+        handleInput();
+    });
+
     document.addEventListener('keydown', (e) => {
+        // Chỉ xử lý khi ô nhập liệu đang được focus
         if (document.activeElement === typingInputEl) {
             if (e.key === 'Tab') {
-                e.preventDefault();
+                e.preventDefault(); // Ngăn hành vi mặc định của phím Tab
             }
-            highlightKeyAndFinger(e.code); // Gọi hàm làm sáng mới
+            highlightKeyAndFinger(e.code);
         }
     });
 
-    // Lắng nghe sự kiện keyup để tắt làm sáng bàn phím và ngón tay
     document.addEventListener('keyup', (e) => {
-         if (document.activeElement === typingInputEl) {
-            unhighlightKeyAndFinger(e.code); // Gọi hàm tắt làm sáng mới
+        if (document.activeElement === typingInputEl) {
+            unhighlightKeyAndFinger(e.code);
         }
     });
     
