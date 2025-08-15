@@ -1,0 +1,135 @@
+/* --- Cài đặt chung --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    padding: 2rem;
+}
+
+/* --- Container chính --- */
+.course-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.course-container h1 {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    font-size: 2.5rem;
+    color: #1a2a4c;
+}
+
+/* --- Lưới hiển thị các khóa học --- */
+.course-grid {
+    display: grid;
+    /* Thiết lập 4 cột trên màn hình lớn */
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 2rem; /* Khoảng cách giữa các thẻ */
+}
+
+/* --- Thẻ khóa học --- */
+.course-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.course-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* --- Phần đầu thẻ (có màu) --- */
+.card-header {
+    padding: 2rem 1.5rem;
+    color: white;
+    text-align: center;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.card-header .subtitle {
+    font-size: 0.9rem;
+    font-weight: 400;
+    margin-top: 0.5rem;
+    opacity: 0.9;
+    text-transform: none;
+}
+
+/* --- Các màu nền khác nhau cho thẻ --- */
+.bg-red { background: linear-gradient(45deg, #f857a6, #ff5858); }
+.bg-green { background: linear-gradient(45deg, #16a085, #f4d03f); }
+.bg-blue { background: linear-gradient(45deg, #4776e6, #8e54e9); }
+.bg-purple { background: linear-gradient(45deg, #8e2de2, #4a00e0); }
+.bg-yellow { background: linear-gradient(45deg, #f7971e, #ffd200); }
+.bg-orange { background: linear-gradient(45deg, #ff4e50, #f9d423); }
+.bg-dark-purple { background: linear-gradient(45deg, #654ea3, #eaafc8); }
+.bg-dark-blue { background: linear-gradient(45deg, #0f2027, #203a43, #2c5364); }
+
+
+/* --- Phần thân và chân thẻ --- */
+.card-body {
+    padding: 1.5rem;
+    flex-grow: 1; /* Giúp đẩy phần footer xuống dưới cùng */
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.card-footer {
+    padding: 0 1.5rem 1.5rem;
+    text-align: right;
+}
+
+.rating {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.rating .fa-star {
+    color: #f8c200;
+    margin-right: 0.3rem;
+}
+
+/* --- Thiết lập Responsive cho các màn hình khác nhau --- */
+
+/* Máy tính bảng (<= 992px) */
+@media (max-width: 992px) {
+    .course-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 cột */
+    }
+}
+
+/* Điện thoại di động (<= 576px) */
+@media (max-width: 576px) {
+    body {
+        padding: 1rem;
+    }
+    .course-container h1 {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+    .course-grid {
+        grid-template-columns: 1fr; /* 1 cột */
+    }
+}
