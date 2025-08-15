@@ -15,13 +15,47 @@
             width: 100%;
             height: 80vh; /* Chiều cao cố định để hiển thị PDF */
             border-radius: 0.5rem;
-            overflow: hidden; /* Đảm bảo nội dung PDF không tràn ra ngoài */
+            overflow: hidden;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            background-color: white; /* Nền trắng cho iframe */
         }
         .pdf-viewer-container iframe {
             width: 100%;
             height: 100%;
             border: none;
+        }
+        /* Ẩn phần tử theo mặc định */
+        .hidden {
+            display: none;
+        }
+        /* Kiểu cho nút quay lại/đóng */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background-color: var(--theme-blue);
+            color: white;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        .back-button:hover {
+            background-color: var(--theme-red);
+        }
+        .back-button i {
+            margin-right: 0.5rem;
+        }
+        /* Đảm bảo hình ảnh chú mèo vẫn đúng kích thước */
+        .grade-card .scratch-cat-icon {
+            width: 3.5rem;
+            height: 3.5rem;
+            object-fit: contain;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease-in-out;
+        }
+        .grade-card:hover .scratch-cat-icon {
+            transform: scale(1.15); /* Không xoay để giữ hình ảnh mèo */
         }
     </style>
 </head>
@@ -29,17 +63,26 @@
 
     <main class="max-w-6xl w-full mx-auto text-center p-4 sm:p-8">
         <a href="../index.html" title="Trở về trang chủ" class="inline-flex items-center text-theme-blue hover:text-theme-red transition-colors duration-300 mb-6">
-            <i class="fas fa-arrow-left mr-2"></i> Trở về
+            <i class="fas fa-arrow-left mr-2"></i> Trở về Trang chủ
         </a>
         <h1 class="text-4xl sm:text-5xl font-bold text-theme-blue mb-6">Tài liệu lập trình Scratch</h1>
-        <p class="text-lg text-gray-500 mb-8">Nội dung học tập và hướng dẫn chi tiết</p>
+        <p class="text-lg text-gray-500 mb-8">Chọn tài liệu bạn muốn xem dưới đây:</p>
 
-        <!-- Container cho PDF Viewer -->
-        <div class="pdf-viewer-container">
-            <!-- Thay thế 'duong_dan_den_file_tai_lieu_scratch_cua_ban.pdf' bằng đường dẫn đến file PDF thực tế của bạn -->
-            <iframe src="duong_dan_den_file_tai_lieu_scratch_cua_ban.pdf" title="Tài liệu lập trình Scratch">
-                Trình duyệt của bạn không hỗ trợ hiển thị PDF. Vui lòng tải xuống tài liệu: <a href="duong_dan_den_file_tai_lieu_scratch_cua_ban.pdf">Tải xuống PDF</a>.
-            </iframe>
+        <!-- Phần hiển thị danh sách các file PDF -->
+        <div id="pdf-list-section" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-12">
+            <!-- Các thẻ PDF sẽ được tạo tự động bởi JavaScript tại đây -->
+        </div>
+
+        <!-- Phần hiển thị trình xem PDF (ban đầu ẩn) -->
+        <div id="pdf-viewer-section" class="hidden w-full mt-8">
+            <button id="close-pdf-button" class="back-button">
+                <i class="fas fa-times mr-2"></i> Đóng tài liệu
+            </button>
+            <div class="pdf-viewer-container">
+                <iframe id="pdf-iframe" src="" title="Trình xem tài liệu PDF">
+                    Trình duyệt của bạn không hỗ trợ hiển thị PDF. Vui lòng tải xuống tài liệu: <a id="pdf-download-link" href="#" target="_blank">Tải xuống PDF</a>.
+                </iframe>
+            </div>
         </div>
     </main>
     
@@ -47,5 +90,76 @@
         <p class="text-sm text-gray-500">&copy; 2025 Bản quyền thuộc về Đăng Lee.</p>
     </footer>
 
+    <script>
+        // Mảng chứa thông tin các file PDF của bạn
+        // CẬP NHẬT DANH SÁCH NÀY MỖI KHI BẠN CÓ FILE PDF MỚI HOẶC THAY ĐỔI ĐƯỜNG DẪN
+        const pdfDocuments = [
+            { name: "Bài 1: Làm quen Scratch", path: "documents/scratch_bai1.pdf", icon: "fas fa-cat" },
+            { name: "Bài 2: Điều khiển nhân vật", path: "documents/scratch_bai2.pdf", icon: "fas fa-gamepad" },
+            { name: "Bài 3: Tạo hoạt hình", path: "documents/scratch_bai3.pdf", icon: "fas fa-film" },
+            { name: "Bài 4: Lập trình trò chơi", path: "documents/scratch_bai4.pdf", icon: "fas fa-dice" },
+            // Thêm các tài liệu PDF khác của bạn vào đây
+            // Ví dụ: { name: "Bài 5: Học về biến", path: "documents/scratch_bai5.pdf", icon: "fas fa-calculator" },
+        ];
+
+        const pdfListSection = document.getElementById('pdf-list-section');
+        const pdfViewerSection = document.getElementById('pdf-viewer-section');
+        const pdfIframe = document.getElementById('pdf-iframe');
+        const pdfDownloadLink = document.getElementById('pdf-download-link');
+        const closePdfButton = document.getElementById('close-pdf-button');
+
+        // Hàm để tạo và hiển thị danh sách các thẻ PDF
+        function renderPdfList() {
+            pdfListSection.innerHTML = ''; // Xóa nội dung cũ
+            pdfDocuments.forEach(doc => {
+                const card = document.createElement('a');
+                card.href = "#"; // Sử dụng JavaScript để xử lý click
+                card.classList.add('grade-card');
+                card.setAttribute('data-pdf-path', doc.path); // Lưu đường dẫn PDF vào thuộc tính data
+
+                // Chọn icon hoặc hình ảnh
+                let iconContent = '';
+                if (doc.icon.startsWith('fa-')) { // Nếu là icon Font Awesome
+                    iconContent = `<i class="${doc.icon} grade-card-icon"></i>`;
+                } else { // Nếu là đường dẫn hình ảnh (ví dụ: chú mèo Scratch)
+                    iconContent = `<img src="${doc.icon}" alt="${doc.name} Icon" class="scratch-cat-icon grade-card-icon" style="width: 3.5rem; height: 3.5rem; object-fit: contain;">`;
+                }
+
+                card.innerHTML = `
+                    ${iconContent}
+                    <h2 class="grade-card-title">${doc.name}</h2>
+                `;
+                
+                card.addEventListener('click', (event) => {
+                    event.preventDefault(); // Ngăn chặn hành vi mặc định của thẻ a
+                    showPdfViewer(doc.path);
+                });
+                pdfListSection.appendChild(card);
+            });
+        }
+
+        // Hàm để hiển thị trình xem PDF
+        function showPdfViewer(pdfPath) {
+            pdfListSection.classList.add('hidden'); // Ẩn danh sách
+            pdfViewerSection.classList.remove('hidden'); // Hiện trình xem
+            pdfIframe.src = pdfPath; // Đặt nguồn PDF cho iframe
+            pdfDownloadLink.href = pdfPath; // Đặt đường dẫn tải xuống
+            pdfIframe.focus(); // Tập trung vào iframe
+        }
+
+        // Hàm để ẩn trình xem PDF và quay lại danh sách
+        function hidePdfViewer() {
+            pdfViewerSection.classList.add('hidden'); // Ẩn trình xem
+            pdfListSection.classList.remove('hidden'); // Hiện danh sách
+            pdfIframe.src = ""; // Xóa nguồn iframe để dừng tải
+            pdfDownloadLink.href = "#"; // Xóa đường dẫn tải xuống
+        }
+
+        // Gán sự kiện cho nút đóng PDF
+        closePdfButton.addEventListener('click', hidePdfViewer);
+
+        // Render danh sách PDF khi trang được tải
+        document.addEventListener('DOMContentLoaded', renderPdfList);
+    </script>
 </body>
 </html>
