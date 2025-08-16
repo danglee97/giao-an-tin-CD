@@ -6,167 +6,140 @@
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f0f2f5;
-    color: #333;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f7f9;
+    color: #444;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
     padding: 2rem;
 }
 
-/* --- Container chính --- */
-.course-container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* === PHẦN MỚI: NÚT QUAY LẠI === */
+/* --- Nút quay lại & Tiêu đề --- */
 .back-button {
     display: inline-block;
-    margin-bottom: 1.5rem; /* Tạo khoảng cách với tiêu đề bên dưới */
-    padding: 0.6rem 1.2rem;
-    background-color: #4a90e2;
-    color: white;
+    margin-bottom: 2rem;
+    color: #555;
     text-decoration: none;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-weight: 500;
+    transition: color 0.3s ease;
 }
 
 .back-button:hover {
-    background-color: #357ABD;
-    transform: translateY(-2px);
+    color: #F9A825;
 }
 
 .back-button i {
     margin-right: 0.5rem;
 }
-/* === KẾT THÚC PHẦN MỚI === */
 
-
-/* === PHẦN CẬP NHẬT: TIÊU ĐỀ NỔI BẬT === */
-.course-container h1 {
+.main-header {
     text-align: center;
-    margin-bottom: 2.5rem;
-    font-size: 3rem; /* Tăng kích thước một chút */
-    font-weight: 700;
-    
-    /* Hiệu ứng Gradient cho chữ */
-    background: linear-gradient(45deg, #4a00e0, #8e2de2, #f857a6);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-
-    /* Hiệu ứng bóng mờ cho chữ */
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 3rem;
 }
-/* === KẾT THÚC PHẦN CẬP NHẬT === */
 
+.main-header h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.8rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
 
-/* --- Lưới hiển thị các khóa học --- */
-.course-grid {
+.main-header h1 i {
+    color: #F9A825; /* Scratch Orange Color */
+    margin-right: 1rem;
+}
+
+.main-header p {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+}
+
+/* --- Lưới tài liệu --- */
+.document-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); 
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
 }
 
-/* --- Thẻ khóa học --- */
-.course-card {
+/* --- Thẻ tài liệu --- */
+.doc-card {
     background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     text-decoration: none;
     color: inherit;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.course-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-}
-
-/* --- Phần đầu thẻ (có màu) --- */
-.card-header {
-    padding: 2rem 1.5rem;
-    color: white;
-    text-align: center;
-    min-height: 140px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e0e0e0;
 }
 
-.card-header h2 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    text-transform: uppercase;
+.doc-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-.card-header .subtitle {
-    font-size: 0.9rem;
-    font-weight: 400;
-    margin-top: 0.5rem;
-    opacity: 0.9;
-    text-transform: none;
-}
-
-/* --- Các màu nền khác nhau cho thẻ --- */
-.bg-red { background: linear-gradient(45deg, #f857a6, #ff5858); }
-.bg-green { background: linear-gradient(45deg, #16a085, #f4d03f); }
-.bg-blue { background: linear-gradient(45deg, #4776e6, #8e54e9); }
-.bg-purple { background: linear-gradient(45deg, #8e2de2, #4a00e0); }
-.bg-yellow { background: linear-gradient(45deg, #f7971e, #ffd200); }
-.bg-orange { background: linear-gradient(45deg, #ff4e50, #f9d423); }
-.bg-dark-purple { background: linear-gradient(45deg, #654ea3, #eaafc8); }
-.bg-dark-blue { background: linear-gradient(45deg, #0f2027, #203a43, #2c5364); }
-
-
-/* --- Phần thân và chân thẻ --- */
-.card-body {
+.doc-card-content {
     padding: 1.5rem;
-    flex-grow: 1; 
-    font-weight: 600;
-    color: #2c3e50;
+    flex-grow: 1; /* Đẩy footer xuống dưới */
 }
 
-.card-footer {
-    padding: 0 1.5rem 1.5rem;
-    text-align: right;
+.pdf-icon {
+    font-size: 2.5rem;
+    color: #E53935; /* PDF Red Color */
+    margin-bottom: 1rem;
 }
 
-.rating {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #555;
+.doc-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.25rem;
+    color: #34495e;
+    margin-bottom: 0.5rem;
 }
 
-.rating .fa-star {
-    color: #f8c200;
-    margin-right: 0.3rem;
+.doc-subtitle {
+    font-size: 0.9rem;
+    color: #95a5a6;
 }
 
-/* --- Thiết lập Responsive --- */
-@media (max-width: 992px) {
-    .course-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.doc-card-footer {
+    background-color: #f7f7f7;
+    border-top: 1px solid #e0e0e0;
+    color: #333;
+    font-weight: 500;
+    padding: 0.8rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
 }
 
+.doc-card:hover .doc-card-footer {
+    background-color: #F9A825;
+    color: white;
+    border-color: #F9A825;
+}
+
+/* --- Responsive cho màn hình nhỏ --- */
 @media (max-width: 768px) {
-    .course-container h1 {
-        font-size: 2.5rem; /* Điều chỉnh lại font size trên màn hình nhỏ hơn */
+    .main-header h1 {
+        font-size: 2.2rem;
     }
 }
 
-@media (max-width: 576px) {
-    body {
+@media (max-width: 480px) {
+    .container {
         padding: 1rem;
     }
-    .course-container h1 {
-        font-size: 2rem;
+    .main-header h1 {
+        font-size: 1.8rem;
     }
-    .course-grid {
-        grid-template-columns: 1fr;
+    .main-header p {
+        font-size: 1rem;
     }
 }
