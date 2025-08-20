@@ -50,7 +50,12 @@ async function fetchData() {
         chaptersContainer.innerHTML = `<div class="text-center p-6 bg-red-100 border-l-4 border-red-500 text-red-700 rounded-lg"><h3 class="font-bold text-lg mb-2">Lỗi Cấu Hình!</h3><p>Bạn chưa cập nhật URL của Google Sheet API trong tệp <strong>app.js</strong>.</p><p class="mt-1">Vui lòng thay thế dòng chữ <code>'DÁN_URL_CỦA_BẠN_VÀO_ĐÂY'</code> bằng URL ứng dụng web bạn đã nhận được từ Google Apps Script.</p></div>`;
         return;
     }
-    chaptersContainer.innerHTML = '<p class="text-center text-gray-500 animate-pulse">Đang tải dữ liệu bài học...</p>';
+    chaptersContainer.innerHTML = `
+        <div class="text-center py-10">
+            <div class="loader"></div>
+            <p class="text-gray-500 mt-4 animate-pulse">Đang tải dữ liệu bài học...</p>
+        </div>`;
+    /*chaptersContainer.innerHTML = '<p class="text-center text-gray-500 animate-pulse">Đang tải dữ liệu bài học...</p>';*/
     try {
         const response = await fetch(GOOGLE_SHEET_API_URL);
         if (!response.ok) throw new Error(`Lỗi mạng: ${response.statusText}`);
