@@ -1,8 +1,19 @@
 /* === CÀI ĐẶT CHUNG & BIẾN MÀU === */
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #f8fafc; /* Màu nền xám nhạt */
+    /* Màu nền được quản lý bởi script hiệu ứng hạt */
 }
+
+/* === [MỚI] CONTAINER CHO HIỆU ỨNG HẠT === */
+#particles-container {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -1; /* Đặt phía sau mọi nội dung khác */
+}
+
 
 :root {
     --theme-blue: #002060;
@@ -24,7 +35,9 @@ body {
     align-items: center;
     justify-content: center;
     padding: 2rem 1rem;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.85); /* Thêm độ trong suốt nhẹ */
+    backdrop-filter: blur(5px); /* Hiệu ứng mờ kính */
+    -webkit-backdrop-filter: blur(5px);
     border-radius: 1rem;
     border: 1px solid #e5e7eb;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
@@ -37,6 +50,7 @@ body {
     transform: translateY(-8px);
     box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
     border-color: var(--theme-blue);
+    background-color: rgba(255, 255, 255, 1);
 }
 .grade-card-icon {
     font-size: 3.5rem;
