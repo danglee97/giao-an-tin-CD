@@ -55,5 +55,80 @@
     <!-- [QUAN TRỌNG] Bỏ qua data.js vì dữ liệu sẽ được tải từ Google Sheet -->
     <!-- <script src="data.js"></script> -->
     <script src="app.js"></script>
+    <!-- Thư viện hiệu ứng hạt -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+    
+    <!-- Script khởi tạo hiệu ứng -->
+    <script>
+        window.addEventListener('load', () => {
+            tsParticles.load("particles-container", {
+                fpsLimit: 60,
+                background: {
+                    color: "#f8fafc"
+                },
+                particles: {
+                    number: {
+                        value: 50,
+                        density: {
+                            enable: true,
+                            value_area: 800
+                        }
+                    },
+                    color: {
+                        value: "#6b7280"
+                    },
+                    shape: {
+                        type: "circle"
+                    },
+                    opacity: {
+                        value: 0.5,
+                        random: true
+                    },
+                    size: {
+                        value: 3,
+                        random: true
+                    },
+                    links: {
+                        enable: true,
+                        distance: 150,
+                        color: "#6b7280",
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 1,
+                        direction: "none",
+                        out_mode: "out",
+                        bounce: false,
+                        attract: {
+                            enable: false,
+                            rotateX: 600,
+                            rotateY: 1200
+                        }
+                    }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: {
+                        onhover: {
+                            enable: true,
+                            mode: "grab"
+                        },
+                        resize: true
+                    },
+                    modes: {
+                        grab: {
+                            distance: 140,
+                            line_linked: {
+                                opacity: 1
+                            }
+                        }
+                    }
+                },
+                detectRetina: true
+            });
+        });
+    </script>
 </body>
 </html>
