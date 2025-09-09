@@ -256,3 +256,48 @@ body {
     cursor: not-allowed;
     opacity: 0.8;
 }
+
+.qr-card img {
+    /* Thêm transition cho ảnh QR */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.qr-card:hover img {
+    /* Phóng to ảnh và thêm bóng đổ để nổi bật */
+    transform: scale(1.15);
+    box-shadow: 0 15px 30px -5px rgba(0, 32, 96, 0.25);
+}
+
+/* === THẺ THÔNG TIN LIÊN HỆ === */
+.contact-card:hover {
+    cursor: default;
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    border-color: var(--theme-blue);
+}
+.contact-card .contact-details {
+    text-align: left;
+    width: 100%;
+    font-size: 0.875rem; /* 14px */
+    color: #374151;
+    line-height: 1.8;
+}
+.contact-card .contact-details p {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.25rem;
+}
+.contact-card .contact-details .fa-fw {
+    color: var(--theme-blue);
+    margin-right: 0.75rem;
+}
+.contact-card .contact-details a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+.contact-card .contact-details a:hover {
+    color: var(--theme-red);
+    text-decoration: underline;
+}
+
