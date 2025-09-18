@@ -3,186 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cổng Giáo án Tương tác - Đăng Lee</title>
+    
+    <!-- === [CẬP NHẬT] THẺ SEO CHUẨN === -->
+    <title>Cổng Giáo án Tương tác Tin học - Đăng Lee</title>
+    <meta name="description" content="Tổng hợp giáo án, bài tập tương tác và công cụ học tập môn Tin học từ lớp 3 đến lớp 9. Dự án giáo dục của giáo viên Đăng Lee.">
+    <meta name="keywords" content="giáo án tin học, bài tập tin học, học tin học online, luyện gõ 10 ngón, lập trình scratch, Đăng Lee, cổng giáo dục, giáo án điện tử, tin học lớp 3, tin học lớp 4, tin học lớp 5, tin học thcs">
+    <meta name="author" content="Đăng Lee">
+    <meta name="robots" content="index, follow"> <!-- [MỚI] Thẻ chỉ dẫn cho robot của công cụ tìm kiếm -->
+    <link rel="canonical" href="https://tinhoc.leminhdang.com/"> <!-- [CẬP NHẬT] URL chính thức -->
+
+    <!-- Thẻ Open Graph (dành cho chia sẻ trên mạng xã hội như Facebook, Zalo) -->
+    <meta property="og:title" content="Cổng Giáo án Tương tác Tin học - Đăng Lee">
+    <meta property="og:description" content="Tổng hợp giáo án, bài tập tương tác và công cụ học tập môn Tin học từ lớp 3 đến lớp 9.">
+    <meta property="og:image" content="https://tinhoc.leminhdang.com/logo.png"> <!-- [CẬP NHẬT] Đường dẫn đầy đủ tới ảnh logo -->
+    <meta property="og:url" content="https://tinhoc.leminhdang.com/"> <!-- [CẬP NHẬT] URL chính thức -->
+    <meta property="og:type" content="website">
+
+    <!-- Icon cho trang web -->
     <link rel="icon" type="image/png" href="favicon.png">
+    
+    <!-- Thư viện & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        #particles-container { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
+        :root {
+            --theme-blue: #002060;
+            --theme-red: #C00000;
+        }
+        .bg-theme-blue { background-color: var(--theme-blue); }
+        .text-theme-blue { color: var(--theme-blue); }
+        .text-theme-red { color: var(--theme-red); }
+    </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen p-4">
+<body class="flex flex-col min-h-screen bg-slate-50">
 
-    <!-- Container cho hiệu ứng hạt -->
     <div id="particles-container"></div>
 
-    <main class="max-w-6xl w-full mx-auto text-center p-4 sm:p-8 z-10">
+    <!-- PHẦN NỘI DUNG CHÍNH -->
+    <main class="max-w-6xl w-full mx-auto text-center p-4 sm:p-8 z-10 flex-grow">
         <a href="index.html" title="Trở về trang chủ">
-            <img src="logo.png" alt="Minh Đăng IT Logo" class="h-26 sm:h-28 w-auto mx-auto mb-6 transition-transform duration-300 hover:scale-105" onerror="this.src='https://placehold.co/200x100/002060/FFFFFF?text=Logo'; this.onerror=null;">
+            <img src="logo.png" alt="Minh Đăng IT Logo" class="h-24 sm:h-28 w-auto mx-auto mb-6 transition-transform duration-300 hover:scale-105" onerror="this.src='https://placehold.co/200x100/002060/FFFFFF?text=Logo'; this.onerror=null;">
         </a>
         <h1 class="text-4xl sm:text-5xl font-bold text-theme-blue">Cổng Giáo án Tương tác</h1>
         <p class="text-lg text-gray-500 mt-2">Môn <span class="font-bold text-theme-red">Tin học</span></p>
 
-        <!-- Lưới chứa các khối lớp -->
-        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-12">
-            <!-- Luyện gõ chữ -->
-            <a href="luyen-go-chu/index.html" class="grade-card">
-                <i class="fas fa-keyboard grade-card-icon"></i>
-                <h2 class="grade-card-title">Luyện gõ chữ</h2>
-            </a>
+        <!-- LƯỚI ĐIỀU HƯỚNG CHÍNH -->
+        <div id="grade-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8 mt-12">
+            <!-- JavaScript will populate this section -->
+        </div>
 
-            <!-- Lớp 3 -->
-            <a href="khoi3/index.html" class="grade-card">
-                <i class="fas fa-child grade-card-icon"></i>
-                <h2 class="grade-card-title">Lớp 3</h2>
-            </a>
-
-            <!-- Lớp 4 -->
-            <a href="khoi4/index.html" class="grade-card">
-                <i class="fas fa-child-reaching grade-card-icon"></i>
-                <h2 class="grade-card-title">Lớp 4</h2>
-            </a>
-
-            <!-- Lớp 5 -->
-            <a href="khoi5/index.html" class="grade-card">
-                <i class="fa-solid fa-people-pulling grade-card-icon"></i>
-                <h2 class="grade-card-title">Lớp 5</h2>
-            </a>
-
-            <!-- Lớp 6 -->
-            <a href="khoi6/index.html" class="grade-card">
-                <i class="fas fa-person-running grade-card-icon"></i>
-                <h2 class="grade-card-title">Lớp 6</h2>
-            </a>
-
-            <!-- Lớp 7 -->
-            <a href="khoi7/index.html" class="grade-card">
-                <i class="fas fa-user-graduate grade-card-icon"></i>
-                <h2 class="grade-card-title">Lớp 7</h2>
-            </a>
-            
-            <!-- Lớp 8  -->
-            <a href="khoi8/index.html" class="grade-card">
-                <i class="fas fa-brain grade-card-icon"></i>
-                <h2 class="grade-card-title">Lớp 8</h2>
-            </a>
-
-            <!-- Lớp 9  -->
-            <a href="khoi9/index.html" class="grade-card">
-                <i class="fas fa-user-tie grade-card-icon"></i>
-                <h2 class="grade-card-title">Lớp 9</h2>
-            </a>
-
-            <!-- Tài liệu lập trình Scratch -->
-            <a href="tai-lieu-scratch/index.html" class="grade-card">
-                <img src="scratch.png" alt="Scratch Cat Icon" class="grade-card-icon" style="width: 3.5rem; height: 3.5rem; object-fit: contain; margin-bottom: 1rem;">
-                <h2 class="grade-card-title">Tài liệu lập trình Scratch</h2>
-            </a>
-            
-            <!-- Dịch vụ IT -->
-            <a href="https://dichvu.leminhdang.com/" target="_blank" rel="noopener noreferrer" class="grade-card">
-                <i class="fas fa-tools grade-card-icon"></i>
-                <h2 class="grade-card-title">Dịch vụ IT</h2>
-                <p class="text-sm text-gray-500 mt-2 px-2">Hỗ trợ kỹ thuật & sửa chữa máy tính, laptop.</p>
-            </a>
-
-           <!-- Thẻ ủng hộ dự án -->
-            <div class="grade-card qr-card">
-                <img src="https://dichvu.leminhdang.com/img/qr.jpg" alt="Mã QR ủng hộ dự án Tin học" class="rounded-md mb-4" style="width: 8rem; height: 8rem;" onerror="this.onerror=null;this.src='https://placehold.co/128x128/e5e7eb/374151?text=QR+Code';">
-                <h2 class="grade-card-title">Ủng hộ Dự án</h2>
-                <p class="text-sm text-gray-500 mt-2 px-2">Tin học cho học sinh</p>
-            </div>
-
-            <!-- Thẻ Thông tin Liên hệ -->
-            <div class="grade-card contact-card">
-                <i class="fas fa-address-card grade-card-icon"></i>
-                <h2 class="grade-card-title" style="margin-bottom: 1rem;">Thông tin Liên hệ</h2>
-                <div class="contact-details">
-                    <p><i class="fas fa-map-marker-alt fa-fw"></i> Càng Long, Vĩnh Long</p>
-                    <p><i class="fas fa-phone fa-fw"></i> <a href="tel:0899977870">089 99 77 870</a></p>
-                    <p><i class="fas fa-envelope fa-fw"></i> <a href="mailto:danglee@leminhdang.com">danglee@leminhdang.com</a></p>
-                    <p><i class="fab fa-facebook fa-fw"></i> <a href="https://www.facebook.com/danglee97" target="_blank" rel="noopener noreferrer">Đăng Lee</a></p>
+        <!-- KHU VỰC THÔNG TIN BỔ SUNG -->
+        <section class="mt-16 text-left">
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Cột Thông tin liên hệ -->
+                <div class="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-slate-200">
+                    <h2 class="text-2xl font-bold text-theme-blue mb-6 text-center">Thông tin Liên hệ</h2>
+                    <div class="space-y-4 text-slate-700">
+                        <div class="flex items-center"><i class="fas fa-map-marker-alt fa-fw text-xl text-theme-blue mr-4"></i><span>Càng Long, Vĩnh Long</span></div>
+                        <div class="flex items-center"><i class="fas fa-phone fa-fw text-xl text-theme-blue mr-4"></i><a href="tel:0899977870" class="hover:text-theme-red hover:underline transition-colors">089 99 77 870</a></div>
+                        <div class="flex items-center"><i class="fas fa-envelope fa-fw text-xl text-theme-blue mr-4"></i><a href="mailto:danglee@leminhdang.com" class="hover:text-theme-red hover:underline transition-colors">danglee@leminhdang.com</a></div>
+                        <div class="flex items-center"><i class="fab fa-facebook fa-fw text-xl text-theme-blue mr-4"></i><a href="https://www.facebook.com/danglee97" target="_blank" rel="noopener noreferrer" class="hover:text-theme-red hover:underline transition-colors">Đăng Lee</a></div>
+                    </div>
+                </div>
+                <!-- Cột Ủng hộ dự án -->
+                <div class="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-slate-200 flex flex-col items-center justify-center text-center">
+                    <h2 class="text-2xl font-bold text-theme-blue mb-4">Ủng hộ Dự án</h2>
+                    <p class="text-slate-600 mb-6">Sự ủng hộ của bạn là động lực để dự án phát triển và duy trì miễn phí cho học sinh.</p>
+                    <img src="https://dichvu.leminhdang.com/img/qr.jpg" alt="Mã QR ủng hộ dự án" class="w-40 h-40 rounded-lg shadow-md transition-transform duration-300 hover:scale-110" onerror="this.onerror=null;this.src='https://placehold.co/160x160/e5e7eb/374151?text=QR+Code';">
                 </div>
             </div>
-
-            <!-- Thẻ trống để căn chỉnh lưới -->
-             <div class="hidden md:block"></div>
-        </div>
+        </section>
     </main>
     
-    <footer class="w-full text-center p-6 mt-auto z-10">
-        <p class="text-sm text-gray-500">&copy; 2025 Bản quyền thuộc về Đăng Lee.</p>
+    <!-- FOOTER -->
+    <footer class="w-full text-white mt-16 z-10 bg-theme-blue">
+        <div class="max-w-6xl mx-auto px-8 py-10">
+            <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
+                <div class="space-y-4"><h3 class="font-bold text-xl">Cổng Giáo án Tương tác</h3><p class="text-slate-300 text-sm">Xây dựng tương lai số cho thế hệ trẻ Việt Nam.</p></div>
+                <div class="space-y-4"><h3 class="font-bold text-xl">Điều hướng</h3><ul class="space-y-2 text-sm"><li><a href="#grade-grid" class="text-slate-300 hover:text-white hover:underline">Các khối lớp</a></li><li><a href="https://dichvu.leminhdang.com/" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white hover:underline">Dịch vụ IT</a></li></ul></div>
+                <div class="space-y-4"><h3 class="font-bold text-xl">Kết nối</h3><div class="flex justify-center md:justify-start space-x-5">
+<a href="https://www.facebook.com/danglee97" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white transition-transform duration-200 hover:scale-125"><i class="fab fa-facebook-f text-2xl"></i></a>
+<a href="https://zaloapp.com/qr/p/xzyx8g0gmokv?src=qr" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white transition-transform duration-200 hover:scale-125">
+<svg class="w-7 h-7" id="svg_zalo_icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 614.501 613.667">
+<path fill="#FFFFFF" d="M464.721,301.399c-13.984-0.014-23.707,11.478-23.944,28.312c-0.251,17.771,9.168,29.208,24.037,29.202 c14.287-0.007,23.799-11.095,24.01-27.995C489.028,313.536,479.127,301.399,464.721,301.399z"></path>
+<path fill="#FFFFFF" d="M291.83,301.392c-14.473-0.316-24.578,11.603-24.604,29.024c-0.02,16.959,9.294,28.259,23.496,28.502 c15.072,0.251,24.592-10.87,24.539-28.707C315.214,313.318,305.769,301.696,291.83,301.392z"></path>
+<path fill="#FFFFFF" d="M310.518,3.158C143.102,3.158,7.375,138.884,7.375,306.3s135.727,303.142,303.143,303.142 c167.415,0,303.143-135.727,303.143-303.142S477.933,3.158,310.518,3.158z M217.858,391.083 c-33.364,0.818-66.828,1.353-100.133-0.343c-21.326-1.095-27.652-18.647-14.248-36.583c21.55-28.826,43.886-57.065,65.792-85.621 c2.546-3.305,6.214-5.996,7.15-12.705c-16.609,0-32.784,0.04-48.958-0.013c-19.195-0.066-28.278-5.805-28.14-17.652 c0.132-11.768,9.175-17.329,28.397-17.348c25.159-0.026,50.324-0.06,75.476,0.026c9.637,0.033,19.604,0.105,25.304,9.789 c6.22,10.561,0.284,19.512-5.646,27.454c-21.26,28.497-43.015,56.624-64.559,84.902c-2.599,3.41-5.119,6.88-9.453,12.725 c23.424,0,44.123-0.053,64.816,0.026c8.674,0.026,16.662,1.873,19.941,11.267C237.892,379.329,231.368,390.752,217.858,391.083z M350.854,330.211c0,13.417-0.093,26.841,0.039,40.265c0.073,7.599-2.599,13.647-9.512,17.084 c-7.296,3.642-14.71,3.028-20.304-2.968c-3.997-4.281-6.214-3.213-10.488-0.422c-17.955,11.728-39.908,9.96-56.597-3.866 c-29.928-24.789-30.026-74.803-0.211-99.776c16.194-13.562,39.592-15.462,56.709-4.143c3.951,2.619,6.201,4.815,10.396-0.053 c5.39-6.267,13.055-6.761,20.271-3.357c7.454,3.509,9.935,10.165,9.776,18.265C350.67,304.222,350.86,317.217,350.854,330.211z M395.617,369.579c-0.118,12.837-6.398,19.783-17.196,19.908c-10.779,0.132-17.593-6.966-17.646-19.512 c-0.179-43.352-0.185-86.696,0.007-130.041c0.059-12.256,7.302-19.921,17.896-19.222c11.425,0.752,16.992,7.448,16.992,18.833 c0,22.104,0,44.216,0,66.327C395.677,327.105,395.828,348.345,395.617,369.579z M463.981,391.868 c-34.399-0.336-59.037-26.444-58.786-62.289c0.251-35.66,25.304-60.713,60.383-60.396c34.631,0.304,59.374,26.306,58.998,61.986 C524.207,366.492,498.534,392.205,463.981,391.868z"></path>
+</svg>
+</a>
+</div></div>
+            </div>
+            <div class="border-t border-slate-600 mt-8 pt-6 text-center text-sm text-slate-400">&copy; 2025 Bản quyền thuộc về Đăng Lee.</div>
+        </div>
     </footer>
 
-    <!-- Thư viện hiệu ứng hạt -->
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
-    
-    <!-- Script khởi tạo hiệu ứng -->
     <script>
+        const cardData = [
+            { type: 'icon', icon: 'fas fa-keyboard', title: 'Luyện gõ chữ', href: 'luyen-go-chu/index.html' },
+            { type: 'icon', icon: 'fas fa-child', title: 'Lớp 3', href: 'khoi3/index.html' },
+            { type: 'icon', icon: 'fas fa-child-reaching', title: 'Lớp 4', href: 'khoi4/index.html' },
+            { type: 'icon', icon: 'fa-solid fa-people-pulling', title: 'Lớp 5', href: 'khoi5/index.html' },
+            { type: 'icon', icon: 'fas fa-person-running', title: 'Lớp 6', href: 'khoi6/index.html' },
+            { type: 'icon', icon: 'fas fa-user-graduate', title: 'Lớp 7', href: 'khoi7/index.html' },
+            { type: 'icon', icon: 'fas fa-brain', title: 'Lớp 8', href: 'khoi8/index.html' },
+            { type: 'icon', icon: 'fas fa-user-tie', title: 'Lớp 9', href: 'khoi9/index.html' },
+            { type: 'image', icon: 'scratch.png', title: 'Tài liệu Scratch', href: 'tai-lieu-scratch/index.html' },
+            { type: 'icon', icon: 'fas fa-tools', title: 'Dịch vụ IT', href: 'https://dichvu.leminhdang.com/', target: '_blank', description: 'Hỗ trợ kỹ thuật & sửa chữa.' },
+        ];
+
+        function renderCards() {
+            const grid = document.getElementById('grade-grid');
+            if (!grid) return;
+            grid.innerHTML = cardData.map(card => {
+                let iconHTML = '';
+                if (card.type === 'icon') iconHTML = `<i class="${card.icon} text-5xl sm:text-6xl text-blue-800 group-hover:text-red-500 group-hover:scale-110 transition-all duration-300 ease-in-out mb-4"></i>`;
+                else if (card.type === 'image') iconHTML = `<img src="${card.icon}" alt="${card.title} icon" class="h-14 sm:h-16 mb-4 group-hover:scale-110 transition-transform duration-300">`;
+                
+                return `
+                    <a href="${card.href}" ${card.target ? `target="${card.target}" rel="noopener noreferrer"`:''} class="group relative flex flex-col items-center justify-center p-6 sm:p-8 text-center bg-white/70 backdrop-blur-sm border border-slate-200 rounded-2xl shadow-md hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 ease-in-out overflow-hidden">
+                        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-cyan-100 to-blue-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
+                        <div class="relative z-10 flex flex-col items-center justify-center h-full">
+                            ${iconHTML}
+                            <h2 class="text-lg sm:text-xl font-bold text-slate-800">${card.title}</h2>
+                            ${card.description ? `<p class="text-sm text-gray-600 mt-2">${card.description}</p>` : ''}
+                        </div>
+                    </a>
+                `;
+            }).join('');
+        }
+
         window.addEventListener('load', () => {
+            renderCards(); 
+            
+            // === [KHÔI PHỤC] CẤU HÌNH CHI TIẾT CHO HIỆU ỨNG HẠT ===
             tsParticles.load("particles-container", {
                 fpsLimit: 60,
-                background: {
-                    color: "#f8fafc"
-                },
+                background: { color: "#f8fafc" },
                 particles: {
-                    number: {
-                        value: 50,
-                        density: {
-                            enable: true,
-                            value_area: 800
-                        }
-                    },
-                    color: {
-                        value: "#6b7280"
-                    },
-                    shape: {
-                        type: "circle"
-                    },
-                    opacity: {
-                        value: 0.5,
-                        random: true
-                    },
-                    size: {
-                        value: 3,
-                        random: true
-                    },
-                    links: {
-                        enable: true,
-                        distance: 150,
-                        color: "#6b7280",
-                        opacity: 0.4,
-                        width: 1
-                    },
-                    move: {
-                        enable: true,
-                        speed: 1,
-                        direction: "none",
-                        out_mode: "out",
-                        bounce: false,
-                        attract: {
-                            enable: false,
-                            rotateX: 600,
-                            rotateY: 1200
-                        }
-                    }
+                    number: { value: 60, density: { enable: true, value_area: 800 } },
+                    color: { value: "#002060" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.4, random: true },
+                    size: { value: 3, random: true },
+                    links: { enable: true, distance: 150, color: "#6b7280", opacity: 0.3, width: 1 },
+                    move: { enable: true, speed: 1.5, direction: "none", out_mode: "out" }
                 },
                 interactivity: {
-                    detect_on: "canvas",
-                    events: {
-                        onhover: {
-                            enable: true,
-                            mode: "grab"
-                        },
-                        resize: true
+                    events: { 
+                        onhover: { enable: true, mode: "grab" },
+                        onclick: { enable: true, mode: "push"},
+                        resize: true 
                     },
-                    modes: {
-                        grab: {
-                            distance: 140,
-                            line_linked: {
-                                opacity: 1
-                            }
-                        }
-                    }
+                    modes: { 
+                        grab: { distance: 150, line_linked: { opacity: 0.8 } },
+                        push: { particles_nb: 4 }
+                     }
                 },
                 detectRetina: true
             });
