@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tin Học Vui - Ôn Tập HK1</title>
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { font-family: 'Nunito', sans-serif; user-select: none; }
+        .btn-press { transition: all 0.1s; border-bottom-width: 5px; cursor: pointer; }
+        .btn-press:active { transform: translateY(3px); border-bottom-width: 2px; margin-top: 3px; }
+        .screen { display: none !important; }
+        .screen.active { display: flex !important; }
+        @keyframes pulse-red { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .timer-warning { color: #ef4444; animation: pulse-red 1s infinite; }
+        
+        /* Hiệu ứng loading khi gửi điểm */
+        .sending-overlay {
+            background: rgba(255, 255, 255, 0.9);
+            position: absolute; top:0; left:0; right:0; bottom:0;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 50; border-radius: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-sky-200 to-blue-400 min-h-screen">
+
+    <!-- MÀN HÌNH 1: ĐĂNG NHẬP -->
+    <div id="screen-login" class="screen active min-h-screen flex-col items-center justify-center p-4">
+        <div class="bg-white/90 backdrop-blur rounded-[2rem] shadow-2xl border-b-8 border-blue-200 p-8 w-full max-w-md text-center">
+            <div class="mb-6 flex justify-center">
+                <img src="../logo.png" alt="Logo" class="h-24 w-auto drop-shadow-md hover:scale-110 transition-transform" onerror="this.style.display='none'">
+            </div>
+            <h1 class="text-4xl text-blue-800 mb-2 uppercase tracking-tight font-black">Tin Học Vui</h1>
+            <p class="text-gray-500 mb-8 font-bold text-lg">Ôn thi Học Kì 1 cùng thầy Đăng</p>
+            <div class="space-y-5 text-left">
+                <div>
+                    <label class="block text-blue-800 font-extrabold mb-2 pl-1 text-lg">Họ và Tên em</label>
+                    <input type="text" id="input-name" placeholder="Ví dụ: Lê Minh Đăng" class="w-full px-5 py-4 rounded-2xl border-4 border-blue-100 focus:border-blue-500 focus:outline-none bg-blue-50 text-xl font-bold text-gray-700 transition-colors">
+                </div>
+                <div>
+                    <label class="block text-blue-800 font-extrabold mb-2 pl-1 text-lg">Lớp</label>
+                    <input type="text" id="input-class" placeholder="Ví dụ: 3A2" class="w-full px-5 py-4 rounded-2xl border-4 border-blue-100 focus:border-blue-500 focus:outline-none bg-blue-50 text-xl font-bold text-gray-700 transition-colors">
+                </div>
+                <button onclick="handleLogin()" class="btn-press w-full bg-blue-600 border-blue-800 text-white font-black py-4 rounded-2xl text-2xl mt-4 shadow-lg hover:bg-blue-500 flex items-center justify-center gap-3">
+                    BẮT ĐẦU NGAY <i class="fa-solid fa-rocket"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MÀN HÌNH 2: CHỌN KHỐI -->
+    <div id="screen-home" class="screen min-h-screen flex-col items-center justify-center p-4">
+        <div class="bg-white/90 backdrop-blur rounded-[2rem] shadow-xl border-b-8 border-indigo-200 p-6 w-full max-w-3xl text-center relative">
+            <div class="absolute top-4 right-4 flex gap-2">
+                <span class="bg-blue-100 text-blue-700 px-4 py-2 rounded-full font-extrabold text-sm shadow-sm border-2 border-blue-200">
+                    <i class="fa-solid fa-user mr-1"></i> <span id="display-name">Tên</span>
+                </span>
+                <span class="bg-pink-100 text-pink-700 px-4 py-2 rounded-full font-extrabold text-sm shadow-sm border-2 border-pink-200">
+                    <span id="display-class">Lớp</span>
+                </span>
+            </div>
+            <h2 class="text-4xl font-black text-indigo-700 mt-10 mb-2">CHỌN KHỐI LỚP</h2>
+            <p class="text-gray-500 font-bold mb-8 text-lg">Em đang học lớp mấy nào?</p>
+            <div class="grid grid-cols-2 gap-4 md:gap-6" id="grade-buttons-container"></div>
+            <button onclick="handleLogout()" class="mt-10 text-gray-400 font-bold hover:text-red-500 text-sm underline decoration-dashed transition-colors">Thoát / Đổi tên</button>
+        </div>
+    </div>
+
+    <!-- MÀN HÌNH 3: MENU -->
+    <div id="screen-menu" class="screen min-h-screen p-4 flex-col justify-center items-center">
+        <div class="max-w-4xl w-full">
+            <button onclick="showScreen('screen-home')" class="mb-6 bg-white text-gray-600 px-5 py-3 rounded-2xl font-extrabold shadow-md hover:bg-gray-50 transition-transform hover:-translate-y-1">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Quay lại
+            </button>
+            <div class="text-center mb-10">
+                <h1 id="menu-title" class="text-5xl font-black text-white drop-shadow-lg mb-2 uppercase tracking-wide">Tiêu đề lớp</h1>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div onclick="startQuiz()" class="btn-press bg-white rounded-[2.5rem] border-b-8 border-blue-200 p-10 text-center group hover:border-blue-400 transition-colors">
+                    <div class="w-28 h-28 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-6 mx-auto group-hover:scale-110 transition-transform shadow-inner">
+                        <i class="fa-solid fa-star text-6xl"></i>
+                    </div>
+                    <h2 class="text-4xl font-black text-gray-800 mb-2">Trắc Nghiệm</h2>
+                    <p class="text-gray-500 font-bold text-lg">Thử tài kiến thức</p>
+                </div>
+                <div onclick="startPractice()" class="btn-press bg-white rounded-[2.5rem] border-b-8 border-green-200 p-10 text-center group hover:border-green-400 transition-colors">
+                    <div class="w-28 h-28 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-6 mx-auto group-hover:scale-110 transition-transform shadow-inner">
+                        <i class="fa-solid fa-desktop text-6xl"></i>
+                    </div>
+                    <h2 class="text-4xl font-black text-gray-800 mb-2">Thực Hành</h2>
+                    <p class="text-gray-500 font-bold text-lg">Luyện tập máy tính</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MÀN HÌNH 4: TRẮC NGHIỆM -->
+    <div id="screen-quiz" class="screen min-h-screen p-4 flex-col items-center justify-center">
+        <div class="max-w-3xl w-full">
+            <div class="flex justify-between items-center mb-6">
+                <button onclick="exitToMenu()" class="bg-white/20 text-white hover:bg-white/30 px-5 py-2 rounded-2xl font-bold backdrop-blur border-2 border-white/30 transition-colors">
+                    <i class="fa-solid fa-xmark mr-2"></i> Thoát
+                </button>
+                <div class="bg-white px-8 py-3 rounded-full shadow-xl flex items-center border-4 border-blue-100 transform scale-110">
+                    <i class="fa-regular fa-clock mr-3 text-gray-400 text-xl"></i>
+                    <span id="timer-display" class="text-3xl font-black text-blue-600 font-mono">30</span>
+                    <span class="text-sm font-bold text-gray-400 ml-1 self-end mb-1">giây</span>
+                </div>
+                <div class="bg-white/20 text-white px-5 py-2 rounded-2xl font-bold backdrop-blur border-2 border-white/30">
+                    Câu <span id="quiz-current">1</span>/<span id="quiz-total">10</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-[2.5rem] shadow-2xl border-b-8 border-gray-200 p-8 mb-6 relative overflow-hidden min-h-[200px] flex items-center justify-center text-center">
+                <div id="question-text" class="text-3xl font-extrabold text-gray-800 leading-tight relative z-10">Đang tải...</div>
+                <i class="fa-solid fa-circle-question absolute -bottom-8 -right-8 text-[10rem] text-gray-100 z-0 transform rotate-12 opacity-10"></i>
+            </div>
+            <div id="answers-container" class="grid grid-cols-1 gap-4"></div>
+            <div id="feedback-msg" class="mt-6 text-center hidden p-4 rounded-2xl bg-white shadow-xl font-black text-2xl border-4 animate-bounce z-50 relative"></div>
+        </div>
+    </div>
+
+    <!-- MÀN HÌNH 5: KẾT QUẢ -->
+    <div id="screen-result" class="screen min-h-screen bg-yellow-400 items-center justify-center p-4">
+        <div class="bg-white rounded-[3rem] shadow-2xl border-b-8 border-yellow-600 p-10 w-full max-w-xl text-center relative overflow-hidden">
+            <!-- Hiệu ứng gửi điểm -->
+            <div id="sending-status" class="hidden sending-overlay flex-col">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-600 mb-4"></div>
+                <p class="text-blue-600 font-bold text-xl">Đang lưu kết quả...</p>
+            </div>
+
+            <div class="absolute top-0 left-0 w-full h-full pointer-events-none opacity-30 bg-[url('https://www.transparenttextures.com/patterns/confetti.png')]"></div>
+            <div class="flex justify-center mb-8 relative z-10">
+                <div class="w-40 h-40 bg-yellow-100 rounded-full flex items-center justify-center border-8 border-yellow-300 shadow-inner">
+                    <i class="fa-solid fa-trophy text-7xl text-yellow-500 drop-shadow-sm"></i>
+                </div>
+            </div>
+            <h2 class="text-5xl font-black text-gray-800 mb-2 relative z-10 tracking-tight">HOÀN THÀNH!</h2>
+            <div class="text-xl font-bold text-gray-400 mb-8 uppercase tracking-widest relative z-10">
+                <span id="result-name">Tên</span> - <span id="result-class">Lớp</span>
+            </div>
+            <div class="bg-gray-50 rounded-3xl p-8 mb-8 relative z-10 border-4 border-gray-100">
+                <div class="text-gray-400 font-bold text-sm mb-2 uppercase tracking-wide">Điểm số của em</div>
+                <div class="text-7xl font-black text-blue-600 leading-none mb-2">
+                    <span id="result-score">0</span><span class="text-4xl text-gray-300">/</span><span id="result-total" class="text-4xl text-gray-300">0</span>
+                </div>
+                <p id="result-message" class="text-xl font-extrabold text-orange-500 mt-4">...</p>
+            </div>
+            <button onclick="showScreen('screen-menu')" class="btn-press w-full bg-blue-600 border-blue-800 text-white font-black py-5 rounded-2xl text-2xl shadow-xl hover:bg-blue-500 relative z-10 uppercase tracking-wide">Quay về Menu</button>
+        </div>
+    </div>
+
+    <!-- MÀN HÌNH 6: THỰC HÀNH -->
+    <div id="screen-practice" class="screen min-h-screen p-4 flex-col justify-center items-center">
+        <div class="max-w-4xl w-full">
+            <button onclick="showScreen('screen-menu')" class="mb-6 bg-white px-5 py-3 rounded-2xl font-bold shadow hover:bg-gray-50 transition-transform hover:-translate-y-1">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Quay lại
+            </button>
+            <h1 class="text-4xl font-black text-white mb-8 drop-shadow-md"><i class="fa-solid fa-keyboard mr-3"></i> Nhiệm Vụ Thực Hành</h1>
+            <div id="practice-list" class="space-y-8 pb-12"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- CẤU HÌNH: DÁN LINK WEB APP CỦA BẠN VÀO ĐÂY ---
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwziks8ynJ60Lj93bBymd_rhF9DxQvVrMklszxcX4tM99mNjMsorNzJveAcviqbv4x6/exec"; 
+        
+        // --- BIẾN TOÀN CỤC ---
+        let studentName = "", studentClass = "", currentGrade = null, currentScore = 0, currentQuizIndex = 0, timerInterval = null, timeLeft = 30;
+
+        const gradesData = {
+            2: { title: "Lớp 2", color: "bg-pink-500",
+                quiz: [
+                    { q: "Lợi ích của việc gõ 10 ngón là gì?", options: ["Gõ chậm hơn", "Chơi game giỏi", "Không cần nhìn phím", "Gõ nhanh & chính xác"], a: 3 },
+                    { q: "Hai ngón trỏ đặt ở phím có gờ nào?", options: ["A và S", "G và H", "F và J", "Q và P"], a: 2 },
+                    { q: "Phím Caps Lock dùng để làm gì?", options: ["Viết hoa liên tục", "Xóa kí tự", "Cách dòng", "Xuống dòng"], a: 0 },
+                    { q: "Phím Backspace (Mũi tên trái) dùng để?", options: ["Xóa bên phải", "Xóa bên trái con trỏ", "Viết hoa", "Xuống dòng"], a: 1 },
+                    { q: "Phím Delete dùng để làm gì?", options: ["Xóa bên phải con trỏ", "Xóa bên trái", "Cách dòng", "Lùi lại"], a: 0 },
+                    { q: "Hai ngón cái đặt ở phím nào?", options: ["Phím F", "Phím J", "Phím Cách (Space)", "Phím Shift"], a: 2 },
+                    { q: "Muốn gõ 1 chữ in hoa (vd: H) ta nhấn?", options: ["Giữ Shift + H", "Nhấn CapsLock", "Nhấn Ctrl + H", "Gõ H 2 lần"], a: 0 },
+                    { q: "Phím Enter dùng để làm gì?", options: ["Xóa chữ", "Cách một khoảng", "Xuống dòng", "Viết hoa"], a: 2 },
+                    { q: "Hàng phím cơ sở là hàng nào?", options: ["Hàng số", "Hàng trên", "Hàng chứa A, S, D...", "Hàng dưới"], a: 2 },
+                    { q: "Tư thế ngồi máy tính đúng?", options: ["Ngồi cong lưng", "Mắt sát màn hình", "Lưng thẳng, mắt ngang tầm", "Nằm ra ghế"], a: 2 }
+                ],
+                practice: [ { title: "Khởi động Word", steps: ["Tìm biểu tượng chữ W màu xanh.", "Nháy đúp chuột trái để mở.", "Chọn trang trắng (Blank Document)."] }, { title: "Tập gõ", content: "EM TAP GO BAN PHIM\nLOP 2A TRUONG VIET ANH", note: "Dùng Caps Lock để viết hoa cả dòng.", steps: ["Đặt tay lên hàng phím cơ sở.", "Gõ nội dung mẫu."] } ]
+            },
+            3: { title: "Lớp 3", color: "bg-blue-500",
+                quiz: [
+                    { q: "Đâu KHÔNG phải thành phần cơ bản của máy tính?", options: ["Màn hình", "Thân máy", "Bàn phím", "Máy in"], a: 3 },
+                    { q: "Bộ phận giúp em nhìn thấy hình ảnh?", options: ["Bàn phím", "Chuột", "Màn hình", "Thân máy"], a: 2 },
+                    { q: "Máy tính bảng có đặc điểm gì?", options: ["Màn hình cảm ứng", "Bàn phím rời to", "Luôn cần chuột", "Không có loa"], a: 0 },
+                    { q: "Thao tác nhấn nhanh 2 lần chuột trái gọi là?", options: ["Nháy chuột", "Nháy đúp chuột", "Kéo thả", "Nháy phải"], a: 1 },
+                    { q: "Bộ não của máy tính nằm ở đâu?", options: ["Màn hình", "Bàn phím", "Chuột", "Thân máy"], a: 3 },
+                    { q: "Tắt máy tính đúng cách?", options: ["Rút điện", "Bấm nút màn hình", "Start -> Shut down", "Giữ nút nguồn"], a: 2 },
+                    { q: "Ngón trỏ phải đặt ở phím nào?", options: ["F", "J", "K", "L"], a: 1 },
+                    { q: "Internet là gì?", options: ["Trò chơi", "Mạng máy tính toàn cầu", "Phần mềm vẽ", "Máy in"], a: 1 },
+                    { q: "Biểu tượng thùng rác tên là gì?", options: ["This PC", "Network", "Recycle Bin", "Control Panel"], a: 2 },
+                    { q: "Phím dài nhất bàn phím?", options: ["Enter", "Shift", "Space (Cách)", "Caps Lock"], a: 2 },
+                    { q: "Hàng phím có gai F, J là hàng nào?", options: ["Hàng trên", "Hàng dưới", "Hàng cơ sở", "Hàng số"], a: 2 },
+                    { q: "Không nên làm gì khi dùng máy tính?", options: ["Ngồi thẳng", "Ăn uống rơi vào phím", "Nghỉ giải lao", "Gõ nhẹ nhàng"], a: 1 },
+                    { q: "Con trỏ chuột thường có hình gì?", options: ["Mũi tên", "Bàn tay", "Đồng hồ cát", "Dấu cộng"], a: 0 },
+                    { q: "Để mở thư mục, ta dùng thao tác gì?", options: ["Nháy chuột", "Nháy đúp chuột", "Kéo thả", "Nháy phải"], a: 1 },
+                    { q: "Thông tin trên Internet dạng nào?", options: ["Chữ viết", "Hình ảnh", "Âm thanh/Video", "Tất cả các dạng trên"], a: 3 },
+                    { q: "Trình duyệt web là gì?", options: ["Word", "Chrome/Edge", "Paint", "Excel"], a: 1 },
+                    { q: "Nút X đỏ góc cửa sổ dùng để?", options: ["Phóng to", "Thu nhỏ", "Đóng cửa sổ", "Di chuyển"], a: 2 },
+                    { q: "Thấy tin xấu trên mạng, em nên?", options: ["Xem tiếp", "Gửi bạn", "Tắt ngay & báo người lớn", "Làm theo"], a: 2 },
+                    { q: "Khu vực chứa các biểu tượng chính gọi là?", options: ["Desktop (Màn hình nền)", "Thanh Taskbar", "Start Menu", "Folder"], a: 0 },
+                    { q: "Để gõ Tiếng Việt, ta cần phần mềm gì?", options: ["Unikey", "Paint", "Zoom", "Zalo"], a: 0 }
+                ],
+                practice: [ { title: "Thao tác chuột", steps: ["Mở This PC bằng nháy đúp.", "Phóng to cửa sổ.", "Đóng bằng nút X."] }, { title: "Soạn thảo", content: "HỌ VÀ TÊN: NGUYỄN VĂN A\nLỚP: 3A2", steps: ["Mở Word.", "Bật Unikey.", "Gõ nội dung trên."] } ]
+            },
+            4: { title: "Lớp 4", color: "bg-green-500",
+                quiz: [
+                    { q: "Thiết bị lưu trữ thông tin lâu dài?", options: ["RAM", "Ổ cứng (HDD/SSD)", "CPU", "Mainboard"], a: 1 },
+                    { q: "Máy tính bị 'treo' là lỗi do?", options: ["Chỉ phần cứng", "Chỉ phần mềm", "Cả hai", "Màn hình"], a: 2 },
+                    { q: "CPU được ví như bộ phận nào?", options: ["Tay chân", "Mắt", "Bộ não", "Miệng"], a: 2 },
+                    { q: "Để gõ kí tự trên (vd: @, %) ta giữ phím?", options: ["Ctrl", "Alt", "Shift", "Tab"], a: 2 },
+                    { q: "Thiết bị xuất thông tin (Output)?", options: ["Bàn phím", "Chuột", "Micro", "Máy in/Loa"], a: 3 },
+                    { q: "Phím số 5 dùng ngón nào?", options: ["Ngón cái", "Ngón trỏ", "Ngón giữa", "Ngón út"], a: 1 },
+                    { q: "Tổ hợp phím Copy là?", options: ["Ctrl + C", "Ctrl + V", "Ctrl + X", "Ctrl + Z"], a: 0 },
+                    { q: "Tổ hợp phím Paste (Dán) là?", options: ["Ctrl + P", "Ctrl + V", "Ctrl + S", "Ctrl + A"], a: 1 },
+                    { q: "Sao chép thư mục dùng lệnh?", options: ["Cut", "Copy", "Delete", "Rename"], a: 1 },
+                    { q: "Đổi tên thư mục dùng lệnh?", options: ["New", "Rename", "Paste", "Properties"], a: 1 },
+                    { q: "Phần mềm soạn thảo là?", options: ["Excel", "PowerPoint", "Word", "Paint"], a: 2 },
+                    { q: "Phần mềm trình chiếu là?", options: ["Word", "PowerPoint", "Chrome", "Unikey"], a: 1 },
+                    { q: "Để tạo trang chiếu mới?", options: ["New Slide", "New Folder", "New File", "New Image"], a: 0 },
+                    { q: "Phím F5 trong PowerPoint để làm gì?", options: ["Lưu bài", "Thoát", "Trình chiếu", "Xóa"], a: 2 },
+                    { q: "Để tìm kiếm thông tin, ta dùng?", options: ["Google", "Zalo", "Word", "Game"], a: 0 },
+                    { q: "Virus máy tính là gì?", options: ["Con côn trùng", "Đoạn mã độc hại", "Bụi bẩn", "Hỏng phần cứng"], a: 1 },
+                    { q: "Để bảo vệ mắt, nên chớp mắt sau?", options: ["1 tiếng", "20 phút", "5 tiếng", "Không cần"], a: 1 },
+                    { q: "Tên tệp tin gồm mấy phần?", options: ["1 phần", "2 phần (Tên & Đuôi)", "3 phần", "4 phần"], a: 1 },
+                    { q: "Đuôi .docx là của phần mềm nào?", options: ["Word", "Excel", "PowerPoint", "Paint"], a: 0 },
+                    { q: "Đuôi .pptx là của phần mềm nào?", options: ["Word", "Excel", "PowerPoint", "Paint"], a: 2 }
+                ],
+                practice: [ { title: "Quản lý tệp", steps: ["Tạo thư mục 'Lop 4' ổ D.", "Tạo thư mục con 'Bai Tap'.", "Đổi tên thành 'Kiem Tra'."] }, { title: "PowerPoint", steps: ["Tạo Slide giới thiệu bản thân.", "Chèn 1 hình ảnh.", "Lưu bài 'GioiThieu.pptx'."] } ]
+            },
+            5: { title: "Lớp 5", color: "bg-purple-500",
+                quiz: [
+                    { q: "Lợi ích của máy tính?", options: ["Học tập", "Giải trí", "Liên lạc", "Tất cả đúng"], a: 3 },
+                    { q: "Để tìm 'Giá vé' bảo tàng, xem mục nào?", options: ["Tin tức", "Giới thiệu/Tham quan", "Liên hệ", "Sản phẩm"], a: 1 },
+                    { q: "Menu website dùng để làm gì?", options: ["Trang trí", "Điều hướng nội dung", "Quảng cáo", "Chơi game"], a: 1 },
+                    { q: "Để xem chi tiết file (ngày, cỡ), chọn view?", options: ["Icons", "List", "Details", "Tiles"], a: 2 },
+                    { q: "Bản quyền nội dung là gì?", options: ["Quyền tác giả", "Quyền người xem", "Quyền chia sẻ", "Miễn phí"], a: 0 },
+                    { q: "Hành động tôn trọng bản quyền?", options: ["Sao chép tự do", "Ghi rõ nguồn/Tác giả", "Bán lại bài người khác", "Xóa tên tác giả"], a: 1 },
+                    { q: "Mật khẩu an toàn nên có?", options: ["Tên mình", "123456", "Chữ, số, ký tự đặc biệt", "Ngày sinh"], a: 2 },
+                    { q: "Lệnh Cut (Cắt) phím tắt là?", options: ["Ctrl + C", "Ctrl + X", "Ctrl + V", "Ctrl + Z"], a: 1 },
+                    { q: "Lệnh Undo (Quay lại) phím tắt là?", options: ["Ctrl + Y", "Ctrl + U", "Ctrl + Z", "Ctrl + B"], a: 2 },
+                    { q: "Để chèn ảnh từ máy, chọn?", options: ["Online Pictures", "This Device", "Shapes", "Icons"], a: 1 },
+                    { q: "Lệnh B (Bold) dùng để?", options: ["In nghiêng", "Gạch chân", "In đậm", "Tô màu"], a: 2 },
+                    { q: "Lệnh I (Italic) dùng để?", options: ["In nghiêng", "In đậm", "Gạch chân", "Căn giữa"], a: 0 },
+                    { q: "Lệnh U (Underline) dùng để?", options: ["In đậm", "Gạch chân", "In nghiêng", "Xóa"], a: 1 },
+                    { q: "Căn giữa văn bản dùng phím?", options: ["Ctrl + L", "Ctrl + R", "Ctrl + E", "Ctrl + J"], a: 2 },
+                    { q: "Wrap Text 'Square' nghĩa là?", options: ["Chữ nằm trên ảnh", "Chữ bao quanh vuông", "Ảnh đè chữ", "Chữ nằm dưới"], a: 1 },
+                    { q: "Khác nhau giữa Save và Save As?", options: ["Giống nhau", "Save As đặt tên mới", "Save xóa bài", "Save As chỉ lưu ảnh"], a: 1 },
+                    { q: "Header & Footer nằm ở thẻ nào?", options: ["Home", "Layout", "Insert", "View"], a: 2 },
+                    { q: "Để chia cột văn bản, chọn?", options: ["Columns", "Size", "Margins", "Break"], a: 0 },
+                    { q: "Định dạng trang nằm ngang chọn?", options: ["Portrait", "Landscape", "A4", "Letter"], a: 1 },
+                    { q: "Địa chỉ email hợp lệ?", options: ["abc.com", "abc@gmail.com", "gmail.com@abc", "www.abc"], a: 1 }
+                ],
+                practice: [ { title: "Cây thư mục", steps: ["Tạo cây thư mục môn học.", "Sao chép tệp vào thư mục con."] }, { title: "Word Nâng cao", content: "THÔNG BÁO\n(Căn giữa, Đậm, Đỏ)", steps: ["Soạn thảo văn bản.", "Chèn ảnh minh họa.", "Tạo khung viền (Page Border)."] } ]
+            }
+        };
+
+        function handleLogin() {
+            const name = document.getElementById('input-name').value.trim();
+            const cls = document.getElementById('input-class').value.trim();
+            if (!name || !cls) { alert("Vui lòng nhập tên và lớp!"); return; }
+            studentName = name; studentClass = cls;
+            document.getElementById('display-name').innerText = name;
+            document.getElementById('display-class').innerText = cls;
+            renderGradeButtons();
+            showScreen('screen-home');
+        }
+
+        function handleLogout() {
+            showScreen('screen-login');
+            document.getElementById('input-name').value = "";
+            document.getElementById('input-class').value = "";
+        }
+
+        function renderGradeButtons() {
+            const container = document.getElementById('grade-buttons-container');
+            container.innerHTML = '';
+            const styles = { 2: "bg-pink-500 border-pink-700 hover:bg-pink-400", 3: "bg-blue-500 border-blue-700 hover:bg-blue-400", 4: "bg-green-500 border-green-700 hover:bg-green-400", 5: "bg-purple-500 border-purple-700 hover:bg-purple-400" };
+            const icons = { 2: "fa-keyboard", 3: "fa-computer-mouse", 4: "fa-desktop", 5: "fa-folder-open" };
+            [2, 3, 4, 5].forEach(g => {
+                container.innerHTML += `<button onclick="selectGrade(${g})" class="btn-press ${styles[g]} text-white rounded-[2rem] h-36 flex flex-col items-center justify-center shadow-lg transform transition hover:scale-105"><div class="bg-white/20 p-4 rounded-full mb-2"><i class="fa-solid ${icons[g]} text-4xl"></i></div><span class="text-3xl font-black">LỚP ${g}</span></button>`;
+            });
+        }
+
+        function selectGrade(g) {
+            currentGrade = g;
+            document.getElementById('menu-title').innerText = gradesData[g].title;
+            const bgColors = { 2: "from-pink-200 to-pink-400", 3: "from-blue-200 to-blue-400", 4: "from-green-200 to-green-400", 5: "from-purple-200 to-purple-400" };
+            document.body.className = `bg-gradient-to-b ${bgColors[g]} min-h-screen transition-colors duration-500`;
+            showScreen('screen-menu');
+        }
+
+        function startQuiz() {
+            currentScore = 0; currentQuizIndex = 0;
+            showScreen('screen-quiz');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const qData = gradesData[currentGrade].quiz[currentQuizIndex];
+            document.getElementById('quiz-current').innerText = currentQuizIndex + 1;
+            document.getElementById('quiz-total').innerText = gradesData[currentGrade].quiz.length;
+            document.getElementById('question-text').innerText = qData.q;
+            document.getElementById('feedback-msg').className = "hidden";
+            const container = document.getElementById('answers-container');
+            container.innerHTML = '';
+            qData.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "btn-press w-full text-left text-xl bg-white border-4 border-gray-100 text-gray-700 p-5 rounded-3xl hover:border-blue-300 hover:bg-blue-50 font-bold flex items-center group transition-all";
+                btn.innerHTML = `<span class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mr-5 font-black group-hover:bg-blue-500 group-hover:text-white transition-colors text-lg">${String.fromCharCode(65+idx)}</span>${opt}`;
+                btn.onclick = () => checkAnswer(idx, btn);
+                container.appendChild(btn);
+            });
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval); timeLeft = 30; updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timeLeft--; updateTimerDisplay();
+                if (timeLeft <= 0) { clearInterval(timerInterval); timeOut(); }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const display = document.getElementById('timer-display');
+            display.innerText = timeLeft;
+            if (timeLeft <= 5) { display.parentElement.classList.add('timer-warning'); display.classList.replace('text-blue-600', 'text-red-600'); }
+            else { display.parentElement.classList.remove('timer-warning'); display.classList.replace('text-red-600', 'text-blue-600'); }
+        }
+
+        function timeOut() {
+            const feedback = document.getElementById('feedback-msg');
+            feedback.innerHTML = `<i class="fa-solid fa-hourglass-end text-red-500 mr-2"></i> HẾT GIỜ RỒI!`;
+            feedback.className = "mt-6 text-center block p-4 rounded-2xl bg-red-100 text-red-600 font-black text-2xl animate-bounce border-4 border-red-200";
+            const btns = document.querySelectorAll('#answers-container button');
+            btns.forEach(b => b.disabled = true);
+            setTimeout(nextQuestion, 2000);
+        }
+
+        function checkAnswer(idx, btn) {
+            clearInterval(timerInterval);
+            const btns = document.querySelectorAll('#answers-container button');
+            btns.forEach(b => b.disabled = true);
+            const correctIdx = gradesData[currentGrade].quiz[currentQuizIndex].a;
+            const feedback = document.getElementById('feedback-msg');
+            feedback.className = "mt-6 text-center block p-4 rounded-2xl font-black text-2xl animate-bounce shadow-xl border-4 z-50 relative";
+            if (idx === correctIdx) {
+                currentScore++;
+                btn.className = "w-full text-left text-xl bg-green-500 border-b-8 border-green-700 text-white p-5 rounded-3xl font-bold flex items-center shadow-xl transform scale-105";
+                feedback.innerHTML = `<i class="fa-solid fa-check-circle mr-2"></i> CHÍNH XÁC!`;
+                feedback.classList.add("bg-green-100", "text-green-600", "border-green-200");
+            } else {
+                btn.className = "w-full text-left text-xl bg-red-500 border-b-8 border-red-700 text-white p-5 rounded-3xl font-bold flex items-center opacity-50";
+                btns[correctIdx].className = "w-full text-left text-xl bg-green-500 border-b-8 border-green-700 text-white p-5 rounded-3xl font-bold flex items-center shadow-xl";
+                feedback.innerHTML = `<i class="fa-solid fa-xmark mr-2"></i> SAI RỒI!`;
+                feedback.classList.add("bg-red-100", "text-red-600", "border-red-200");
+            }
+            setTimeout(nextQuestion, 1500);
+        }
+
+        function nextQuestion() {
+            currentQuizIndex++;
+            if (currentQuizIndex < gradesData[currentGrade].quiz.length) { renderQuestion(); } else { finishQuiz(); }
+        }
+
+        function finishQuiz() {
+            showScreen('screen-result');
+            const total = gradesData[currentGrade].quiz.length;
+            document.getElementById('result-name').innerText = studentName;
+            document.getElementById('result-class').innerText = studentClass;
+            document.getElementById('result-score').innerText = currentScore;
+            document.getElementById('result-total').innerText = total;
+            let percent = (currentScore / total) * 100;
+            let msg = "";
+            if (percent == 100) msg = "XUẤT SẮC! EM LÀ THIÊN TÀI! 🏆";
+            else if (percent >= 80) msg = "GIỎI QUÁ! CỐ LÊN NHÉ! 🌟";
+            else if (percent >= 50) msg = "KHÁ TỐT! ÔN THÊM CHÚT NỮA! 💪";
+            else msg = "CẦN CỐ GẮNG NHIỀU HƠN! 📚";
+            document.getElementById('result-message').innerText = msg;
+            sendDataToSheet();
+        }
+
+        function sendDataToSheet() {
+            if(GOOGLE_SCRIPT_URL.includes("YOUR_SCRIPT_ID")) return;
+            
+            // Hiển thị trạng thái đang gửi
+            const status = document.getElementById('sending-status');
+            if(status) status.classList.replace('hidden', 'flex');
+
+            const data = {
+                name: studentName,
+                className: studentClass,
+                grade: currentGrade,
+                score: currentScore,
+                total: gradesData[currentGrade].quiz.length
+            };
+
+            // Gửi dữ liệu dạng text/plain để tránh lỗi CORS
+            fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify(data)
+            }).then(() => {
+                if(status) status.classList.replace('flex', 'hidden');
+                console.log("Đã gửi điểm thành công");
+            }).catch(err => console.error(err));
+        }
+
+        function startPractice() {
+            showScreen('screen-practice');
+            const list = document.getElementById('practice-list');
+            list.innerHTML = '';
+            gradesData[currentGrade].practice.forEach((task, i) => {
+                let contentHTML = task.content ? `<div class="bg-gray-800 text-green-400 p-5 rounded-2xl font-mono text-base mb-6 border-4 border-gray-600 shadow-inner whitespace-pre-line leading-relaxed">${task.content}</div>` : '';
+                let stepsHTML = task.steps.map((s, idx) => `<div class="flex gap-4 mb-3 items-start"><span class="bg-blue-100 text-blue-600 font-black w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 mt-1 shadow-sm">${idx+1}</span><span class="text-gray-700 font-bold text-lg">${s}</span></div>`).join('');
+                let html = `<div class="bg-white rounded-[2rem] shadow-xl border-b-8 border-gray-200 p-8 relative overflow-hidden transform hover:scale-[1.02] transition-transform"><div class="absolute top-0 left-0 w-3 h-full bg-blue-500"></div><h3 class="text-2xl font-black text-gray-800 mb-6 flex items-center"><i class="fa-solid fa-list-check text-blue-500 mr-4 text-3xl"></i> Bài ${i+1}: ${task.title}</h3>${contentHTML}<div class="bg-blue-50 rounded-2xl p-6 border-2 border-blue-100">${stepsHTML}</div></div>`;
+                list.innerHTML += html;
+            });
+        }
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(id === 'screen-login' || id === 'screen-home') { document.body.className = "bg-gradient-to-b from-sky-200 to-blue-400 min-h-screen transition-colors duration-500"; }
+        }
+        
+        function exitToMenu() { clearInterval(timerInterval); showScreen('screen-menu'); }
+    </script>
+</body>
+</html>
