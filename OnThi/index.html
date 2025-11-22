@@ -34,16 +34,14 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-b from-sky-200 to-blue-400 min-h-screen overflow-x-hidden">
+<body class="bg-gradient-to-b from-sky-200 to-blue-400 min-h-screen overflow-x-hidden relative">
 
     <!-- MÀN HÌNH 1: ĐĂNG NHẬP -->
-    <div id="screen-login" class="screen active min-h-screen flex-col items-center justify-center p-4">
+    <div id="screen-login" class="screen active min-h-screen flex-col items-center justify-center p-4 pb-16">
         <div class="bg-white/90 backdrop-blur-md rounded-[2.5rem] shadow-2xl border-b-8 border-blue-200 p-8 w-full max-w-md text-center transform transition-all hover:scale-[1.01]">
             <div class="mb-6 flex justify-center">
-                <!-- Placeholder Logo nếu ảnh lỗi -->
-                <div class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center text-blue-500 text-4xl shadow-inner">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                </div>
+                <!-- Logo Minh Dang IT -->
+                <img src="../logo.png" alt="Minh Dang IT Logo" class="h-28 w-auto object-contain drop-shadow-md hover:scale-110 transition-transform">
             </div>
             <h1 class="text-4xl text-blue-800 mb-2 uppercase tracking-tight font-black drop-shadow-sm">Tin Học Vui</h1>
             <p class="text-gray-500 mb-8 font-bold text-lg">Ôn thi Học Kì 1 cùng thầy Đăng</p>
@@ -65,7 +63,7 @@
     </div>
 
     <!-- MÀN HÌNH 2: CHỌN KHỐI -->
-    <div id="screen-home" class="screen min-h-screen flex-col items-center justify-center p-4">
+    <div id="screen-home" class="screen min-h-screen flex-col items-center justify-center p-4 pb-16">
         <div class="bg-white/90 backdrop-blur-md rounded-[2rem] shadow-xl border-b-8 border-indigo-200 p-6 w-full max-w-3xl text-center relative">
             <!-- Thông tin học sinh -->
             <div class="absolute -top-6 left-0 w-full flex justify-center md:justify-end md:top-4 md:right-4 gap-2 px-4">
@@ -91,7 +89,7 @@
     </div>
 
     <!-- MÀN HÌNH 3: MENU CHỨC NĂNG -->
-    <div id="screen-menu" class="screen min-h-screen p-4 flex-col justify-center items-center">
+    <div id="screen-menu" class="screen min-h-screen p-4 flex-col justify-center items-center pb-16">
         <div class="max-w-4xl w-full">
             <button onclick="showScreen('screen-home')" class="mb-6 bg-white/90 backdrop-blur text-gray-600 px-5 py-3 rounded-2xl font-extrabold shadow-md hover:bg-white transition-transform hover:-translate-y-1 border-b-4 border-gray-200">
                 <i class="fa-solid fa-arrow-left mr-2"></i> Chọn lại khối
@@ -125,7 +123,7 @@
     </div>
 
     <!-- MÀN HÌNH 4: LÀM BÀI TRẮC NGHIỆM -->
-    <div id="screen-quiz" class="screen min-h-screen p-4 flex-col items-center justify-center">
+    <div id="screen-quiz" class="screen min-h-screen p-4 flex-col items-center justify-center pb-16">
         <div class="max-w-3xl w-full">
             <!-- Header Quiz -->
             <div class="flex justify-between items-center mb-6">
@@ -162,7 +160,7 @@
     </div>
 
     <!-- MÀN HÌNH 5: KẾT QUẢ & GỬI ĐIỂM -->
-    <div id="screen-result" class="screen min-h-screen bg-yellow-400 items-center justify-center p-4">
+    <div id="screen-result" class="screen min-h-screen bg-yellow-400 items-center justify-center p-4 pb-16">
         <div class="bg-white rounded-[3rem] shadow-2xl border-b-8 border-yellow-600 p-8 md:p-10 w-full max-w-xl text-center relative overflow-hidden">
             
             <!-- Overlay Loading khi gửi điểm -->
@@ -201,7 +199,7 @@
     </div>
 
     <!-- MÀN HÌNH 6: THỰC HÀNH -->
-    <div id="screen-practice" class="screen min-h-screen p-4 flex-col justify-center items-center">
+    <div id="screen-practice" class="screen min-h-screen p-4 flex-col justify-center items-center pb-16">
         <div class="max-w-4xl w-full">
             <button onclick="showScreen('screen-menu')" class="mb-6 bg-white px-5 py-3 rounded-2xl font-bold shadow hover:bg-gray-50 transition-transform hover:-translate-y-1">
                 <i class="fa-solid fa-arrow-left mr-2"></i> Quay lại
@@ -212,6 +210,18 @@
             <div id="practice-list" class="space-y-6 md:space-y-8 pb-12">
                 <!-- Practice Items rendered by JS -->
             </div>
+        </div>
+    </div>
+
+    <!-- FOOTER BẢN QUYỀN (THÊM MỚI) -->
+    <div class="fixed bottom-0 left-0 w-full p-2 md:p-3 text-center z-[60] pointer-events-none">
+        <div class="inline-block rounded-full px-4 py-1 bg-black/10 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none">
+            <span class="text-white/90 font-bold text-xs md:text-sm drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
+                Bản quyền thuộc về 
+                <a href="https://dichvu.leminhdang.com/" target="_blank" class="pointer-events-auto text-white hover:text-yellow-200 underline decoration-dotted underline-offset-4 transition-colors font-extrabold">
+                    Minh Đăng IT
+                </a>
+            </span>
         </div>
     </div>
 
@@ -367,7 +377,7 @@
             currentGrade = g;
             document.getElementById('menu-title').innerText = gradesData[g].title;
             const bgColors = { 2: "from-pink-200 to-pink-400", 3: "from-blue-200 to-blue-400", 4: "from-green-200 to-green-400", 5: "from-purple-200 to-purple-400" };
-            document.body.className = `bg-gradient-to-b ${bgColors[g]} min-h-screen transition-colors duration-500 overflow-x-hidden`;
+            document.body.className = `bg-gradient-to-b ${bgColors[g]} min-h-screen transition-colors duration-500 overflow-x-hidden relative`;
             showScreen('screen-menu');
         }
 
@@ -560,7 +570,7 @@
             
             // Đổi màu nền nếu về login hoặc home
             if(id === 'screen-login' || id === 'screen-home') { 
-                document.body.className = "bg-gradient-to-b from-sky-200 to-blue-400 min-h-screen transition-colors duration-500 overflow-x-hidden"; 
+                document.body.className = "bg-gradient-to-b from-sky-200 to-blue-400 min-h-screen transition-colors duration-500 overflow-x-hidden relative"; 
             }
         }
         
