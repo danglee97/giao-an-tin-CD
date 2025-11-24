@@ -59,7 +59,10 @@
     <div id="screen-login" class="screen min-h-screen flex-col items-center justify-center p-4 pb-16">
         <div class="bg-white/90 backdrop-blur-md rounded-[2.5rem] shadow-2xl border-b-8 border-blue-200 p-8 w-full max-w-md text-center transform transition-all hover:scale-[1.01]">
             <div class="mb-6 flex justify-center">
-                <img src="../logo.png" alt="Minh Dang IT Logo" class="h-28 w-auto object-contain drop-shadow-md hover:scale-110 transition-transform" onerror="this.style.display='none'">
+                <!-- [CẬP NHẬT] Thêm thẻ a bao quanh logo để quay về trang chủ -->
+                <a href="../index.html" title="Quay về trang chủ">
+                    <img src="../logo.png" alt="Minh Dang IT Logo" class="h-28 w-auto object-contain drop-shadow-md hover:scale-110 transition-transform" onerror="this.style.display='none'">
+                </a>
             </div>
             <h1 class="text-4xl text-blue-800 mb-2 uppercase tracking-tight font-black drop-shadow-sm">Tin Học Vui</h1>
             <p class="text-gray-500 mb-8 font-bold text-lg">Ôn thi Học Kì 1 cùng thầy Đăng</p>
@@ -155,10 +158,10 @@
         </div>
     </div>
 
-    <!-- MÀN HÌNH 4: LÀM BÀI TRẮC NGHIỆM (CẬP NHẬT NÚT THOÁT & CÂU HỎI) -->
+    <!-- MÀN HÌNH 4: LÀM BÀI TRẮC NGHIỆM -->
     <div id="screen-quiz" class="screen min-h-screen p-4 flex-col items-center justify-center pb-16">
         <div class="max-w-3xl w-full">
-            <!-- Header Quiz Cải tiến -->
+            <!-- Header Quiz -->
             <div class="flex justify-between items-center mb-8 gap-3">
                 <!-- Nút Thoát Nổi Bật -->
                 <button onclick="exitToMenu()" class="group bg-white text-red-500 hover:bg-red-50 px-5 py-3 rounded-2xl font-black shadow-lg border-b-4 border-red-100 hover:border-red-200 active:border-b-0 active:translate-y-1 transition-all flex items-center shrink-0">

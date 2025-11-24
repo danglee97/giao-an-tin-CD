@@ -26,6 +26,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css"> <!-- [QUAN TRỌNG] Đảm bảo đã link file CSS -->
     
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -104,8 +105,16 @@
     <script>
         const cardData = [
             { type: 'icon', icon: 'fas fa-keyboard', title: 'Luyện gõ chữ', href: 'luyen-go-chu/index.html' },
-            /* === [MỚI] Thêm ô Ôn thi HK1 tại đây với đường dẫn thư mục "OnThi" === */
-            { type: 'icon', icon: 'fas fa-graduation-cap', title: 'Ôn thi HK1', href: 'OnThi/index.html', description: 'Trắc nghiệm & Thực hành' },
+            // --- [CẬP NHẬT] MỤC ÔN THI ĐƯỢC LÀM NỔI BẬT ---
+            { 
+                type: 'icon', 
+                icon: 'fas fa-graduation-cap', 
+                title: 'Ôn thi HK1', 
+                href: 'OnThi/index.html', 
+                description: 'Trắc nghiệm & Thực hành',
+                highlight: true, // Đánh dấu nổi bật
+                badge: 'MỚI'     // Nội dung nhãn dán
+            },
             { type: 'icon', icon: 'fas fa-child', title: 'Lớp 3', href: 'khoi3/index.html' },
             { type: 'icon', icon: 'fas fa-child-reaching', title: 'Lớp 4', href: 'khoi4/index.html' },
             { type: 'icon', icon: 'fa-solid fa-people-pulling', title: 'Lớp 5', href: 'khoi5/index.html' },
@@ -125,9 +134,14 @@
                 if (card.type === 'icon') iconHTML = `<i class="${card.icon} text-5xl sm:text-6xl text-blue-800 group-hover:text-red-500 group-hover:scale-110 transition-all duration-300 ease-in-out mb-4"></i>`;
                 else if (card.type === 'image') iconHTML = `<img src="${card.icon}" alt="${card.title} icon" class="h-14 sm:h-16 mb-4 group-hover:scale-110 transition-transform duration-300">`;
                 
+                // [CẬP NHẬT] Xử lý lớp CSS nổi bật và nhãn dán
+                const isHighlight = card.highlight ? 'card-highlighted' : '';
+                const badgeHTML = card.badge ? `<span class="badge-hot">${card.badge}</span>` : '';
+
                 return `
-                    <a href="${card.href}" ${card.target ? `target="${card.target}" rel="noopener noreferrer"`:''} class="group relative flex flex-col items-center justify-center p-6 sm:p-8 text-center bg-white/70 backdrop-blur-sm border border-slate-200 rounded-2xl shadow-md hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 ease-in-out overflow-hidden">
-                        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-cyan-100 to-blue-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
+                    <a href="${card.href}" ${card.target ? `target="${card.target}" rel="noopener noreferrer"`:''} class="group relative flex flex-col items-center justify-center p-6 sm:p-8 text-center bg-white/70 backdrop-blur-sm border border-slate-200 rounded-2xl shadow-md hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 ease-in-out overflow-visible ${isHighlight}">
+                        ${badgeHTML}
+                        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-cyan-100 to-blue-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0 rounded-2xl overflow-hidden"></div>
                         <div class="relative z-10 flex flex-col items-center justify-center h-full">
                             ${iconHTML}
                             <h2 class="text-lg sm:text-xl font-bold text-slate-800">${card.title}</h2>
