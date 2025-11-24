@@ -14,30 +14,21 @@
         .btn-press { transition: all 0.1s; border-bottom-width: 6px; cursor: pointer; position: relative; top: 0; }
         .btn-press:active { transform: translateY(4px); border-bottom-width: 2px; margin-top: 4px; }
         
-        /* Screen Management */
         .screen { display: none !important; opacity: 0; transition: opacity 0.3s ease-in-out; }
         .screen.active { display: flex !important; opacity: 1; }
         
-        /* Animations */
         @keyframes pulse-red { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         .timer-warning { color: #ef4444; animation: pulse-red 1s infinite; }
-        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        .popup-enter { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        @keyframes loading-text { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .animate-text-pulse { animation: loading-text 1.5s infinite; }
+        
+        .sending-overlay { background: rgba(255, 255, 255, 0.95); position: absolute; top:0; left:0; right:0; bottom:0; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 50; border-radius: 1.5rem; }
+        
+        select { appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1rem; }
 
-        /* Background Elements */
-        .bg-3d-animated {
-            background: linear-gradient(to bottom, #eef2ff, #e0e7ff);
-            position: relative;
-            overflow-x: hidden;
-        }
-        .cube {
-            position: absolute; top: 80vh; left: 45vw; width: 10px; height: 10px;
-            border: solid 1px rgba(59, 130, 246, 0.2); background-color: rgba(59, 130, 246, 0.1);
-            transform-origin: top left; transform: scale(0) rotate(0deg) translate(-50%, -50%);
-            animation: cube 12s ease-in forwards infinite; z-index: -1; border-radius: 15%;
-        }
+        .fun-title { background: linear-gradient(45deg, #2563eb, #9333ea, #db2777, #2563eb); background-size: 300% 300%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rainbow_animation 4s ease-in-out infinite; text-shadow: 0px 4px 10px rgba(0,0,0,0.1); }
+        @keyframes rainbow_animation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .bg-3d-animated { background: linear-gradient(to bottom, #eef2ff, #e0e7ff); position: relative; overflow-x: hidden; }
+        .cube { position: absolute; top: 80vh; left: 45vw; width: 10px; height: 10px; border: solid 1px rgba(59, 130, 246, 0.2); background-color: rgba(59, 130, 246, 0.1); transform-origin: top left; transform: scale(0) rotate(0deg) translate(-50%, -50%); animation: cube 12s ease-in forwards infinite; z-index: -1; border-radius: 15%; }
         .cube:nth-child(2n) { border-color: rgba(168, 85, 247, 0.2); background-color: rgba(168, 85, 247, 0.1); }
         .cube:nth-child(2) { animation-delay: 2s; left: 25vw; top: 40vh; }
         .cube:nth-child(3) { animation-delay: 4s; left: 75vw; top: 50vh; }
@@ -46,60 +37,40 @@
         .cube:nth-child(6) { animation-delay: 10s; left: 50vw; top: 10vh; }
         @keyframes cube { from { transform: scale(0) rotate(0deg) translate(-50%, -50%); opacity: 1; } to { transform: scale(20) rotate(960deg) translate(-50%, -50%); opacity: 0; } }
         
-        /* Utilities */
-        .sending-overlay { background: rgba(255, 255, 255, 0.95); position: absolute; top:0; left:0; right:0; bottom:0; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 50; border-radius: 1.5rem; }
-        select { appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1rem; }
-        .fun-title { background: linear-gradient(45deg, #2563eb, #9333ea, #db2777, #2563eb); background-size: 300% 300%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rainbow_animation 4s ease-in-out infinite; text-shadow: 0px 4px 10px rgba(0,0,0,0.1); }
-        @keyframes rainbow_animation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .text-pop-3d { color: #1e40af; -webkit-text-stroke: 2px white; filter: drop-shadow(0px 4px 0px rgba(0, 0, 0, 0.15)); text-shadow: 2px 2px 0px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff, 0px 5px 10px rgba(0,0,0,0.2); color: #1d4ed8; }
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .popup-enter { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes loading-text { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .animate-text-pulse { animation: loading-text 1.5s infinite; }
     </style>
 </head>
 <body class="bg-3d-animated min-h-screen flex flex-col">
 
-    <!-- Background Decor -->
     <div class="cube"></div><div class="cube"></div><div class="cube"></div><div class="cube"></div><div class="cube"></div><div class="cube"></div>
 
-    <!-- [CẬP NHẬT] LOADING SCREEN VỚI "GÓC THÔNG THÁI" -->
+    <!-- 0. LOADING SCREEN -->
     <div id="screen-loading" class="screen active min-h-screen flex-col items-center justify-center p-4 bg-white/80 backdrop-blur-lg z-[100]">
         <div class="bg-white rounded-[2rem] p-8 text-center shadow-2xl max-w-md w-full border-b-8 border-blue-200 relative overflow-hidden">
-            
-            <!-- Thanh màu trang trí trên cùng -->
             <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400"></div>
-
-            <!-- Icon sinh động hơn -->
             <div class="flex justify-center gap-6 mb-6 mt-2">
                 <i class="fa-solid fa-robot text-5xl text-indigo-500 animate-bounce" style="animation-duration: 1.2s;"></i>
                 <i class="fa-solid fa-puzzle-piece text-5xl text-pink-500 animate-spin" style="animation-duration: 3s;"></i>
                 <i class="fa-solid fa-code text-5xl text-yellow-500 animate-pulse" style="animation-duration: 1.5s;"></i>
             </div>
-            
             <h2 class="text-2xl font-black text-blue-800 mb-1">Đang tải dữ liệu...</h2>
             <p class="text-gray-400 font-bold text-sm mb-6 animate-text-pulse">Chờ thầy Đăng xíu nhé! <i class="fa-solid fa-heart text-red-400"></i></p>
-
-            <!-- [MỚI] Hộp Sự Thật Thú Vị -->
             <div class="bg-blue-50 rounded-2xl p-5 border-2 border-blue-100 relative mb-6">
-                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider border border-blue-200 shadow-sm whitespace-nowrap">
-                    <i class="fa-regular fa-lightbulb mr-1"></i> Có thể em chưa biết?
-                </div>
-                <p id="loading-fact" class="text-slate-600 font-bold text-base mt-2 min-h-[3rem] flex items-center justify-center leading-tight transition-opacity duration-500">
-                    Máy tính đầu tiên nặng bằng 5 con voi đấy! 🐘
-                </p>
+                <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider border border-blue-200 shadow-sm whitespace-nowrap"><i class="fa-regular fa-lightbulb mr-1"></i> Có thể em chưa biết?</div>
+                <p id="loading-fact" class="text-slate-600 font-bold text-base mt-2 min-h-[3rem] flex items-center justify-center leading-tight transition-opacity duration-500">Máy tính đầu tiên nặng bằng 5 con voi đấy! 🐘</p>
             </div>
-
-            <!-- [MỚI] Thanh Progress Bar -->
-            <div class="w-full bg-gray-100 rounded-full h-3 mb-2 overflow-hidden border border-gray-200">
-                <div id="loading-progress" class="bg-gradient-to-r from-blue-500 to-indigo-500 h-3 rounded-full transition-all duration-300 ease-out" style="width: 5%"></div>
-            </div>
+            <div class="w-full bg-gray-100 rounded-full h-3 mb-2 overflow-hidden border border-gray-200"><div id="loading-progress" class="bg-gradient-to-r from-blue-500 to-indigo-500 h-3 rounded-full transition-all duration-300 ease-out" style="width: 5%"></div></div>
             <p class="text-xs text-gray-400 font-bold">Đang kết nối máy chủ...</p>
-            
             <div id="loading-error" class="hidden mt-4 text-red-500 font-bold text-sm bg-red-100 p-3 rounded-xl border-2 border-red-200"></div>
             <button onclick="window.location.reload()" id="btn-reload" class="hidden mt-4 w-full bg-blue-600 text-white px-4 py-3 rounded-xl font-bold hover:bg-blue-700 btn-press border-b-4 border-blue-800">Tải lại trang</button>
         </div>
     </div>
 
-    <!-- MAIN CONTENT WRAPPER -->
     <div class="flex-grow pb-24"> 
-        
         <!-- 1. LOGIN SCREEN -->
         <div id="screen-login" class="screen min-h-screen flex-col items-center justify-center p-4">
             <div class="bg-white/90 backdrop-blur-md rounded-[2.5rem] shadow-2xl border-b-8 border-gray-200 p-8 w-full max-w-md text-center transform transition-all hover:scale-[1.01] relative z-10">
@@ -163,11 +134,25 @@
                 <h2 class="text-4xl md:text-5xl font-black text-gray-800 mb-2 relative z-10 tracking-tight">HOÀN THÀNH!</h2>
                 <div class="text-lg font-bold text-gray-400 mb-6 uppercase tracking-widest relative z-10"><span id="result-name">Tên</span> - <span id="result-class">Lớp</span></div>
                 <div class="bg-gray-50 rounded-3xl p-6 mb-6 relative z-10 border-4 border-gray-100"><div class="text-gray-400 font-bold text-xs md:text-sm mb-2 uppercase tracking-wide">Điểm số của em</div><div class="text-6xl md:text-7xl font-black text-blue-600 leading-none mb-2"><span id="result-score">0</span><span class="text-4xl text-gray-300 mx-1">/</span><span id="result-total">0</span></div><p id="result-message" class="text-lg md:text-xl font-extrabold text-orange-500 mt-4 px-2">...</p></div>
-                <button onclick="showScreen('screen-menu')" class="btn-press w-full bg-blue-600 border-blue-800 text-white font-black py-4 md:py-5 rounded-2xl text-xl md:text-2xl shadow-xl hover:bg-blue-500 relative z-10 uppercase tracking-wide"><i class="fa-solid fa-rotate-left mr-2"></i> Làm lại / Về Menu</button>
+                
+                <!-- [MỚI] Nút Xem lại bài làm -->
+                <button onclick="reviewQuiz()" class="btn-press w-full bg-white border-blue-600 text-blue-600 border-2 font-black py-4 md:py-5 rounded-2xl text-xl md:text-2xl shadow-lg hover:bg-blue-50 relative z-10 uppercase tracking-wide mb-4"><i class="fa-solid fa-eye mr-2"></i> Xem lại bài làm</button>
+                <button onclick="showScreen('screen-menu')" class="btn-press w-full bg-blue-600 border-blue-800 text-white font-black py-4 md:py-5 rounded-2xl text-xl md:text-2xl shadow-xl hover:bg-blue-500 relative z-10 uppercase tracking-wide"><i class="fa-solid fa-rotate-left mr-2"></i> Về Menu</button>
             </div>
         </div>
 
-        <!-- 5. PRACTICE SCREEN -->
+        <!-- [MỚI] 5. REVIEW SCREEN (XEM LẠI BÀI) -->
+        <div id="screen-review" class="screen min-h-screen p-4 flex-col justify-start items-center pt-12 pb-32 overflow-y-auto">
+            <div class="max-w-4xl w-full relative z-10">
+                <div class="flex justify-between items-center mb-8">
+                    <button onclick="showScreen('screen-result')" class="mb-0 bg-white px-5 py-3 rounded-2xl font-bold shadow hover:bg-gray-50 transition-transform hover:-translate-y-1"><i class="fa-solid fa-arrow-left mr-2"></i> Quay lại kết quả</button>
+                    <h1 class="text-2xl md:text-3xl font-black text-gray-800 drop-shadow-md flex items-center bg-white px-6 py-3 rounded-2xl shadow"><i class="fa-solid fa-magnifying-glass mr-3 text-blue-500"></i> Xem lại bài làm</h1>
+                </div>
+                <div id="review-list" class="space-y-6 pb-12"></div>
+            </div>
+        </div>
+
+        <!-- 6. PRACTICE SCREEN -->
         <div id="screen-practice" class="screen min-h-screen p-4 flex-col justify-start items-center pt-28 pb-32">
             <div class="max-w-4xl w-full relative z-10">
                 <button onclick="showScreen('screen-menu')" class="mb-6 bg-white px-5 py-3 rounded-2xl font-bold shadow hover:bg-gray-50 transition-transform hover:-translate-y-1"><i class="fa-solid fa-arrow-left mr-2"></i> Quay lại</button>
@@ -184,8 +169,10 @@
     <script>
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwziks8ynJ60Lj93bBymd_rhF9DxQvVrMklszxcX4tM99mNjMsorNzJveAcviqbv4x6/exec"; 
         let gradesData = {}; let studentName = "", studentClass = "", currentGrade = null, currentScore = 0, currentQuizIndex = 0, timerInterval = null, timeLeft = 30;
+        
+        // [MỚI] Biến lưu lịch sử làm bài
+        let userAnswers = []; // Lưu mảng: { question: "...", selected: index, correct: index, options: [...] }
 
-        // [MỚI] Dữ liệu Fun Facts
         const funFacts = [
             "Máy tính đầu tiên nặng tới 27 tấn, bằng khoảng 5 con voi! 🐘",
             "Con chuột máy tính đầu tiên được làm bằng gỗ đấy! 🪵",
@@ -198,13 +185,11 @@
 
         window.onload = function() {
             if(GOOGLE_SCRIPT_URL.includes("HÃY_DÁN_LINK")) { showError("Lỗi cấu hình: Thầy Đăng chưa dán link Web App vào code!"); return; }
-            startLoadingEffects(); // Bắt đầu hiệu ứng loading
+            startLoadingEffects();
             fetchQuestions();
         };
 
-        // [MỚI] Hàm chạy hiệu ứng Loading vui nhộn
         function startLoadingEffects() {
-            // 1. Random Fun Fact
             const factEl = document.getElementById('loading-fact');
             const updateFact = () => {
                 factEl.style.opacity = 0;
@@ -213,19 +198,14 @@
                     factEl.style.opacity = 1;
                 }, 500);
             };
-            updateFact(); // Chạy ngay lần đầu
-            setInterval(updateFact, 4000); // Đổi câu mỗi 4 giây
+            updateFact();
+            setInterval(updateFact, 4000);
 
-            // 2. Fake Progress Bar
             const bar = document.getElementById('loading-progress');
             let width = 5;
             const progressInterval = setInterval(() => {
-                if (width >= 95) { 
-                    clearInterval(progressInterval); 
-                } else {
-                    // Tăng ngẫu nhiên để cảm giác tự nhiên
-                    width += Math.random() * 5;
-                    if(width > 95) width = 95;
+                if (width >= 95) { clearInterval(progressInterval); } else {
+                    width += Math.random() * 5; if(width > 95) width = 95;
                     bar.style.width = width + '%';
                 }
             }, 300);
@@ -233,7 +213,6 @@
 
         function fetchQuestions() {
             fetch(GOOGLE_SCRIPT_URL).then(r => r.json()).then(res => {
-                // Khi tải xong, đẩy progress lên 100% rồi mới ẩn
                 document.getElementById('loading-progress').style.width = '100%';
                 setTimeout(() => {
                     if(res.status === 'success') { processSheetData(res.data); document.getElementById('screen-loading').classList.remove('active'); document.getElementById('screen-login').classList.add('active'); } 
@@ -269,7 +248,12 @@
         function handleLogout() { if(confirm("Em muốn thoát để nhập lại tên?")) { showScreen('screen-login'); document.getElementById('input-name').value = ""; } }
         function selectGrade(g) { currentGrade = g; if (gradesData[g].quiz.length == 0 && gradesData[g].practice.length == 0) alert("Chưa có bài cho khối này!"); document.getElementById('menu-title').innerText = gradesData[g].title; showScreen('screen-menu'); }
         
-        function startQuiz() { if (gradesData[currentGrade].quiz.length == 0) return; currentScore = 0; currentQuizIndex = 0; showScreen('screen-quiz'); renderQuestion(); }
+        function startQuiz() { 
+            if (gradesData[currentGrade].quiz.length == 0) return; 
+            currentScore = 0; currentQuizIndex = 0; 
+            userAnswers = []; // Reset lịch sử làm bài
+            showScreen('screen-quiz'); renderQuestion(); 
+        }
 
         function renderQuestion() {
             const qData = gradesData[currentGrade].quiz[currentQuizIndex];
@@ -303,12 +287,21 @@
             else { el.parentElement.classList.remove('timer-warning', 'border-red-200'); el.classList.replace('text-red-600', 'text-blue-600'); }
         }
 
-        function timeOut() { showFeedbackPopup(false, "HẾT GIỜ RỒI!", "bg-red-500"); setTimeout(nextQuestion, 2000); }
+        function timeOut() { 
+            // Ghi nhận không trả lời (sai)
+            recordAnswer(-1);
+            showFeedbackPopup(false, "HẾT GIỜ RỒI!", "bg-red-500"); 
+            setTimeout(nextQuestion, 2000); 
+        }
 
         function checkAnswer(idx, btn) {
             clearInterval(timerInterval);
             const btns = document.querySelectorAll('#answers-container button'); btns.forEach(b => b.disabled = true);
             const correctIdx = gradesData[currentGrade].quiz[currentQuizIndex].a;
+            
+            // [MỚI] Ghi nhận đáp án
+            recordAnswer(idx);
+
             if (idx === correctIdx) {
                 currentScore++;
                 btn.classList.replace("border-gray-200", "border-green-600");
@@ -327,6 +320,17 @@
             setTimeout(nextQuestion, 2500);
         }
         
+        // [MỚI] Hàm lưu lịch sử
+        function recordAnswer(selectedIdx) {
+            const currentQ = gradesData[currentGrade].quiz[currentQuizIndex];
+            userAnswers.push({
+                question: currentQ.q,
+                options: currentQ.options,
+                correct: currentQ.a,
+                selected: selectedIdx
+            });
+        }
+
         function showFeedbackPopup(isCorrect, msg, colorClass) {
             const overlay = document.getElementById('feedback-overlay');
             const box = document.getElementById('feedback-msg');
@@ -376,6 +380,55 @@
             fetch(GOOGLE_SCRIPT_URL, { method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) })
             .then(r => r.json()).then(res => { status.classList.replace('flex', 'hidden'); if(res.status !== 'success') alert("Lỗi lưu: " + res.message); })
             .catch(e => status.classList.replace('flex', 'hidden'));
+        }
+
+        // [MỚI] Hàm hiển thị danh sách xem lại bài
+        function reviewQuiz() {
+            showScreen('screen-review');
+            const list = document.getElementById('review-list');
+            list.innerHTML = '';
+            const badges = ["A", "B", "C", "D"];
+
+            userAnswers.forEach((item, idx) => {
+                const isCorrect = item.selected === item.correct;
+                const statusIcon = isCorrect ? '<i class="fa-solid fa-check-circle text-green-500 text-2xl"></i>' : '<i class="fa-solid fa-circle-xmark text-red-500 text-2xl"></i>';
+                const borderClass = isCorrect ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50';
+                
+                let html = `
+                <div class="bg-white rounded-[2rem] shadow-lg border-2 ${isCorrect ? 'border-gray-100' : 'border-red-100'} p-6 relative overflow-hidden">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-lg font-black text-gray-800 w-[90%]">Câu ${idx + 1}: ${item.question}</h3>
+                        <div>${statusIcon}</div>
+                    </div>
+                    <div class="space-y-2">
+                `;
+
+                item.options.forEach((opt, optIdx) => {
+                    if(!opt && opt !== 0) return;
+                    let optionClass = "bg-white border-gray-200 text-gray-500";
+                    let icon = "";
+
+                    // Logic tô màu đáp án
+                    if (optIdx === item.correct) {
+                        optionClass = "bg-green-100 border-green-500 text-green-700 font-bold shadow-sm"; // Đáp án đúng luôn xanh
+                        icon = '<i class="fa-solid fa-check ml-auto"></i>';
+                    } else if (optIdx === item.selected && !isCorrect) {
+                        optionClass = "bg-red-100 border-red-500 text-red-700 font-bold"; // Chọn sai thì đỏ
+                        icon = '<i class="fa-solid fa-xmark ml-auto"></i>';
+                    }
+
+                    html += `
+                        <div class="flex items-center p-3 rounded-xl border-2 ${optionClass}">
+                            <span class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 font-black border bg-white/50 text-sm">${badges[optIdx]}</span>
+                            <span class="flex-grow">${opt}</span>
+                            ${icon}
+                        </div>
+                    `;
+                });
+
+                html += `</div></div>`;
+                list.innerHTML += html;
+            });
         }
 
         function startPractice() {
