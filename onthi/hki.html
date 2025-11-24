@@ -38,6 +38,23 @@
             background-position: right 1rem center;
             background-size: 1rem;
         }
+
+        /* [MỚI] Hiệu ứng chữ Tin Học Vui sinh động */
+        .fun-title {
+            background: linear-gradient(45deg, #2563eb, #9333ea, #db2777, #2563eb);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: rainbow_animation 4s ease-in-out infinite;
+            text-shadow: 0px 4px 10px rgba(0,0,0,0.1); /* Bóng nhẹ cho dễ đọc */
+        }
+        
+        @keyframes rainbow_animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
     </style>
 </head>
 <body class="bg-gradient-to-b from-sky-200 to-blue-400 min-h-screen overflow-x-hidden relative">
@@ -59,12 +76,12 @@
     <div id="screen-login" class="screen min-h-screen flex-col items-center justify-center p-4 pb-16">
         <div class="bg-white/90 backdrop-blur-md rounded-[2.5rem] shadow-2xl border-b-8 border-blue-200 p-8 w-full max-w-md text-center transform transition-all hover:scale-[1.01]">
             <div class="mb-6 flex justify-center">
-                <!-- [CẬP NHẬT] Thêm thẻ a bao quanh logo để quay về trang chủ -->
                 <a href="../index.html" title="Quay về trang chủ">
                     <img src="../logo.png" alt="Minh Dang IT Logo" class="h-28 w-auto object-contain drop-shadow-md hover:scale-110 transition-transform" onerror="this.style.display='none'">
                 </a>
             </div>
-            <h1 class="text-4xl text-blue-800 mb-2 uppercase tracking-tight font-black drop-shadow-sm">Tin Học Vui</h1>
+            <!-- [CẬP NHẬT] Áp dụng class fun-title cho tiêu đề -->
+            <h1 class="text-5xl md:text-6xl mb-2 uppercase tracking-tight font-black drop-shadow-sm fun-title py-2">Tin Học Vui</h1>
             <p class="text-gray-500 mb-8 font-bold text-lg">Ôn thi Học Kì 1 cùng thầy Đăng</p>
             
             <div class="space-y-5 text-left">
@@ -116,8 +133,9 @@
             </button>
             
             <div class="text-center mb-12 mt-4">
-                <span class="inline-block bg-white/25 backdrop-blur-md text-white border-2 border-white/40 px-6 py-2 rounded-full font-extrabold text-base tracking-widest mb-4 shadow-sm uppercase">
-                    MÔN TIN HỌC
+                <!-- [CẬP NHẬT] Làm nổi bật tag Môn học -->
+                <span class="inline-block bg-white text-blue-600 border-4 border-blue-100 px-8 py-3 rounded-full font-black text-lg tracking-widest mb-6 shadow-xl uppercase transform hover:-translate-y-1 transition-all duration-300">
+                    <i class="fa-solid fa-laptop-code mr-2"></i> MÔN TIN HỌC
                 </span>
                 
                 <h1 id="menu-title" class="text-5xl md:text-7xl font-black text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] mt-2 mb-8 uppercase tracking-wide leading-tight">
