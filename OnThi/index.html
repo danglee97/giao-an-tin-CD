@@ -29,11 +29,20 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 50; border-radius: 1.5rem;
         }
+        
+        /* Custom Select */
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-b from-sky-200 to-blue-400 min-h-screen overflow-x-hidden relative">
 
-    <!-- MÀN HÌNH 0: LOADING (TẢI DỮ LIỆU) -->
+    <!-- MÀN HÌNH 0: LOADING -->
     <div id="screen-loading" class="screen active min-h-screen flex-col items-center justify-center p-4 bg-blue-500 z-[100]">
         <div class="bg-white rounded-3xl p-8 text-center shadow-2xl max-w-sm w-full border-b-8 border-blue-200">
             <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-600 mb-6 mx-auto"></div>
@@ -62,7 +71,29 @@
                 </div>
                 <div>
                     <label class="block text-blue-800 font-extrabold mb-2 pl-1 text-lg">Lớp</label>
-                    <input type="text" id="input-class" placeholder="Ví dụ: 3A2" class="w-full px-5 py-4 rounded-2xl border-4 border-blue-100 focus:border-blue-500 focus:outline-none bg-blue-50 text-xl font-bold text-gray-700 transition-colors placeholder-gray-300">
+                    <select id="input-class" class="w-full px-5 py-4 rounded-2xl border-4 border-blue-100 focus:border-blue-500 focus:outline-none bg-blue-50 text-xl font-bold text-gray-700 transition-colors cursor-pointer">
+                        <option value="" disabled selected>-- Chọn lớp của em --</option>
+                        <optgroup label="Khối 2">
+                            <option value="2A1">2A1</option>
+                            <option value="2A2">2A2</option>
+                            <option value="2A3">2A3</option>
+                            <option value="2A4">2A4</option>
+                        </optgroup>
+                        <optgroup label="Khối 3">
+                            <option value="3A1">3A1</option>
+                            <option value="3A2">3A2</option>
+                            <option value="3A3">3A3</option>
+                        </optgroup>
+                        <optgroup label="Khối 4">
+                            <option value="4A1">4A1</option>
+                            <option value="4A2">4A2</option>
+                            <option value="4A3">4A3</option>
+                        </optgroup>
+                        <optgroup label="Khối 5">
+                            <option value="5A1">5A1</option>
+                            <option value="5A2">5A2</option>
+                        </optgroup>
+                    </select>
                 </div>
                 <button onclick="handleLogin()" class="btn-press w-full bg-blue-600 border-blue-800 text-white font-black py-4 rounded-2xl text-2xl mt-4 shadow-lg hover:bg-blue-500 flex items-center justify-center gap-3">
                     BẮT ĐẦU NGAY <i class="fa-solid fa-rocket"></i>
@@ -71,41 +102,35 @@
         </div>
     </div>
 
-    <!-- MÀN HÌNH 2: CHỌN KHỐI -->
-    <div id="screen-home" class="screen min-h-screen flex-col items-center justify-center p-4 pb-16">
-        <div class="bg-white/90 backdrop-blur-md rounded-[2rem] shadow-xl border-b-8 border-indigo-200 p-6 w-full max-w-3xl text-center relative">
-            <div class="absolute -top-6 left-0 w-full flex justify-center md:justify-end md:top-4 md:right-4 gap-2 px-4">
-                <span class="bg-white text-blue-700 px-4 py-2 rounded-full font-extrabold text-sm shadow-md border-2 border-blue-100 flex items-center">
-                    <i class="fa-solid fa-user-graduate mr-2"></i> <span id="display-name">Tên</span>
-                </span>
-                <span class="bg-white text-pink-700 px-4 py-2 rounded-full font-extrabold text-sm shadow-md border-2 border-pink-100 flex items-center">
-                    <i class="fa-solid fa-users mr-2"></i> <span id="display-class">Lớp</span>
-                </span>
-            </div>
-
-            <h2 class="text-3xl md:text-4xl font-black text-indigo-700 mt-8 md:mt-10 mb-2">CHỌN KHỐI LỚP</h2>
-            <p class="text-gray-500 font-bold mb-8 text-lg">Em đang học lớp mấy nào?</p>
-            
-            <div class="grid grid-cols-2 gap-4 md:gap-6" id="grade-buttons-container">
-                <!-- Các nút khối lớp sẽ được tạo tự động -->
-            </div>
-            
-            <button onclick="handleLogout()" class="mt-10 text-gray-400 font-bold hover:text-red-500 text-sm underline decoration-dashed transition-colors">
-                <i class="fa-solid fa-right-from-bracket"></i> Thoát / Đổi tên
-            </button>
-        </div>
-    </div>
+    <!-- MÀN HÌNH 2: CHỌN KHỐI (Đã ẩn) -->
+    <div id="screen-home" class="screen min-h-screen flex-col items-center justify-center p-4 pb-16"></div>
 
     <!-- MÀN HÌNH 3: MENU CHỨC NĂNG -->
     <div id="screen-menu" class="screen min-h-screen p-4 flex-col justify-center items-center pb-16">
         <div class="max-w-4xl w-full">
-            <button onclick="showScreen('screen-home')" class="mb-6 bg-white/90 backdrop-blur text-gray-600 px-5 py-3 rounded-2xl font-extrabold shadow-md hover:bg-white transition-transform hover:-translate-y-1 border-b-4 border-gray-200">
-                <i class="fa-solid fa-arrow-left mr-2"></i> Chọn lại khối
+            <button onclick="handleLogout()" class="mb-4 bg-white/80 backdrop-blur text-gray-600 px-5 py-3 rounded-2xl font-extrabold shadow-md hover:bg-white transition-transform hover:-translate-y-1 border-b-4 border-gray-200">
+                <i class="fa-solid fa-right-from-bracket mr-2"></i> Đổi tên / Lớp khác
             </button>
             
-            <div class="text-center mb-10">
-                <span class="bg-white/20 text-white px-4 py-1 rounded-full font-bold text-sm border border-white/30 uppercase tracking-wider">Môn Tin Học</span>
-                <h1 id="menu-title" class="text-5xl md:text-6xl font-black text-white drop-shadow-lg mt-2 uppercase tracking-wide">LỚP ...</h1>
+            <div class="text-center mb-12 mt-4">
+                <span class="inline-block bg-white/25 backdrop-blur-md text-white border-2 border-white/40 px-6 py-2 rounded-full font-extrabold text-base tracking-widest mb-4 shadow-sm uppercase">
+                    MÔN TIN HỌC
+                </span>
+                
+                <h1 id="menu-title" class="text-5xl md:text-7xl font-black text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] mt-2 mb-8 uppercase tracking-wide leading-tight">
+                    KHỐI LỚP ...
+                </h1>
+                
+                <div class="inline-flex items-center gap-3 bg-white text-blue-700 rounded-full px-6 py-3 md:px-8 md:py-4 font-black text-lg md:text-2xl shadow-xl transform hover:scale-105 transition-transform border-4 border-blue-100">
+                    <div class="bg-blue-100 p-2 rounded-full">
+                        <i class="fa-solid fa-user-graduate text-blue-600"></i> 
+                    </div>
+                    <span id="menu-student-name">...</span>
+                    <span class="text-gray-300 mx-1 text-2xl font-light">|</span>
+                    <span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-xl border-2 border-orange-200 text-base md:text-lg">
+                        <i class="fa-solid fa-users mr-1"></i> <span id="menu-student-class">...</span>
+                    </span>
+                </div>
             </div>
             
             <div class="grid md:grid-cols-2 gap-6 md:gap-8">
@@ -130,31 +155,38 @@
         </div>
     </div>
 
-    <!-- MÀN HÌNH 4: LÀM BÀI TRẮC NGHIỆM -->
+    <!-- MÀN HÌNH 4: LÀM BÀI TRẮC NGHIỆM (CẬP NHẬT NÚT THOÁT & CÂU HỎI) -->
     <div id="screen-quiz" class="screen min-h-screen p-4 flex-col items-center justify-center pb-16">
         <div class="max-w-3xl w-full">
-            <!-- Header Quiz -->
-            <div class="flex justify-between items-center mb-6">
-                <button onclick="exitToMenu()" class="bg-white/20 text-white hover:bg-red-500/80 px-4 py-2 rounded-xl font-bold backdrop-blur border-2 border-white/30 transition-colors text-sm md:text-base">
-                    <i class="fa-solid fa-xmark mr-1"></i> Thoát
+            <!-- Header Quiz Cải tiến -->
+            <div class="flex justify-between items-center mb-8 gap-3">
+                <!-- Nút Thoát Nổi Bật -->
+                <button onclick="exitToMenu()" class="group bg-white text-red-500 hover:bg-red-50 px-5 py-3 rounded-2xl font-black shadow-lg border-b-4 border-red-100 hover:border-red-200 active:border-b-0 active:translate-y-1 transition-all flex items-center shrink-0">
+                    <i class="fa-solid fa-right-from-bracket mr-2 text-xl"></i> 
+                    <span class="text-lg">Thoát</span>
                 </button>
                 
-                <div class="bg-white px-6 py-2 rounded-full shadow-xl flex items-center border-4 border-blue-100 transform scale-110">
-                    <i class="fa-regular fa-clock mr-2 text-gray-400 text-xl"></i>
-                    <span id="timer-display" class="text-3xl font-black text-blue-600 font-mono tabular-nums">30</span>
+                <!-- Đồng hồ -->
+                <div class="bg-white px-6 py-3 rounded-full shadow-xl flex items-center border-4 border-blue-100 transform scale-110 z-10">
+                    <i class="fa-regular fa-clock mr-2 text-gray-400 text-2xl"></i>
+                    <span id="timer-display" class="text-4xl font-black text-blue-600 font-mono tabular-nums">30</span>
                 </div>
                 
-                <div class="bg-white/20 text-white px-4 py-2 rounded-xl font-bold backdrop-blur border-2 border-white/30 text-sm md:text-base">
-                    Câu <span id="quiz-current">1</span>/<span id="quiz-total">10</span>
+                <!-- Bộ đếm câu hỏi Nổi Bật -->
+                <div class="bg-white text-blue-600 px-5 py-3 rounded-2xl font-black shadow-lg border-b-4 border-blue-100 flex items-center shrink-0">
+                    <span class="text-gray-400 mr-2 text-xs uppercase font-bold tracking-wider mt-1">CÂU</span>
+                    <span id="quiz-current" class="text-2xl">1</span>
+                    <span class="text-gray-300 mx-1 text-xl">/</span>
+                    <span id="quiz-total" class="text-xl text-gray-500">10</span>
                 </div>
             </div>
 
             <!-- Câu hỏi -->
-            <div class="bg-white rounded-[2rem] shadow-2xl border-b-8 border-gray-200 p-6 md:p-8 mb-6 relative overflow-hidden min-h-[180px] flex items-center justify-center text-center">
+            <div class="bg-white rounded-[2.5rem] shadow-2xl border-b-8 border-gray-200 p-8 md:p-10 mb-6 relative overflow-hidden min-h-[220px] flex items-center justify-center text-center">
                 <div id="question-text" class="text-2xl md:text-3xl font-extrabold text-gray-800 leading-snug relative z-10">
                     Đang tải câu hỏi...
                 </div>
-                <i class="fa-solid fa-circle-question absolute -bottom-6 -right-6 text-[8rem] text-gray-100 z-0 transform rotate-12 opacity-40"></i>
+                <i class="fa-solid fa-circle-question absolute -bottom-8 -right-8 text-[10rem] text-gray-50 z-0 transform rotate-12"></i>
             </div>
 
             <!-- Các đáp án -->
@@ -258,7 +290,6 @@
             .then(result => {
                 if(result.status === 'success') {
                     processSheetData(result.data);
-                    // Tải xong -> Ẩn màn hình loading -> Hiện màn hình login
                     document.getElementById('screen-loading').classList.remove('active');
                     document.getElementById('screen-login').classList.add('active');
                 } else {
@@ -279,12 +310,10 @@
             btn.classList.remove('hidden');
         }
 
-        // Xử lý dữ liệu từ Sheet (Dạng phẳng) thành Dạng cây (Theo lớp)
         function processSheetData(rows) {
-            // Khởi tạo khung dữ liệu cho 4 khối
             [2, 3, 4, 5].forEach(g => {
                 gradesData[g] = { 
-                    title: "Lớp " + g, 
+                    title: "KHỐI LỚP " + g, 
                     quiz: [], 
                     practice: [] 
                 };
@@ -294,18 +323,16 @@
                 const g = parseInt(row.grade);
                 if (gradesData[g]) {
                     if (row.type === 'quiz') {
-                        // Thêm câu hỏi trắc nghiệm
                         gradesData[g].quiz.push({
                             q: row.content,
                             options: row.options,
                             a: parseInt(row.correct)
                         });
                     } else if (row.type === 'practice') {
-                        // Thêm bài thực hành
                         gradesData[g].practice.push({
-                            title: row.content, // Cột Nội dung làm tiêu đề bài tập
-                            content: row.options[0], // Cột Đáp án A dùng làm mô tả/đề bài chi tiết
-                            steps: row.steps // Các bước thực hiện
+                            title: row.content,
+                            content: row.options[0],
+                            steps: row.steps
                         });
                     }
                 }
@@ -313,61 +340,54 @@
             console.log("Đã tải xong dữ liệu:", gradesData);
         }
 
-        // --- CÁC HÀM GIAO DIỆN (LOGIC CŨ ĐƯỢC GIỮ NGUYÊN) ---
-
+        // --- XỬ LÝ ĐĂNG NHẬP THÔNG MINH ---
         function handleLogin() {
             const name = document.getElementById('input-name').value.trim();
-            const cls = document.getElementById('input-class').value.trim();
-            if (!name || !cls) { 
-                const box = document.getElementById('screen-login').querySelector('.bg-white\\/90');
-                box.classList.add('animate-bounce');
-                setTimeout(()=>box.classList.remove('animate-bounce'), 500);
-                alert("Em nhớ nhập đủ Họ tên và Lớp nhé!"); 
+            const cls = document.getElementById('input-class').value; 
+            
+            if (!name) { 
+                alert("Em ơi, em quên nhập tên rồi nè!"); 
                 return; 
             }
-            studentName = name; studentClass = cls;
-            document.getElementById('display-name').innerText = name;
-            document.getElementById('display-class').innerText = cls;
-            renderGradeButtons();
-            showScreen('screen-home');
+            if (!cls) {
+                alert("Em nhớ chọn lớp của mình nhé!");
+                return;
+            }
+
+            studentName = name; 
+            studentClass = cls;
+            
+            const grade = parseInt(cls.charAt(0));
+            
+            if (gradesData[grade]) {
+                document.getElementById('menu-student-name').innerText = studentName;
+                document.getElementById('menu-student-class').innerText = studentClass;
+                selectGrade(grade);
+            } else {
+                alert("Lỗi: Không tìm thấy dữ liệu cho khối " + grade);
+            }
         }
 
         function handleLogout() {
-            if(confirm("Em có chắc muốn thoát để đổi tên không?")) {
+            if(confirm("Em muốn thoát để nhập lại tên và lớp đúng không?")) {
                 showScreen('screen-login');
                 document.getElementById('input-name').value = "";
-                document.getElementById('input-class').value = "";
+                document.getElementById('input-class').value = ""; 
             }
-        }
-
-        function renderGradeButtons() {
-            const container = document.getElementById('grade-buttons-container');
-            container.innerHTML = '';
-            const styles = { 2: "bg-pink-500 border-pink-700 hover:bg-pink-400", 3: "bg-blue-500 border-blue-700 hover:bg-blue-400", 4: "bg-green-500 border-green-700 hover:bg-green-400", 5: "bg-purple-500 border-purple-700 hover:bg-purple-400" };
-            const icons = { 2: "fa-keyboard", 3: "fa-computer-mouse", 4: "fa-desktop", 5: "fa-folder-open" };
-            
-            [2, 3, 4, 5].forEach(g => {
-                container.innerHTML += `
-                <button onclick="selectGrade(${g})" class="btn-press ${styles[g]} text-white rounded-[2rem] h-32 md:h-36 flex flex-col items-center justify-center shadow-lg transform transition hover:scale-105 w-full">
-                    <div class="bg-white/20 p-3 md:p-4 rounded-full mb-2">
-                        <i class="fa-solid ${icons[g]} text-3xl md:text-4xl"></i>
-                    </div>
-                    <span class="text-2xl md:text-3xl font-black">LỚP ${g}</span>
-                </button>`;
-            });
         }
 
         function selectGrade(g) {
             currentGrade = g;
-            // Kiểm tra nếu khối lớp này chưa có câu hỏi
+            
             if (gradesData[g].quiz.length === 0 && gradesData[g].practice.length === 0) {
                 alert("Hiện tại chưa có dữ liệu cho Khối " + g + ". Thầy sẽ cập nhật sớm!");
-                return;
             }
 
             document.getElementById('menu-title').innerText = gradesData[g].title;
+            
             const bgColors = { 2: "from-pink-200 to-pink-400", 3: "from-blue-200 to-blue-400", 4: "from-green-200 to-green-400", 5: "from-purple-200 to-purple-400" };
             document.body.className = `bg-gradient-to-b ${bgColors[g]} min-h-screen transition-colors duration-500 overflow-x-hidden relative`;
+            
             showScreen('screen-menu');
         }
 
@@ -391,7 +411,6 @@
             container.innerHTML = '';
             
             qData.options.forEach((opt, idx) => {
-                // Bỏ qua nếu ô đáp án trong Excel bị để trống
                 if(!opt && opt !== 0) return;
 
                 const btn = document.createElement('button');
@@ -449,7 +468,6 @@
                 btn.classList.replace("text-gray-700", "text-white");
                 btn.classList.add("border-red-700", "opacity-50");
                 
-                // Hiện đáp án đúng (nếu nút đó tồn tại)
                 if(btns[correctIdx]) {
                     btns[correctIdx].classList.replace("bg-white", "bg-green-500");
                     btns[correctIdx].classList.replace("text-gray-700", "text-white");
@@ -458,7 +476,7 @@
                 
                 showFeedback(false, "TIẾC QUÁ! CỐ LÊN NHÉ!", "bg-red-100 text-red-600 border-red-200");
             }
-            setTimeout(nextQuestion, 2500); // Tăng thời gian đợi chút để học sinh xem đáp án đúng
+            setTimeout(nextQuestion, 2500); 
         }
         
         function showFeedback(isCorrect, msg, classes) {
@@ -491,7 +509,6 @@
             sendDataToSheet();
         }
 
-        // --- HÀM GỬI DỮ LIỆU VỀ SHEET (POST) ---
         function sendDataToSheet() {
             if(GOOGLE_SCRIPT_URL.includes("HÃY_DÁN_LINK")) return;
             
@@ -523,7 +540,6 @@
             .catch(err => {
                 console.error(err);
                 status.classList.replace('flex', 'hidden');
-                // Không alert lỗi mạng để tránh làm phiền học sinh nếu mạng chập chờn
             });
         }
 
@@ -536,10 +552,8 @@
             list.innerHTML = '';
             
             gradesData[currentGrade].practice.forEach((task, i) => {
-                // Xử lý nội dung bài thực hành (có thể xuống dòng)
                 let contentHTML = task.content ? `<div class="bg-gray-800 text-green-400 p-5 rounded-2xl font-mono text-base mb-6 border-4 border-gray-600 shadow-inner whitespace-pre-line leading-relaxed select-text">${task.content}</div>` : '';
                 
-                // Xử lý các bước thực hành
                 let stepsHTML = "";
                 if(task.steps && task.steps.length > 0) {
                     stepsHTML = task.steps.map((s, idx) => `<div class="flex gap-4 mb-3 items-start"><span class="bg-blue-100 text-blue-600 font-black w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 mt-1 shadow-sm border border-blue-200">${idx+1}</span><span class="text-gray-700 font-bold text-lg">${s}</span></div>`).join('');
