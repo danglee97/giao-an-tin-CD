@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tin Học Vui - Ôn Tập HK1</title>
-    <!-- Font và Icon -->
     <link rel="icon" type="image/png" href="../favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -12,8 +11,6 @@
 
     <style>
         body { font-family: 'Nunito', sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
-        
-        /* Hiệu ứng nút bấm */
         .btn-press { transition: all 0.1s; border-bottom-width: 6px; cursor: pointer; position: relative; top: 0; }
         .btn-press:active { transform: translateY(4px); border-bottom-width: 2px; margin-top: 4px; }
         
@@ -21,7 +18,7 @@
         .screen { display: none !important; opacity: 0; transition: opacity 0.3s ease-in-out; }
         .screen.active { display: flex !important; opacity: 1; }
         
-        /* Animation cảnh báo thời gian */
+        /* Animation */
         @keyframes pulse-red { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         .timer-warning { color: #ef4444; animation: pulse-red 1s infinite; }
         
@@ -36,12 +33,24 @@
 </head>
 <body class="bg-gradient-to-b from-sky-200 to-blue-400 min-h-screen overflow-x-hidden relative">
 
+    <!-- MÀN HÌNH 0: LOADING (TẢI DỮ LIỆU) -->
+    <div id="screen-loading" class="screen active min-h-screen flex-col items-center justify-center p-4 bg-blue-500 z-[100]">
+        <div class="bg-white rounded-3xl p-8 text-center shadow-2xl max-w-sm w-full border-b-8 border-blue-200">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-600 mb-6 mx-auto"></div>
+            <h2 class="text-2xl font-black text-blue-800 mb-2">Đang tải đề thi...</h2>
+            <p class="text-gray-500 font-bold">Thầy Đăng đang lấy câu hỏi từ máy chủ, em đợi xíu nhé!</p>
+            <div id="loading-error" class="hidden mt-4 text-red-500 font-bold text-sm bg-red-100 p-3 rounded-xl border-2 border-red-200"></div>
+            <button onclick="window.location.reload()" id="btn-reload" class="hidden mt-4 w-full bg-blue-600 text-white px-4 py-3 rounded-xl font-bold hover:bg-blue-700 btn-press border-b-4 border-blue-800">
+                <i class="fa-solid fa-rotate-right mr-2"></i> Tải lại trang
+            </button>
+        </div>
+    </div>
+
     <!-- MÀN HÌNH 1: ĐĂNG NHẬP -->
-    <div id="screen-login" class="screen active min-h-screen flex-col items-center justify-center p-4 pb-16">
+    <div id="screen-login" class="screen min-h-screen flex-col items-center justify-center p-4 pb-16">
         <div class="bg-white/90 backdrop-blur-md rounded-[2.5rem] shadow-2xl border-b-8 border-blue-200 p-8 w-full max-w-md text-center transform transition-all hover:scale-[1.01]">
             <div class="mb-6 flex justify-center">
-                <!-- Logo Minh Dang IT -->
-                <img src="../logo.png" alt="Minh Dang IT Logo" class="h-28 w-auto object-contain drop-shadow-md hover:scale-110 transition-transform">
+                <img src="../logo.png" alt="Minh Dang IT Logo" class="h-28 w-auto object-contain drop-shadow-md hover:scale-110 transition-transform" onerror="this.style.display='none'">
             </div>
             <h1 class="text-4xl text-blue-800 mb-2 uppercase tracking-tight font-black drop-shadow-sm">Tin Học Vui</h1>
             <p class="text-gray-500 mb-8 font-bold text-lg">Ôn thi Học Kì 1 cùng thầy Đăng</p>
@@ -65,7 +74,6 @@
     <!-- MÀN HÌNH 2: CHỌN KHỐI -->
     <div id="screen-home" class="screen min-h-screen flex-col items-center justify-center p-4 pb-16">
         <div class="bg-white/90 backdrop-blur-md rounded-[2rem] shadow-xl border-b-8 border-indigo-200 p-6 w-full max-w-3xl text-center relative">
-            <!-- Thông tin học sinh -->
             <div class="absolute -top-6 left-0 w-full flex justify-center md:justify-end md:top-4 md:right-4 gap-2 px-4">
                 <span class="bg-white text-blue-700 px-4 py-2 rounded-full font-extrabold text-sm shadow-md border-2 border-blue-100 flex items-center">
                     <i class="fa-solid fa-user-graduate mr-2"></i> <span id="display-name">Tên</span>
@@ -79,7 +87,7 @@
             <p class="text-gray-500 font-bold mb-8 text-lg">Em đang học lớp mấy nào?</p>
             
             <div class="grid grid-cols-2 gap-4 md:gap-6" id="grade-buttons-container">
-                <!-- Buttons sẽ được render bằng JS -->
+                <!-- Các nút khối lớp sẽ được tạo tự động -->
             </div>
             
             <button onclick="handleLogout()" class="mt-10 text-gray-400 font-bold hover:text-red-500 text-sm underline decoration-dashed transition-colors">
@@ -213,7 +221,7 @@
         </div>
     </div>
 
-    <!-- FOOTER BẢN QUYỀN (THÊM MỚI) -->
+    <!-- FOOTER BẢN QUYỀN -->
     <div class="fixed bottom-0 left-0 w-full p-2 md:p-3 text-center z-[60] pointer-events-none">
         <div class="inline-block rounded-full px-4 py-1 bg-black/10 backdrop-blur-sm md:bg-transparent md:backdrop-blur-none">
             <span class="text-white/90 font-bold text-xs md:text-sm drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
@@ -227,114 +235,90 @@
 
     <script>
         // =================================================================
-        // QUAN TRỌNG: DÁN LINK WEB APP (SAU KHI DEPLOY "ANYONE") VÀO ĐÂY
+        // QUAN TRỌNG: DÁN LINK WEB APP MỚI VÀO ĐÂY
         // =================================================================
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwziks8ynJ60Lj93bBymd_rhF9DxQvVrMklszxcX4tM99mNjMsorNzJveAcviqbv4x6/exec"; 
         
-        // --- DATA CÂU HỎI & THỰC HÀNH ---
-        const gradesData = {
-            2: { title: "Lớp 2", color: "bg-pink-500",
-                quiz: [
-                    { q: "Lợi ích của việc gõ 10 ngón là gì?", options: ["Gõ chậm hơn", "Chơi game giỏi", "Không cần nhìn phím", "Gõ nhanh & chính xác"], a: 3 },
-                    { q: "Hai ngón trỏ đặt ở phím có gờ nào?", options: ["A và S", "G và H", "F và J", "Q và P"], a: 2 },
-                    { q: "Phím Caps Lock dùng để làm gì?", options: ["Viết hoa liên tục", "Xóa kí tự", "Cách dòng", "Xuống dòng"], a: 0 },
-                    { q: "Phím Backspace (Mũi tên trái) dùng để?", options: ["Xóa bên phải", "Xóa bên trái con trỏ", "Viết hoa", "Xuống dòng"], a: 1 },
-                    { q: "Phím Delete dùng để làm gì?", options: ["Xóa bên phải con trỏ", "Xóa bên trái", "Cách dòng", "Lùi lại"], a: 0 },
-                    { q: "Hai ngón cái đặt ở phím nào?", options: ["Phím F", "Phím J", "Phím Cách (Space)", "Phím Shift"], a: 2 },
-                    { q: "Muốn gõ 1 chữ in hoa (vd: H) ta nhấn?", options: ["Giữ Shift + H", "Nhấn CapsLock", "Nhấn Ctrl + H", "Gõ H 2 lần"], a: 0 },
-                    { q: "Phím Enter dùng để làm gì?", options: ["Xóa chữ", "Cách một khoảng", "Xuống dòng", "Viết hoa"], a: 2 },
-                    { q: "Hàng phím cơ sở là hàng nào?", options: ["Hàng số", "Hàng trên", "Hàng chứa A, S, D...", "Hàng dưới"], a: 2 },
-                    { q: "Tư thế ngồi máy tính đúng?", options: ["Ngồi cong lưng", "Mắt sát màn hình", "Lưng thẳng, mắt ngang tầm", "Nằm ra ghế"], a: 2 }
-                ],
-                practice: [ { title: "Khởi động Word", steps: ["Tìm biểu tượng chữ W màu xanh.", "Nháy đúp chuột trái để mở.", "Chọn trang trắng (Blank Document)."] }, { title: "Tập gõ", content: "EM TAP GO BAN PHIM\nLOP 2A TRUONG VIET ANH", note: "Dùng Caps Lock để viết hoa cả dòng.", steps: ["Đặt tay lên hàng phím cơ sở.", "Gõ nội dung mẫu."] } ]
-            },
-            3: { title: "Lớp 3", color: "bg-blue-500",
-                quiz: [
-                    { q: "Đâu KHÔNG phải thành phần cơ bản của máy tính?", options: ["Màn hình", "Thân máy", "Bàn phím", "Máy in"], a: 3 },
-                    { q: "Bộ phận giúp em nhìn thấy hình ảnh?", options: ["Bàn phím", "Chuột", "Màn hình", "Thân máy"], a: 2 },
-                    { q: "Máy tính bảng có đặc điểm gì?", options: ["Màn hình cảm ứng", "Bàn phím rời to", "Luôn cần chuột", "Không có loa"], a: 0 },
-                    { q: "Thao tác nhấn nhanh 2 lần chuột trái gọi là?", options: ["Nháy chuột", "Nháy đúp chuột", "Kéo thả", "Nháy phải"], a: 1 },
-                    { q: "Bộ não của máy tính nằm ở đâu?", options: ["Màn hình", "Bàn phím", "Chuột", "Thân máy"], a: 3 },
-                    { q: "Tắt máy tính đúng cách?", options: ["Rút điện", "Bấm nút màn hình", "Start -> Shut down", "Giữ nút nguồn"], a: 2 },
-                    { q: "Ngón trỏ phải đặt ở phím nào?", options: ["F", "J", "K", "L"], a: 1 },
-                    { q: "Internet là gì?", options: ["Trò chơi", "Mạng máy tính toàn cầu", "Phần mềm vẽ", "Máy in"], a: 1 },
-                    { q: "Biểu tượng thùng rác tên là gì?", options: ["This PC", "Network", "Recycle Bin", "Control Panel"], a: 2 },
-                    { q: "Phím dài nhất bàn phím?", options: ["Enter", "Shift", "Space (Cách)", "Caps Lock"], a: 2 },
-                    { q: "Hàng phím có gai F, J là hàng nào?", options: ["Hàng trên", "Hàng dưới", "Hàng cơ sở", "Hàng số"], a: 2 },
-                    { q: "Không nên làm gì khi dùng máy tính?", options: ["Ngồi thẳng", "Ăn uống rơi vào phím", "Nghỉ giải lao", "Gõ nhẹ nhàng"], a: 1 },
-                    { q: "Con trỏ chuột thường có hình gì?", options: ["Mũi tên", "Bàn tay", "Đồng hồ cát", "Dấu cộng"], a: 0 },
-                    { q: "Để mở thư mục, ta dùng thao tác gì?", options: ["Nháy chuột", "Nháy đúp chuột", "Kéo thả", "Nháy phải"], a: 1 },
-                    { q: "Thông tin trên Internet dạng nào?", options: ["Chữ viết", "Hình ảnh", "Âm thanh/Video", "Tất cả các dạng trên"], a: 3 },
-                    { q: "Trình duyệt web là gì?", options: ["Word", "Chrome/Edge", "Paint", "Excel"], a: 1 },
-                    { q: "Nút X đỏ góc cửa sổ dùng để?", options: ["Phóng to", "Thu nhỏ", "Đóng cửa sổ", "Di chuyển"], a: 2 },
-                    { q: "Thấy tin xấu trên mạng, em nên?", options: ["Xem tiếp", "Gửi bạn", "Tắt ngay & báo người lớn", "Làm theo"], a: 2 },
-                    { q: "Khu vực chứa các biểu tượng chính gọi là?", options: ["Desktop (Màn hình nền)", "Thanh Taskbar", "Start Menu", "Folder"], a: 0 },
-                    { q: "Để gõ Tiếng Việt, ta cần phần mềm gì?", options: ["Unikey", "Paint", "Zoom", "Zalo"], a: 0 }
-                ],
-                practice: [ { title: "Thao tác chuột", steps: ["Mở This PC bằng nháy đúp.", "Phóng to cửa sổ.", "Đóng bằng nút X."] }, { title: "Soạn thảo", content: "HỌ VÀ TÊN: NGUYỄN VĂN A\nLỚP: 3A2", steps: ["Mở Word.", "Bật Unikey.", "Gõ nội dung trên."] } ]
-            },
-            4: { title: "Lớp 4", color: "bg-green-500",
-                quiz: [
-                    { q: "Thiết bị lưu trữ thông tin lâu dài?", options: ["RAM", "Ổ cứng (HDD/SSD)", "CPU", "Mainboard"], a: 1 },
-                    { q: "Máy tính bị 'treo' là lỗi do?", options: ["Chỉ phần cứng", "Chỉ phần mềm", "Cả hai", "Màn hình"], a: 2 },
-                    { q: "CPU được ví như bộ phận nào?", options: ["Tay chân", "Mắt", "Bộ não", "Miệng"], a: 2 },
-                    { q: "Để gõ kí tự trên (vd: @, %) ta giữ phím?", options: ["Ctrl", "Alt", "Shift", "Tab"], a: 2 },
-                    { q: "Thiết bị xuất thông tin (Output)?", options: ["Bàn phím", "Chuột", "Micro", "Máy in/Loa"], a: 3 },
-                    { q: "Phím số 5 dùng ngón nào?", options: ["Ngón cái", "Ngón trỏ", "Ngón giữa", "Ngón út"], a: 1 },
-                    { q: "Tổ hợp phím Copy là?", options: ["Ctrl + C", "Ctrl + V", "Ctrl + X", "Ctrl + Z"], a: 0 },
-                    { q: "Tổ hợp phím Paste (Dán) là?", options: ["Ctrl + P", "Ctrl + V", "Ctrl + S", "Ctrl + A"], a: 1 },
-                    { q: "Sao chép thư mục dùng lệnh?", options: ["Cut", "Copy", "Delete", "Rename"], a: 1 },
-                    { q: "Đổi tên thư mục dùng lệnh?", options: ["New", "Rename", "Paste", "Properties"], a: 1 },
-                    { q: "Phần mềm soạn thảo là?", options: ["Excel", "PowerPoint", "Word", "Paint"], a: 2 },
-                    { q: "Phần mềm trình chiếu là?", options: ["Word", "PowerPoint", "Chrome", "Unikey"], a: 1 },
-                    { q: "Để tạo trang chiếu mới?", options: ["New Slide", "New Folder", "New File", "New Image"], a: 0 },
-                    { q: "Phím F5 trong PowerPoint để làm gì?", options: ["Lưu bài", "Thoát", "Trình chiếu", "Xóa"], a: 2 },
-                    { q: "Để tìm kiếm thông tin, ta dùng?", options: ["Google", "Zalo", "Word", "Game"], a: 0 },
-                    { q: "Virus máy tính là gì?", options: ["Con côn trùng", "Đoạn mã độc hại", "Bụi bẩn", "Hỏng phần cứng"], a: 1 },
-                    { q: "Để bảo vệ mắt, nên chớp mắt sau?", options: ["1 tiếng", "20 phút", "5 tiếng", "Không cần"], a: 1 },
-                    { q: "Tên tệp tin gồm mấy phần?", options: ["1 phần", "2 phần (Tên & Đuôi)", "3 phần", "4 phần"], a: 1 },
-                    { q: "Đuôi .docx là của phần mềm nào?", options: ["Word", "Excel", "PowerPoint", "Paint"], a: 0 },
-                    { q: "Đuôi .pptx là của phần mềm nào?", options: ["Word", "Excel", "PowerPoint", "Paint"], a: 2 }
-                ],
-                practice: [ { title: "Quản lý tệp", steps: ["Tạo thư mục 'Lop 4' ổ D.", "Tạo thư mục con 'Bai Tap'.", "Đổi tên thành 'Kiem Tra'."] }, { title: "PowerPoint", steps: ["Tạo Slide giới thiệu bản thân.", "Chèn 1 hình ảnh.", "Lưu bài 'GioiThieu.pptx'."] } ]
-            },
-            5: { title: "Lớp 5", color: "bg-purple-500",
-                quiz: [
-                    { q: "Lợi ích của máy tính?", options: ["Học tập", "Giải trí", "Liên lạc", "Tất cả đúng"], a: 3 },
-                    { q: "Để tìm 'Giá vé' bảo tàng, xem mục nào?", options: ["Tin tức", "Giới thiệu/Tham quan", "Liên hệ", "Sản phẩm"], a: 1 },
-                    { q: "Menu website dùng để làm gì?", options: ["Trang trí", "Điều hướng nội dung", "Quảng cáo", "Chơi game"], a: 1 },
-                    { q: "Để xem chi tiết file (ngày, cỡ), chọn view?", options: ["Icons", "List", "Details", "Tiles"], a: 2 },
-                    { q: "Bản quyền nội dung là gì?", options: ["Quyền tác giả", "Quyền người xem", "Quyền chia sẻ", "Miễn phí"], a: 0 },
-                    { q: "Hành động tôn trọng bản quyền?", options: ["Sao chép tự do", "Ghi rõ nguồn/Tác giả", "Bán lại bài người khác", "Xóa tên tác giả"], a: 1 },
-                    { q: "Mật khẩu an toàn nên có?", options: ["Tên mình", "123456", "Chữ, số, ký tự đặc biệt", "Ngày sinh"], a: 2 },
-                    { q: "Lệnh Cut (Cắt) phím tắt là?", options: ["Ctrl + C", "Ctrl + X", "Ctrl + V", "Ctrl + Z"], a: 1 },
-                    { q: "Lệnh Undo (Quay lại) phím tắt là?", options: ["Ctrl + Y", "Ctrl + U", "Ctrl + Z", "Ctrl + B"], a: 2 },
-                    { q: "Để chèn ảnh từ máy, chọn?", options: ["Online Pictures", "This Device", "Shapes", "Icons"], a: 1 },
-                    { q: "Lệnh B (Bold) dùng để?", options: ["In nghiêng", "Gạch chân", "In đậm", "Tô màu"], a: 2 },
-                    { q: "Lệnh I (Italic) dùng để?", options: ["In nghiêng", "In đậm", "Gạch chân", "Căn giữa"], a: 0 },
-                    { q: "Lệnh U (Underline) dùng để?", options: ["In đậm", "Gạch chân", "In nghiêng", "Xóa"], a: 1 },
-                    { q: "Căn giữa văn bản dùng phím?", options: ["Ctrl + L", "Ctrl + R", "Ctrl + E", "Ctrl + J"], a: 2 },
-                    { q: "Wrap Text 'Square' nghĩa là?", options: ["Chữ nằm trên ảnh", "Chữ bao quanh vuông", "Ảnh đè chữ", "Chữ nằm dưới"], a: 1 },
-                    { q: "Khác nhau giữa Save và Save As?", options: ["Giống nhau", "Save As đặt tên mới", "Save xóa bài", "Save As chỉ lưu ảnh"], a: 1 },
-                    { q: "Header & Footer nằm ở thẻ nào?", options: ["Home", "Layout", "Insert", "View"], a: 2 },
-                    { q: "Để chia cột văn bản, chọn?", options: ["Columns", "Size", "Margins", "Break"], a: 0 },
-                    { q: "Định dạng trang nằm ngang chọn?", options: ["Portrait", "Landscape", "A4", "Letter"], a: 1 },
-                    { q: "Địa chỉ email hợp lệ?", options: ["abc.com", "abc@gmail.com", "gmail.com@abc", "www.abc"], a: 1 }
-                ],
-                practice: [ { title: "Cây thư mục", steps: ["Tạo cây thư mục môn học.", "Sao chép tệp vào thư mục con."] }, { title: "Word Nâng cao", content: "THÔNG BÁO\n(Căn giữa, Đậm, Đỏ)", steps: ["Soạn thảo văn bản.", "Chèn ảnh minh họa.", "Tạo khung viền (Page Border)."] } ]
-            }
-        };
-
         // --- BIẾN TOÀN CỤC ---
+        let gradesData = {}; // Dữ liệu sẽ được nạp từ Sheet
         let studentName = "", studentClass = "", currentGrade = null, currentScore = 0, currentQuizIndex = 0, timerInterval = null, timeLeft = 30;
 
-        // --- CÁC HÀM XỬ LÝ ---
+        // --- KHỞI ĐỘNG: LẤY DỮ LIỆU TỪ SHEET ---
+        window.onload = function() {
+            if(GOOGLE_SCRIPT_URL.includes("HÃY_DÁN_LINK")) {
+                showError("Lỗi cấu hình: Thầy Đăng chưa dán link Web App vào code!");
+                return;
+            }
+            fetchQuestions();
+        };
+
+        function fetchQuestions() {
+            fetch(GOOGLE_SCRIPT_URL)
+            .then(response => response.json())
+            .then(result => {
+                if(result.status === 'success') {
+                    processSheetData(result.data);
+                    // Tải xong -> Ẩn màn hình loading -> Hiện màn hình login
+                    document.getElementById('screen-loading').classList.remove('active');
+                    document.getElementById('screen-login').classList.add('active');
+                } else {
+                    showError("Lỗi dữ liệu: " + result.message);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                showError("Không thể kết nối đến máy chủ. Vui lòng kiểm tra mạng hoặc Link Script.");
+            });
+        }
+
+        function showError(msg) {
+            const errDiv = document.getElementById('loading-error');
+            const btn = document.getElementById('btn-reload');
+            errDiv.innerText = msg;
+            errDiv.classList.remove('hidden');
+            btn.classList.remove('hidden');
+        }
+
+        // Xử lý dữ liệu từ Sheet (Dạng phẳng) thành Dạng cây (Theo lớp)
+        function processSheetData(rows) {
+            // Khởi tạo khung dữ liệu cho 4 khối
+            [2, 3, 4, 5].forEach(g => {
+                gradesData[g] = { 
+                    title: "Lớp " + g, 
+                    quiz: [], 
+                    practice: [] 
+                };
+            });
+
+            rows.forEach(row => {
+                const g = parseInt(row.grade);
+                if (gradesData[g]) {
+                    if (row.type === 'quiz') {
+                        // Thêm câu hỏi trắc nghiệm
+                        gradesData[g].quiz.push({
+                            q: row.content,
+                            options: row.options,
+                            a: parseInt(row.correct)
+                        });
+                    } else if (row.type === 'practice') {
+                        // Thêm bài thực hành
+                        gradesData[g].practice.push({
+                            title: row.content, // Cột Nội dung làm tiêu đề bài tập
+                            content: row.options[0], // Cột Đáp án A dùng làm mô tả/đề bài chi tiết
+                            steps: row.steps // Các bước thực hiện
+                        });
+                    }
+                }
+            });
+            console.log("Đã tải xong dữ liệu:", gradesData);
+        }
+
+        // --- CÁC HÀM GIAO DIỆN (LOGIC CŨ ĐƯỢC GIỮ NGUYÊN) ---
 
         function handleLogin() {
             const name = document.getElementById('input-name').value.trim();
             const cls = document.getElementById('input-class').value.trim();
             if (!name || !cls) { 
-                // Hiệu ứng rung nhẹ nếu chưa nhập
                 const box = document.getElementById('screen-login').querySelector('.bg-white\\/90');
                 box.classList.add('animate-bounce');
                 setTimeout(()=>box.classList.remove('animate-bounce'), 500);
@@ -375,6 +359,12 @@
 
         function selectGrade(g) {
             currentGrade = g;
+            // Kiểm tra nếu khối lớp này chưa có câu hỏi
+            if (gradesData[g].quiz.length === 0 && gradesData[g].practice.length === 0) {
+                alert("Hiện tại chưa có dữ liệu cho Khối " + g + ". Thầy sẽ cập nhật sớm!");
+                return;
+            }
+
             document.getElementById('menu-title').innerText = gradesData[g].title;
             const bgColors = { 2: "from-pink-200 to-pink-400", 3: "from-blue-200 to-blue-400", 4: "from-green-200 to-green-400", 5: "from-purple-200 to-purple-400" };
             document.body.className = `bg-gradient-to-b ${bgColors[g]} min-h-screen transition-colors duration-500 overflow-x-hidden relative`;
@@ -382,6 +372,9 @@
         }
 
         function startQuiz() {
+            if (gradesData[currentGrade].quiz.length === 0) {
+                alert("Chưa có bài trắc nghiệm nào cho khối này!"); return;
+            }
             currentScore = 0; currentQuizIndex = 0;
             showScreen('screen-quiz');
             renderQuestion();
@@ -398,6 +391,9 @@
             container.innerHTML = '';
             
             qData.options.forEach((opt, idx) => {
+                // Bỏ qua nếu ô đáp án trong Excel bị để trống
+                if(!opt && opt !== 0) return;
+
                 const btn = document.createElement('button');
                 btn.className = "btn-press w-full text-left text-lg md:text-xl bg-white border-4 border-gray-100 text-gray-700 p-4 md:p-5 rounded-3xl hover:border-blue-300 hover:bg-blue-50 font-bold flex items-center group transition-all";
                 btn.innerHTML = `<span class="w-10 h-10 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center mr-4 font-black group-hover:bg-blue-500 group-hover:text-white transition-colors shrink-0">${String.fromCharCode(65+idx)}</span><span>${opt}</span>`;
@@ -438,7 +434,7 @@
         function checkAnswer(idx, btn) {
             clearInterval(timerInterval);
             const btns = document.querySelectorAll('#answers-container button');
-            btns.forEach(b => b.disabled = true); // Khóa nút
+            btns.forEach(b => b.disabled = true);
             
             const correctIdx = gradesData[currentGrade].quiz[currentQuizIndex].a;
             
@@ -453,14 +449,16 @@
                 btn.classList.replace("text-gray-700", "text-white");
                 btn.classList.add("border-red-700", "opacity-50");
                 
-                // Hiện đáp án đúng
-                btns[correctIdx].classList.replace("bg-white", "bg-green-500");
-                btns[correctIdx].classList.replace("text-gray-700", "text-white");
-                btns[correctIdx].classList.add("border-green-700", "shadow-xl", "scale-105");
+                // Hiện đáp án đúng (nếu nút đó tồn tại)
+                if(btns[correctIdx]) {
+                    btns[correctIdx].classList.replace("bg-white", "bg-green-500");
+                    btns[correctIdx].classList.replace("text-gray-700", "text-white");
+                    btns[correctIdx].classList.add("border-green-700", "shadow-xl", "scale-105");
+                }
                 
                 showFeedback(false, "TIẾC QUÁ! CỐ LÊN NHÉ!", "bg-red-100 text-red-600 border-red-200");
             }
-            setTimeout(nextQuestion, 2000);
+            setTimeout(nextQuestion, 2500); // Tăng thời gian đợi chút để học sinh xem đáp án đúng
         }
         
         function showFeedback(isCorrect, msg, classes) {
@@ -493,13 +491,9 @@
             sendDataToSheet();
         }
 
-        // --- HÀM GỬI DỮ LIỆU QUAN TRỌNG ---
+        // --- HÀM GỬI DỮ LIỆU VỀ SHEET (POST) ---
         function sendDataToSheet() {
-            // Kiểm tra nếu chưa dán link Script
-            if(GOOGLE_SCRIPT_URL.includes("HÃY_DÁN_LINK")) {
-                alert("Thầy ơi, thầy chưa dán link Web App vào code kìa!");
-                return;
-            }
+            if(GOOGLE_SCRIPT_URL.includes("HÃY_DÁN_LINK")) return;
             
             const status = document.getElementById('sending-status');
             status.classList.replace('hidden', 'flex');
@@ -512,41 +506,45 @@
                 total: gradesData[currentGrade].quiz.length
             };
 
-            // Fetch với cấu hình chuẩn để tránh lỗi CORS và Preflight
             fetch(GOOGLE_SCRIPT_URL, {
                 method: 'POST',
                 redirect: 'follow',
-                // Sử dụng text/plain để Browser không gửi preflight OPTIONS request
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(data)
             })
             .then(response => response.json())
             .then(result => {
-                console.log("Kết quả:", result);
+                console.log("Kết quả lưu:", result);
                 status.classList.replace('flex', 'hidden');
-                if(result.status === 'success') {
-                    // Có thể thêm thông báo nhỏ ở đây nếu muốn, nhưng giao diện kết quả đã đủ
-                    // alert("Thầy đã nhận được điểm của em!");
-                } else {
-                    alert("Lỗi: " + result.message);
+                if(result.status !== 'success') {
+                    alert("Lỗi lưu điểm: " + result.message);
                 }
             })
             .catch(err => {
                 console.error(err);
                 status.classList.replace('flex', 'hidden');
-                // Alert để người dùng biết dù lỗi mạng vẫn an tâm
-                // alert("Mạng hơi yếu nhưng máy đã lưu tạm kết quả!");
+                // Không alert lỗi mạng để tránh làm phiền học sinh nếu mạng chập chờn
             });
         }
 
         function startPractice() {
+            if (gradesData[currentGrade].practice.length === 0) {
+                alert("Chưa có bài thực hành nào cho khối này!"); return;
+            }
             showScreen('screen-practice');
             const list = document.getElementById('practice-list');
             list.innerHTML = '';
+            
             gradesData[currentGrade].practice.forEach((task, i) => {
+                // Xử lý nội dung bài thực hành (có thể xuống dòng)
                 let contentHTML = task.content ? `<div class="bg-gray-800 text-green-400 p-5 rounded-2xl font-mono text-base mb-6 border-4 border-gray-600 shadow-inner whitespace-pre-line leading-relaxed select-text">${task.content}</div>` : '';
-                let stepsHTML = task.steps.map((s, idx) => `<div class="flex gap-4 mb-3 items-start"><span class="bg-blue-100 text-blue-600 font-black w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 mt-1 shadow-sm border border-blue-200">${idx+1}</span><span class="text-gray-700 font-bold text-lg">${s}</span></div>`).join('');
                 
+                // Xử lý các bước thực hành
+                let stepsHTML = "";
+                if(task.steps && task.steps.length > 0) {
+                    stepsHTML = task.steps.map((s, idx) => `<div class="flex gap-4 mb-3 items-start"><span class="bg-blue-100 text-blue-600 font-black w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 mt-1 shadow-sm border border-blue-200">${idx+1}</span><span class="text-gray-700 font-bold text-lg">${s}</span></div>`).join('');
+                }
+
                 let html = `
                 <div class="bg-white rounded-[2rem] shadow-xl border-b-8 border-gray-200 p-6 md:p-8 relative overflow-hidden transform hover:scale-[1.01] transition-transform">
                     <div class="absolute top-0 left-0 w-3 h-full bg-blue-500"></div>
@@ -566,9 +564,8 @@
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             setTimeout(() => {
                 document.getElementById(id).classList.add('active');
-            }, 50); // Delay nhỏ để animation mượt
+            }, 50); 
             
-            // Đổi màu nền nếu về login hoặc home
             if(id === 'screen-login' || id === 'screen-home') { 
                 document.body.className = "bg-gradient-to-b from-sky-200 to-blue-400 min-h-screen transition-colors duration-500 overflow-x-hidden relative"; 
             }
