@@ -168,7 +168,7 @@
 
     <script>
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwziks8ynJ60Lj93bBymd_rhF9DxQvVrMklszxcX4tM99mNjMsorNzJveAcviqbv4x6/exec"; 
-        let gradesData = {}; let studentName = "", studentClass = "", currentGrade = null, currentScore = 0, currentQuizIndex = 0, timerInterval = null, timeLeft = 30;
+        let gradesData = {}; let studentName = "", studentClass = "", currentGrade = null, currentScore = 0, currentQuizIndex = 0, timerInterval = null, timeLeft = 60;
         
         // [MỚI] Biến lưu lịch sử làm bài
         let userAnswers = []; // Lưu mảng: { question: "...", selected: index, correct: index, options: [...] }
@@ -277,7 +277,7 @@
         }
 
         function startTimer() {
-            clearInterval(timerInterval); timeLeft = 30; updateTimerDisplay();
+            clearInterval(timerInterval); timeLeft = 60; updateTimerDisplay();
             timerInterval = setInterval(() => { timeLeft--; updateTimerDisplay(); if (timeLeft <= 0) { clearInterval(timerInterval); timeOut(); } }, 1000);
         }
 
