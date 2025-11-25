@@ -14,21 +14,30 @@
         .btn-press { transition: all 0.1s; border-bottom-width: 6px; cursor: pointer; position: relative; top: 0; }
         .btn-press:active { transform: translateY(4px); border-bottom-width: 2px; margin-top: 4px; }
         
+        /* Screen Management */
         .screen { display: none !important; opacity: 0; transition: opacity 0.3s ease-in-out; }
         .screen.active { display: flex !important; opacity: 1; }
         
+        /* Animations */
         @keyframes pulse-red { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         .timer-warning { color: #ef4444; animation: pulse-red 1s infinite; }
-        
-        .sending-overlay { background: rgba(255, 255, 255, 0.95); position: absolute; top:0; left:0; right:0; bottom:0; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 50; border-radius: 1.5rem; }
-        
-        select { appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1rem; }
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .popup-enter { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes loading-text { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .animate-text-pulse { animation: loading-text 1.5s infinite; }
 
-        .fun-title { background: linear-gradient(45deg, #2563eb, #9333ea, #db2777, #2563eb); background-size: 300% 300%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rainbow_animation 4s ease-in-out infinite; text-shadow: 0px 4px 10px rgba(0,0,0,0.1); }
-        @keyframes rainbow_animation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        .bg-3d-animated { background: linear-gradient(to bottom, #eef2ff, #e0e7ff); position: relative; overflow-x: hidden; }
-        .cube { position: absolute; top: 80vh; left: 45vw; width: 10px; height: 10px; border: solid 1px rgba(59, 130, 246, 0.2); background-color: rgba(59, 130, 246, 0.1); transform-origin: top left; transform: scale(0) rotate(0deg) translate(-50%, -50%); animation: cube 12s ease-in forwards infinite; z-index: -1; border-radius: 15%; }
+        /* Background Elements */
+        .bg-3d-animated {
+            background: linear-gradient(to bottom, #eef2ff, #e0e7ff);
+            position: relative;
+            overflow-x: hidden;
+        }
+        .cube {
+            position: absolute; top: 80vh; left: 45vw; width: 10px; height: 10px;
+            border: solid 1px rgba(59, 130, 246, 0.2); background-color: rgba(59, 130, 246, 0.1);
+            transform-origin: top left; transform: scale(0) rotate(0deg) translate(-50%, -50%);
+            animation: cube 12s ease-in forwards infinite; z-index: -1; border-radius: 15%;
+        }
         .cube:nth-child(2n) { border-color: rgba(168, 85, 247, 0.2); background-color: rgba(168, 85, 247, 0.1); }
         .cube:nth-child(2) { animation-delay: 2s; left: 25vw; top: 40vh; }
         .cube:nth-child(3) { animation-delay: 4s; left: 75vw; top: 50vh; }
@@ -37,11 +46,23 @@
         .cube:nth-child(6) { animation-delay: 10s; left: 50vw; top: 10vh; }
         @keyframes cube { from { transform: scale(0) rotate(0deg) translate(-50%, -50%); opacity: 1; } to { transform: scale(20) rotate(960deg) translate(-50%, -50%); opacity: 0; } }
         
+        /* Utilities */
+        .sending-overlay { background: rgba(255, 255, 255, 0.95); position: absolute; top:0; left:0; right:0; bottom:0; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 50; border-radius: 1.5rem; }
+        select { appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1rem; }
+        .fun-title { background: linear-gradient(45deg, #2563eb, #9333ea, #db2777, #2563eb); background-size: 300% 300%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: rainbow_animation 4s ease-in-out infinite; text-shadow: 0px 4px 10px rgba(0,0,0,0.1); }
+        @keyframes rainbow_animation { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         .text-pop-3d { color: #1e40af; -webkit-text-stroke: 2px white; filter: drop-shadow(0px 4px 0px rgba(0, 0, 0, 0.15)); text-shadow: 2px 2px 0px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff, 0px 5px 10px rgba(0,0,0,0.2); color: #1d4ed8; }
-        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-        .popup-enter { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        @keyframes loading-text { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .animate-text-pulse { animation: loading-text 1.5s infinite; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .knowledge-content h3 { color: #4338ca; font-weight: 900; font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.5rem; text-transform: uppercase; }
+        .knowledge-content ul { list-style-type: disc; padding-left: 1.5rem; color: #374151; }
+        .knowledge-content li { margin-bottom: 0.5rem; font-weight: 600; }
+        .knowledge-content strong { color: #c026d3; }
     </style>
 </head>
 <body class="bg-3d-animated min-h-screen flex flex-col">
@@ -86,17 +107,38 @@
         </div>
 
         <!-- 2. MENU SCREEN -->
-        <div id="screen-menu" class="screen min-h-screen p-4 flex-col justify-center items-center">
-            <div class="max-w-4xl w-full relative z-10">
+        <div id="screen-menu" class="screen min-h-screen p-4 flex-col justify-center items-center pt-20">
+            <div class="max-w-5xl w-full relative z-10">
                 <button onclick="handleLogout()" class="mb-4 bg-white text-gray-600 px-5 py-3 rounded-2xl font-extrabold shadow-md hover:bg-gray-50 transition-transform hover:-translate-y-1 border-b-4 border-gray-300"><i class="fa-solid fa-right-from-bracket mr-2"></i> Đổi tên / Lớp khác</button>
-                <div class="text-center mb-12 mt-4 relative">
+                
+                <div class="text-center mb-8 mt-4 relative">
                     <div class="relative z-20 mb-12"><span class="inline-block bg-white text-blue-700 border-2 border-blue-200 px-8 py-3 rounded-full font-black text-lg tracking-widest shadow-xl uppercase transform hover:-translate-y-1 transition-all duration-300"><i class="fa-solid fa-laptop-code mr-2"></i> MÔN TIN HỌC</span></div>
                     <h1 id="menu-title" class="text-5xl md:text-8xl font-black text-pop-3d mt-2 mb-8 uppercase tracking-wide leading-tight relative z-10">KHỐI LỚP ...</h1>
                     <div class="inline-flex items-center gap-3 bg-white text-gray-700 rounded-full px-6 py-3 md:px-8 md:py-4 font-black text-lg md:text-2xl shadow-xl transform hover:scale-105 transition-transform border-2 border-gray-100 relative z-10"><div class="bg-blue-100 p-2 rounded-full"><i class="fa-solid fa-user-graduate text-blue-600"></i></div><span id="menu-student-name">...</span><span class="text-gray-300 mx-1 text-2xl font-light">|</span><span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-xl border border-orange-200 text-base md:text-lg"><i class="fa-solid fa-users mr-1"></i> <span id="menu-student-class">...</span></span></div>
                 </div>
-                <div class="grid md:grid-cols-2 gap-6 md:gap-8">
-                    <div onclick="startQuiz()" class="btn-press bg-white rounded-[2.5rem] border-b-8 border-gray-200 p-8 md:p-10 text-center group hover:border-blue-400 transition-colors relative overflow-hidden shadow-2xl"><div class="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-4 py-1.5 rounded-bl-2xl shadow-md">Tính điểm</div><div class="w-28 h-28 bg-blue-50 rounded-full flex items-center justify-center text-blue-600 mb-6 mx-auto group-hover:scale-110 transition-transform shadow-inner border-4 border-blue-100"><i class="fa-solid fa-star text-5xl md:text-6xl"></i></div><h2 class="text-3xl md:text-4xl font-black text-gray-800 mb-2">Trắc Nghiệm</h2></div>
-                    <div onclick="startPractice()" class="btn-press bg-white rounded-[2.5rem] border-b-8 border-gray-200 p-8 md:p-10 text-center group hover:border-green-400 transition-colors relative overflow-hidden shadow-2xl"><div class="absolute top-0 right-0 bg-green-600 text-white text-xs font-bold px-4 py-1.5 rounded-bl-2xl shadow-md">Tự luyện</div><div class="w-28 h-28 bg-green-50 rounded-full flex items-center justify-center text-green-600 mb-6 mx-auto group-hover:scale-110 transition-transform shadow-inner border-4 border-green-100"><i class="fa-solid fa-desktop text-5xl md:text-6xl"></i></div><h2 class="text-3xl md:text-4xl font-black text-gray-800 mb-2">Thực Hành</h2></div>
+
+                <!-- GRID 4 MỤC -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-12">
+                    <div onclick="startQuiz()" class="btn-press bg-white rounded-[2rem] border-b-8 border-blue-100 p-6 flex flex-col items-center justify-center text-center group hover:border-blue-300 transition-all shadow-lg">
+                        <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center text-blue-500 mb-4 group-hover:scale-110 transition-transform border-4 border-blue-100"><i class="fa-solid fa-star text-4xl"></i></div>
+                        <h2 class="text-2xl font-black text-gray-800">Trắc Nghiệm</h2>
+                        <p class="text-gray-500 font-bold text-sm mt-1">Thử tài kiến thức</p>
+                    </div>
+                    <div onclick="startPractice()" class="btn-press bg-white rounded-[2rem] border-b-8 border-green-100 p-6 flex flex-col items-center justify-center text-center group hover:border-green-300 transition-all shadow-lg">
+                        <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center text-green-500 mb-4 group-hover:scale-110 transition-transform border-4 border-green-100"><i class="fa-solid fa-desktop text-4xl"></i></div>
+                        <h2 class="text-2xl font-black text-gray-800">Thực Hành</h2>
+                        <p class="text-gray-500 font-bold text-sm mt-1">Luyện tập máy tính</p>
+                    </div>
+                    <div onclick="showTheory()" class="btn-press bg-white rounded-[2rem] border-b-8 border-purple-100 p-6 flex flex-col items-center justify-center text-center group hover:border-purple-300 transition-all shadow-lg">
+                        <div class="w-20 h-20 bg-purple-50 rounded-full flex items-center justify-center text-purple-500 mb-4 group-hover:scale-110 transition-transform border-4 border-purple-100"><i class="fa-solid fa-book-open text-4xl"></i></div>
+                        <h2 class="text-2xl font-black text-gray-800">Kiến Thức</h2>
+                        <p class="text-gray-500 font-bold text-sm mt-1">Trọng tâm cần nhớ</p>
+                    </div>
+                    <div onclick="startReviewMode()" class="btn-press bg-white rounded-[2rem] border-b-8 border-orange-100 p-6 flex flex-col items-center justify-center text-center group hover:border-orange-300 transition-all shadow-lg">
+                        <div class="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center text-orange-500 mb-4 group-hover:scale-110 transition-transform border-4 border-orange-100"><i class="fa-solid fa-glasses text-4xl"></i></div>
+                        <h2 class="text-2xl font-black text-gray-800">Ôn Tập</h2>
+                        <p class="text-gray-500 font-bold text-sm mt-1">Xem đáp án & giải thích</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -106,7 +148,7 @@
             <div class="max-w-3xl w-full relative z-10">
                 <div class="flex justify-between items-center mb-6 gap-3">
                     <button onclick="exitToMenu()" class="group bg-white text-red-500 hover:bg-red-50 px-5 py-2 rounded-2xl font-black shadow-lg border-b-4 border-red-100 hover:border-red-200 active:border-b-0 active:translate-y-1 transition-all flex items-center shrink-0"><i class="fa-solid fa-right-from-bracket mr-2 text-xl"></i> <span class="text-lg">Thoát</span></button>
-                    <div class="bg-white px-6 py-2 rounded-full shadow-xl flex items-center border-4 border-blue-100 transform scale-110 z-10"><i class="fa-regular fa-clock mr-2 text-gray-400 text-2xl"></i><span id="timer-display" class="text-4xl font-black text-blue-600 font-mono tabular-nums">30</span></div>
+                    <div class="bg-white px-6 py-2 rounded-full shadow-xl flex items-center border-4 border-blue-100 transform scale-110 z-10"><i class="fa-regular fa-clock mr-2 text-gray-400 text-2xl"></i><span id="timer-display" class="text-4xl font-black text-blue-600 font-mono tabular-nums">60</span></div>
                     <div class="bg-white text-blue-600 px-5 py-2 rounded-2xl font-black shadow-lg border-b-4 border-blue-100 flex items-center shrink-0"><span class="text-gray-400 mr-2 text-xs uppercase font-bold tracking-wider mt-1">CÂU</span><span id="quiz-current" class="text-2xl">1</span><span class="text-gray-300 mx-1 text-xl">/</span><span id="quiz-total" class="text-xl text-gray-500">10</span></div>
                 </div>
                 <div class="bg-white rounded-[2rem] shadow-2xl border-b-8 border-indigo-50 p-6 mb-6 relative overflow-hidden min-h-[150px] flex flex-col items-center justify-center text-center transform transition-all">
@@ -134,21 +176,19 @@
                 <h2 class="text-4xl md:text-5xl font-black text-gray-800 mb-2 relative z-10 tracking-tight">HOÀN THÀNH!</h2>
                 <div class="text-lg font-bold text-gray-400 mb-6 uppercase tracking-widest relative z-10"><span id="result-name">Tên</span> - <span id="result-class">Lớp</span></div>
                 <div class="bg-gray-50 rounded-3xl p-6 mb-6 relative z-10 border-4 border-gray-100"><div class="text-gray-400 font-bold text-xs md:text-sm mb-2 uppercase tracking-wide">Điểm số của em</div><div class="text-6xl md:text-7xl font-black text-blue-600 leading-none mb-2"><span id="result-score">0</span><span class="text-4xl text-gray-300 mx-1">/</span><span id="result-total">0</span></div><p id="result-message" class="text-lg md:text-xl font-extrabold text-orange-500 mt-4 px-2">...</p></div>
-                
-                <!-- [MỚI] Nút Xem lại bài làm -->
-                <button onclick="reviewQuiz()" class="btn-press w-full bg-white border-blue-600 text-blue-600 border-2 font-black py-4 md:py-5 rounded-2xl text-xl md:text-2xl shadow-lg hover:bg-blue-50 relative z-10 uppercase tracking-wide mb-4"><i class="fa-solid fa-eye mr-2"></i> Xem lại bài làm</button>
+                <button onclick="startReviewMode()" class="btn-press w-full bg-white border-blue-600 text-blue-600 border-2 font-black py-4 md:py-5 rounded-2xl text-xl md:text-2xl shadow-lg hover:bg-blue-50 relative z-10 uppercase tracking-wide mb-4"><i class="fa-solid fa-eye mr-2"></i> Xem lại bài làm</button>
                 <button onclick="showScreen('screen-menu')" class="btn-press w-full bg-blue-600 border-blue-800 text-white font-black py-4 md:py-5 rounded-2xl text-xl md:text-2xl shadow-xl hover:bg-blue-500 relative z-10 uppercase tracking-wide"><i class="fa-solid fa-rotate-left mr-2"></i> Về Menu</button>
             </div>
         </div>
 
-        <!-- [MỚI] 5. REVIEW SCREEN (XEM LẠI BÀI) -->
+        <!-- 5. REVIEW SCREEN -->
         <div id="screen-review" class="screen min-h-screen p-4 flex-col justify-start items-center pt-12 pb-32 overflow-y-auto">
             <div class="max-w-4xl w-full relative z-10">
                 <div class="flex justify-between items-center mb-8">
-                    <button onclick="showScreen('screen-result')" class="mb-0 bg-white px-5 py-3 rounded-2xl font-bold shadow hover:bg-gray-50 transition-transform hover:-translate-y-1"><i class="fa-solid fa-arrow-left mr-2"></i> Quay lại kết quả</button>
-                    <h1 class="text-2xl md:text-3xl font-black text-gray-800 drop-shadow-md flex items-center bg-white px-6 py-3 rounded-2xl shadow"><i class="fa-solid fa-magnifying-glass mr-3 text-blue-500"></i> Xem lại bài làm</h1>
+                    <button onclick="showScreen('screen-menu')" class="mb-0 bg-white px-5 py-3 rounded-2xl font-bold shadow hover:bg-gray-50 transition-transform hover:-translate-y-1"><i class="fa-solid fa-arrow-left mr-2"></i> Quay lại Menu</button>
+                    <h1 class="text-2xl md:text-3xl font-black text-gray-800 drop-shadow-md flex items-center bg-white px-6 py-3 rounded-2xl shadow"><i class="fa-solid fa-glasses mr-3 text-orange-500"></i> Ôn Tập Trắc Nghiệm</h1>
                 </div>
-                <div id="review-list" class="space-y-6 pb-12"></div>
+                <div id="review-list" class="space-y-8 pb-12"></div>
             </div>
         </div>
 
@@ -160,6 +200,15 @@
                 <div id="practice-list" class="space-y-6 md:space-y-8 pb-12"></div>
             </div>
         </div>
+
+        <!-- 7. THEORY SCREEN -->
+        <div id="screen-theory" class="screen min-h-screen p-4 flex-col justify-start items-center pt-28 pb-32">
+            <div class="max-w-4xl w-full relative z-10">
+                <button onclick="showScreen('screen-menu')" class="mb-6 bg-white px-5 py-3 rounded-2xl font-bold shadow hover:bg-gray-50 transition-transform hover:-translate-y-1"><i class="fa-solid fa-arrow-left mr-2"></i> Quay lại</button>
+                <h1 class="text-3xl md:text-4xl font-black text-purple-800 mb-8 drop-shadow-md flex items-center"><i class="fa-solid fa-book-open mr-3 text-purple-500"></i> Kiến Thức Trọng Tâm</h1>
+                <div id="theory-content" class="bg-white rounded-[2.5rem] shadow-2xl border-b-8 border-purple-100 p-8 space-y-6 text-lg text-slate-700 leading-relaxed knowledge-content"></div>
+            </div>
+        </div>
     </div>
 
     <div class="fixed bottom-0 left-0 w-full bg-slate-800 p-3 text-center z-[999] border-t-4 border-slate-900 shadow-2xl">
@@ -169,9 +218,105 @@
     <script>
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwziks8ynJ60Lj93bBymd_rhF9DxQvVrMklszxcX4tM99mNjMsorNzJveAcviqbv4x6/exec"; 
         let gradesData = {}; let studentName = "", studentClass = "", currentGrade = null, currentScore = 0, currentQuizIndex = 0, timerInterval = null, timeLeft = 60;
+        let userAnswers = []; 
+
+        // DỮ LIỆU KIẾN THỨC
+        const knowledgeData = {
+            2: {
+                content: `
+                <h3>CHỦ ĐỀ 1: EM TẬP GÕ 10 NGÓN:</h3>
+                <ul><li><strong>Kiến thức:</strong> Hiểu lợi ích của gõ 10 ngón, biết cách đặt tay trên bàn phím.</li><li><strong>Kỹ năng gõ:</strong><ul><li>Gõ hàng phím cơ sở, hàng phím trên, hàng phím dưới, hàng phím số.</li><li>Sử dụng phím Shift và Caps Lock để gõ chữ in hoa và ký tự trên.</li><li>Sử dụng phím Backspace và Delete để xóa ký tự.</li></ul></li></ul>
+                <h3>CHỦ ĐỀ 2: SOẠN THẢO VĂN BẢN – WORD:</h3>
+                <ul><li><strong>Làm quen:</strong> Khởi động và làm quen giao diện Microsoft Word.</li><li><strong>Soạn thảo:</strong> Luyện gõ các chữ tiếng Việt (kết hợp với phần mềm gõ tiếng Việt).</li><li><strong>Định dạng cơ bản:</strong> Thay đổi cỡ chữ (Font size).</li></ul>`
+            },
+            3: {
+                content: `
+                <h3>CHỦ ĐỀ A: MÁY TÍNH VÀ EM</h3><h3>CHỦ ĐỀ A1: KHÁM PHÁ MÁY TÍNH</h3><ul><li>Nhận biết các thành phần cơ bản của máy tính (Thân máy, màn hình, chuột, bàn phím).</li><li>Phân biệt các loại máy tính thông dụng.</li><li>Kỹ năng sử dụng chuột máy tính.</li><li>Quy tắc bảo vệ sức khỏe khi dùng máy tính.</li></ul>
+                <h3>CHỦ ĐỀ A2: THÔNG TIN VÀ XỬ LÝ THÔNG TIN</h3><ul><li>Khái niệm thông tin và quyết định.</li><li>Các dạng thông tin thường gặp (văn bản, âm thanh, hình ảnh).</li><li>Quy trình xử lý thông tin cơ bản.</li></ul>
+                <h3>CHỦ ĐỀ A3: LÀM QUEN VỚI CÁCH GÕ BÀN PHÍM</h3><ul><li>Cách gõ hàng phím cơ sở, hàng phím trên và dưới.</li><li>Thi đua gõ phím nhanh và chính xác.</li></ul>
+                <h3>CHỦ ĐỀ B: MẠNG MÁY TÍNH VÀ INTERNET</h3><ul><li>Khái niệm thông tin trên Internet.</li><li>Nhận biết thông tin phù hợp và không phù hợp trên Internet.</li></ul>`
+            },
+            4: {
+                content: `
+                <h3>CHỦ ĐỀ A: MÁY TÍNH VÀ EM</h3><ul><li>Phân biệt Phần cứng và Phần mềm.</li><li>Luyện tập gõ hàng phím số và gõ bàn phím đúng cách.</li></ul>
+                <h3>CHỦ ĐỀ B: MẠNG MÁY TÍNH VÀ INTERNET</h3><ul><li>Các loại thông tin chính trên trang web.</li><li>Tác hại của việc xem trang web không phù hợp lứa tuổi.</li></ul>
+                <h3>CHỦ ĐỀ C: TỔ CHỨC LƯU TRỮ, TÌM KIẾM VÀ TRAO ĐỔI THÔNG TIN</h3><ul><li><strong>Tìm kiếm:</strong> Cách tìm kiếm thông tin trên Internet.</li><li><strong>Quản lý tệp/thư mục:</strong><ul><li>Tạo, xóa, đổi tên thư mục và tệp.</li><li>Di chuyển, sao chép thư mục và tệp.</li><li>Tổ chức cây thư mục khoa học.</li></ul></li></ul>
+                <h3>CHỦ ĐỀ D: ĐẠO ĐỨC, PHÁP LUẬT & VĂN HÓA SỐ</h3><ul><li>Tôn trọng bản quyền tác giả của phần mềm.</li></ul>
+                <h3>CHỦ ĐỀ E: ỨNG DỤNG TIN HỌC - TẠO BÀI TRÌNH CHIẾU</h3><ul><li>Bố cục trang chiếu.</li><li>Định dạng văn bản trên trang chiếu.</li><li>Tạo hiệu ứng chuyển trang (Transitions).</li></ul>`
+            },
+            5: {
+                content: `
+                <h3>CHỦ ĐỀ A: MÁY TÍNH VÀ EM</h3><ul><li>Lợi ích của máy tính và việc sử dụng máy tính thành thạo.</li><li>Thực hành tạo sản phẩm số đơn giản.</li></ul>
+                <h3>CHỦ ĐỀ B: MẠNG MÁY TÍNH VÀ INTERNET</h3><ul><li>Tìm thông tin trên website.</li><li>Hợp tác tìm kiếm và chia sẻ thông tin qua mạng.</li></ul>
+                <h3>CHỦ ĐỀ C: TỔ CHỨC LƯU TRỮ VÀ TÌM KIẾM THÔNG TIN</h3><ul><li>Thu thập, tìm kiếm và chọn lọc thông tin để giải quyết vấn đề.</li><li>Thực hành tạo cây thư mục quản lý dữ liệu.</li><li>Kỹ năng tìm kiếm tệp và thư mục trong máy tính.</li></ul>
+                <h3>CHỦ ĐỀ D: ĐẠO ĐỨC, PHÁP LUẬT & VĂN HÓA SỐ</h3><ul><li>Tôn trọng quyền tác giả khi sử dụng nội dung thông tin.</li></ul>
+                <h3>CHỦ ĐỀ E: ỨNG DỤNG TIN HỌC - SOẠN THẢO VĂN BẢN</h3><ul><li>Các thao tác với khối văn bản: Chọn, Sao chép (Copy), Cắt (Cut), Dán (Paste), Xóa.</li><li>Chèn ảnh vào văn bản.</li><li>Định dạng ký tự (Font, màu sắc, kiểu chữ...).</li><li>Thực hành tổng hợp soạn thảo văn bản.</li></ul>`
+            }
+        };
         
-        // [MỚI] Biến lưu lịch sử làm bài
-        let userAnswers = []; // Lưu mảng: { question: "...", selected: index, correct: index, options: [...] }
+        // TỪ ĐIỂN GIẢI THÍCH CÂU HỎI (SMART DICTIONARY)
+        const explanationDict = {
+             "Lợi ích của việc gõ 10 ngón là gì?": "Gõ 10 ngón giúp phân chia nhiệm vụ cho các ngón tay, từ đó tăng tốc độ và độ chính xác khi soạn thảo.",
+             "Khi tập gõ 10 ngón hai ngón trỏ của em đặt ở hai phím có gờ là:": "Hai phím có gờ (F và J) là vị trí mốc để đặt hai ngón trỏ, giúp định vị các phím khác mà không cần nhìn.",
+             "Phím Caps Lock dùng để làm gì?": "Caps Lock (Capital Lock) dùng để khóa chế độ viết hoa. Khi đèn Caps Lock sáng, mọi chữ cái sẽ được viết hoa.",
+             "Phím Backspace (hình mũi tên sang trái) dùng để làm gì?": "Backspace dùng để xóa ký tự nằm ngay bên trái (phía trước) con trỏ soạn thảo.",
+             "Phím Delete (hoặc Del) dùng để làm gì?": "Phím Delete dùng để xóa ký tự nằm ngay bên phải (phía sau) con trỏ soạn thảo.",
+             "Khi tập gõ 10 ngón hai ngón tay cái của em đặt ở phím nào?": "Hai ngón cái phụ trách phím dài nhất trên bàn phím là phím Cách (Spacebar).",
+             "Để gõ một chữ \"A\" (in hoa) em nên làm thế nào cho nhanh?": "Dùng phím Shift kết hợp với chữ cái là cách nhanh nhất để viết hoa một ký tự đơn lẻ.",
+             "Muốn gõ kí tự \"!\" (nằm ở phía trên phím số 1) em phải làm gì?": "Các ký tự nằm phía trên của phím số luôn cần giữ phím Shift để gõ.",
+             "Đâu KHÔNG phải là thành phần cơ bản của máy tính để bàn?": "Máy in là thiết bị ngoại vi bổ sung, không bắt buộc phải có để máy tính hoạt động cơ bản.",
+             "Bộ phận nào của máy tính giúp em nhìn thấy hình ảnh chữ viết?": "Màn hình (Monitor) là thiết bị xuất, hiển thị thông tin cho người dùng xem.",
+             "Máy tính bảng (Tablet) thường có đặc điểm gì?": "Máy tính bảng tích hợp màn hình cảm ứng và thân máy thành một khối, phím ảo hiện lên khi cần.",
+             "Thao tác \"Nhấn nhanh nút chuột trái hai lần rồi thả ngón tay ra ngay\" được gọi là gì?": "Đây là định nghĩa của thao tác Nháy đúp chuột (Double-click), thường dùng để mở thư mục/tệp.",
+             "Bộ phận nào của máy tính được ví như \"bộ não\" chứa các bộ phận lưu trữ và xử lí thông tin?": "Thân máy chứa CPU, RAM và ổ cứng, nơi diễn ra mọi hoạt động xử lý và lưu trữ.",
+             "Để tắt máy tính đúng cách em chọn nút Start sau đó chọn:": "Chọn Power -> Shut down là quy trình tắt máy chuẩn để bảo vệ phần cứng và dữ liệu.",
+             "Khi ngồi làm việc với máy tính tư thế nào sau đây là đúng?": "Ngồi thẳng lưng giúp bảo vệ cột sống và mắt, khoảng cách 50-80cm là an toàn cho mắt.",
+             "Khi cầm chuột bằng tay phải ngón tay trỏ của em thường đặt ở vị trí nào?": "Ngón trỏ là ngón linh hoạt nhất, dùng để nhấn nút chuột trái (nút chính).",
+             "Internet là gì?": "Internet là hệ thống mạng toàn cầu kết nối hàng tỷ thiết bị với nhau.",
+             "Màn hình làm việc đầu tiên xuất hiện sau khi khởi động máy tính được gọi là gì?": "Desktop (Màn hình nền) là nơi bắt đầu mọi công việc trên Windows.",
+             "Trên bàn phím phím dài nhất ở hàng dưới cùng được gọi là:": "Phím Cách (Spacebar) luôn là phím dài nhất để hai ngón cái dễ dàng nhấn.",
+             "Trên bàn phím hàng phím nào được gọi là hàng phím cơ sở?": "Hàng cơ sở (ASDF...) là nơi đặt các ngón tay ở tư thế xuất phát.",
+             "Trong các thiết bị sau đâu là thiết bị phần cứng giúp máy tính lưu trữ thông tin lâu dài?": "Ổ đĩa cứng (HDD/SSD) lưu dữ liệu ngay cả khi tắt máy, còn RAM sẽ mất dữ liệu khi mất điện.",
+             "Khi máy tính bị \"treo\" (không phản hồi) đó là lỗi thuộc về:": "Treo máy có thể do phần mềm bị lỗi hoặc phần cứng quá nóng/hỏng.",
+             "Đâu là thiết bị phần cứng bên trong thân máy tính được ví như \"bộ não\" của máy tính?": "CPU (Central Processing Unit) xử lý mọi lệnh, giống như não bộ điều khiển cơ thể.",
+             "Để gõ kí tự & (nằm trên phím số 7) em cần:": "Ký tự '&' nằm trên số 7, nên cần giữ Shift + 7.",
+             "Thiết bị nào sau đây là thiết bị ngoại vi dùng để đưa thông tin ra?": "Máy in xuất thông tin từ máy tính ra giấy (Output device).",
+             "Để gõ kí tự số 5 trên hàng phím số em sẽ dùng ngón tay nào của bàn tay trái?": "Theo quy tắc gõ 10 ngón, ngón trỏ trái phụ trách phím 4 và 5.",
+             "Lợi ích của việc gõ bàn phím đúng cách là gì?": "Gõ đúng cách giúp tăng tốc độ, giảm mỏi tay và tăng độ chính xác.",
+             "\"Từ khóa\" (Keyword) khi tìm kiếm thông tin trên Internet là gì?": "Từ khóa là từ đại diện cho nội dung chính mà em muốn tìm kiếm.",
+             "Để sao chép một thư mục sang vị trí khác (giữ lại bản gốc) em dùng lệnh nào?": "Copy (Sao chép) tạo ra bản sao, còn Move (Di chuyển) sẽ xóa bản gốc.",
+             "Để gõ chữ hoa (ví dụ chữ \"A\" thay vì \"a\") em cần nhấn giữ phím nào trong khi gõ?": "Phím Shift dùng để chuyển đổi tạm thời sang chữ hoa hoặc ký tự trên.",
+             "Tác hại của việc cố tình truy cập vào trang web không phù hợp lứa tuổi là gì?": "Web xấu chứa nội dung độc hại, virus và nguy cơ lừa đảo.",
+             "\"Siêu liên kết\" (Hyperlink) trên trang web thường có dấu hiệu nhận biết nào?": "Con trỏ chuột biến thành bàn tay để báo hiệu có thể nhấp vào.",
+             "Để tạo một trang chiếu mới trong PowerPoint em thường dùng lệnh New Slide ở dải lệnh nào?": "Lệnh New Slide nằm ngay trong thẻ Home để dễ truy cập.",
+             "Để tìm kiếm thông tin trên Internet em thường dùng công cụ nào?": "Máy tìm kiếm (Search Engine) như Google, Bing giúp tìm thông tin.",
+             "Để chèn một hình ảnh có sẵn trong máy tính vào trang chiếu em chọn dải lệnh Insert sau đó chọn:": "Insert -> Pictures dùng để chèn ảnh.",
+             "Trong phần mềm quản lí tệp (File Explorer) lệnh Rename dùng để làm gì?": "Rename (Re-name: Đặt lại tên) dùng để đổi tên tệp/thư mục.",
+             "Biểu tượng của phần mềm trình chiếu Microsoft PowerPoint thường là:": "PowerPoint có biểu tượng màu cam với chữ P.",
+             "Lệnh Transitions (Hiệu ứng chuyển trang) trong PowerPoint dùng để:": "Transitions tạo hiệu ứng động khi chuyển từ slide này sang slide khác.",
+             "Trang đầu tiên của bài trình chiếu thường dùng bố cục (Layout) nào?": "Title Slide được thiết kế riêng để làm trang bìa/tiêu đề.",
+             "Để thay đổi phông chữ cỡ chữ màu chữ cho văn bản trong PowerPoint em chọn các lệnh trong nhóm Font thuộc dải lệnh nào?": "Nhóm Font nằm trong thẻ Home chứa các công cụ định dạng văn bản.",
+             "Trong các hoạt động sau hoạt động nào không phải là lợi ích chính của máy tính trong học tập và giải trí?": "Tưới cây là việc làm thủ công, máy tính chưa hỗ trợ trực tiếp việc này phổ biến.",
+             "Máy tính mang lại lợi ích nào trong việc học tập?": "Máy tính hỗ trợ đa dạng: tìm kiếm, soạn thảo, trình chiếu...",
+             "Khi muốn tìm thông tin về \"Giá vé\" trên một website bảo tàng em nên tìm ở mục nào trên bảng chọn nội dung?": "Giá vé thường nằm trong mục Tham quan hoặc Thông tin hữu ích.",
+             "Trên một website thành phần nào thường chứa các siêu liên kết để dẫn đến các nội dung chính của trang?": "Menu (Bảng chọn) là nơi điều hướng chính của website.",
+             "Khi lập kế hoạch tổ chức sinh nhật cho bạn em cần thu thập thông tin nào?": "Cần đủ thông tin: Thời gian, Sở thích, Khách mời để tổ chức tốt.",
+             "Để xem các tệp tin trong thư mục dưới dạng danh sách kèm thông tin chi tiết (ngày tạo kích thước...) em chọn chế độ hiển thị nào?": "Details (Chi tiết) hiển thị đầy đủ thông tin về ngày, giờ, kích thước.",
+             "Hành động nào sau đây vi phạm bản quyền nội dung thông tin?": "Sao chép và nhận vơ là của mình là hành vi ăn cắp chất xám (Đạo văn).",
+             "Hành động nào sau đây thể hiện sự tôn trọng tính riêng tư và bảo mật thông tin?": "Không xem trộm thư/tin nhắn là tôn trọng quyền riêng tư.",
+             "Khi em cần giải một bài toán thông tin về \"công thức tính\" được xem là:": "Công thức là Tri thức/Kiến thức giúp xử lý dữ liệu đầu vào.",
+             "Để di chuyển một đoạn văn bản (cắt và dán) em sử dụng tổ hợp phím:": "Ctrl+X (Cắt) và Ctrl+V (Dán) dùng để di chuyển.",
+             "Để tìm kiếm một tệp tin trong máy tính khi không nhớ vị trí lưu em dùng công cụ nào của Windows?": "Ô tìm kiếm (Search) giúp quét toàn bộ máy để tìm tệp.",
+             "Trong Word lệnh Insert -> Pictures -> Online Pictures dùng để làm gì?": "Online Pictures cho phép tìm và chèn ảnh trực tiếp từ mạng.",
+             "Để sao chép một đoạn văn bản đến vị trí mới (vẫn giữ lại đoạn văn bản gốc) em thực hiện:": "Copy (Ctrl+C) giữ nguyên bản gốc, khác với Cut (Ctrl+X).",
+             "Trong Word để thay đổi kiểu chữ thành in nghiêng em nhấn vào biểu tượng nào?": "Chữ I (Italic) dùng để in nghiêng.",
+             "Thao tác chọn (bôi đen) một khối văn bản dùng để làm gì?": "Phải chọn (bôi đen) đối tượng trước thì máy tính mới biết cần tác động vào đâu.",
+             "Trong Word để chèn một bức ảnh có sẵn trong máy tính vào văn bản em chọn:": "This Device nghĩa là thiết bị này (máy tính đang dùng).",
+             "Lệnh Save (Lưu) và Save As (Lưu với tên mới) khác nhau cơ bản ở điểm nào?": "Save As luôn mở hộp thoại để đặt tên mới hoặc chọn nơi lưu khác.",
+             "Để thay đổi phông chữ cỡ chữ màu chữ cho văn bản em sử dụng các lệnh trong nhóm Font thuộc dải lệnh nào?": "Tất cả lệnh định dạng chữ đều nằm trong thẻ Home.",
+             "Thao tác nhấn tổ hợp phím Ctrl + X dùng để làm gì?": "X giống cái kéo -> Cắt (Cut).",
+             "Để bố trí ảnh nằm bên cạnh chữ (chữ bao quanh ảnh) trong Word sau khi chọn ảnh em chọn Picture Format -> Wrap Text -> chọn kiểu nào?": "Square (Vuông) làm văn bản bao quanh hình ảnh theo khung vuông."
+        };
 
         const funFacts = [
             "Máy tính đầu tiên nặng tới 27 tấn, bằng khoảng 5 con voi! 🐘",
@@ -225,13 +370,39 @@
             document.getElementById('loading-error').innerText = msg; document.getElementById('loading-error').classList.remove('hidden'); document.getElementById('btn-reload').classList.remove('hidden');
         }
 
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
         function processSheetData(rows) {
             [2, 3, 4, 5].forEach(g => { gradesData[g] = { title: "KHỐI LỚP " + g, quiz: [], practice: [] }; });
             rows.forEach(row => {
                 const g = parseInt(row.grade);
                 if (gradesData[g]) {
-                    if (row.type === 'quiz') { gradesData[g].quiz.push({ q: row.content, options: row.options, a: parseInt(row.correct) }); } 
-                    else if (row.type === 'practice') { gradesData[g].practice.push({ title: row.content, content: row.options[0], steps: row.steps }); }
+                    if (row.type === 'quiz') {
+                        gradesData[g].quiz.push({ 
+                            q: row.content, 
+                            options: row.options, 
+                            a: parseInt(row.correct),
+                            steps: row.steps 
+                        }); 
+                    } else if (row.type === 'practice') { 
+                        gradesData[g].practice.push({ 
+                            title: row.content, 
+                            content: row.options[0], 
+                            steps: row.steps 
+                        }); 
+                    }
+                }
+            });
+
+            [2, 3, 4, 5].forEach(g => {
+                if (gradesData[g].quiz.length > 0) {
+                    gradesData[g].quiz = shuffleArray(gradesData[g].quiz);
                 }
             });
         }
@@ -251,7 +422,7 @@
         function startQuiz() { 
             if (gradesData[currentGrade].quiz.length == 0) return; 
             currentScore = 0; currentQuizIndex = 0; 
-            userAnswers = []; // Reset lịch sử làm bài
+            userAnswers = []; 
             showScreen('screen-quiz'); renderQuestion(); 
         }
 
@@ -288,7 +459,6 @@
         }
 
         function timeOut() { 
-            // Ghi nhận không trả lời (sai)
             recordAnswer(-1);
             showFeedbackPopup(false, "HẾT GIỜ RỒI!", "bg-red-500"); 
             setTimeout(nextQuestion, 2000); 
@@ -299,7 +469,6 @@
             const btns = document.querySelectorAll('#answers-container button'); btns.forEach(b => b.disabled = true);
             const correctIdx = gradesData[currentGrade].quiz[currentQuizIndex].a;
             
-            // [MỚI] Ghi nhận đáp án
             recordAnswer(idx);
 
             if (idx === correctIdx) {
@@ -320,7 +489,6 @@
             setTimeout(nextQuestion, 2500);
         }
         
-        // [MỚI] Hàm lưu lịch sử
         function recordAnswer(selectedIdx) {
             const currentQ = gradesData[currentGrade].quiz[currentQuizIndex];
             userAnswers.push({
@@ -382,53 +550,73 @@
             .catch(e => status.classList.replace('flex', 'hidden'));
         }
 
-        // [MỚI] Hàm hiển thị danh sách xem lại bài
-        function reviewQuiz() {
+        // [MỚI] Hàm hiển thị danh sách ÔN TẬP (Review Mode) với giải thích thông minh
+        function startReviewMode() {
+            if (!gradesData[currentGrade].quiz.length) { alert("Chưa có câu hỏi trắc nghiệm cho khối này!"); return; }
             showScreen('screen-review');
             const list = document.getElementById('review-list');
             list.innerHTML = '';
             const badges = ["A", "B", "C", "D"];
 
-            userAnswers.forEach((item, idx) => {
-                const isCorrect = item.selected === item.correct;
-                const statusIcon = isCorrect ? '<i class="fa-solid fa-check-circle text-green-500 text-2xl"></i>' : '<i class="fa-solid fa-circle-xmark text-red-500 text-2xl"></i>';
-                const borderClass = isCorrect ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50';
+            gradesData[currentGrade].quiz.forEach((q, idx) => {
+                const correctOpt = q.options[q.a]; 
+                const correctBadge = badges[q.a];
                 
+                // Tìm lời giải thích từ "Từ điển" nếu có, nếu không thì dùng câu mặc định
+                const smartExplanation = explanationDict[q.q] || "Hãy ghi nhớ đáp án này nhé!";
+
                 let html = `
-                <div class="bg-white rounded-[2rem] shadow-lg border-2 ${isCorrect ? 'border-gray-100' : 'border-red-100'} p-6 relative overflow-hidden">
+                <div class="bg-white rounded-[2rem] shadow-lg border-2 border-orange-50 p-6 relative overflow-hidden">
                     <div class="flex justify-between items-start mb-4">
-                        <h3 class="text-lg font-black text-gray-800 w-[90%]">Câu ${idx + 1}: ${item.question}</h3>
-                        <div>${statusIcon}</div>
+                        <h3 class="text-lg font-black text-gray-800 w-full"><span class="text-orange-500 mr-2">Câu ${idx + 1}:</span> ${q.q}</h3>
                     </div>
-                    <div class="space-y-2">
+                    <div class="space-y-3 mb-6">
                 `;
 
-                item.options.forEach((opt, optIdx) => {
+                q.options.forEach((opt, optIdx) => {
                     if(!opt && opt !== 0) return;
                     let optionClass = "bg-white border-gray-200 text-gray-500";
                     let icon = "";
 
-                    // Logic tô màu đáp án
-                    if (optIdx === item.correct) {
-                        optionClass = "bg-green-100 border-green-500 text-green-700 font-bold shadow-sm"; // Đáp án đúng luôn xanh
-                        icon = '<i class="fa-solid fa-check ml-auto"></i>';
-                    } else if (optIdx === item.selected && !isCorrect) {
-                        optionClass = "bg-red-100 border-red-500 text-red-700 font-bold"; // Chọn sai thì đỏ
-                        icon = '<i class="fa-solid fa-xmark ml-auto"></i>';
+                    if (optIdx === q.a) {
+                        optionClass = "bg-green-50 border-green-500 text-green-700 font-bold shadow-sm ring-2 ring-green-100"; 
+                        icon = '<i class="fa-solid fa-check ml-auto text-green-600 text-xl"></i>';
                     }
 
                     html += `
-                        <div class="flex items-center p-3 rounded-xl border-2 ${optionClass}">
-                            <span class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 font-black border bg-white/50 text-sm">${badges[optIdx]}</span>
-                            <span class="flex-grow">${opt}</span>
+                        <div class="flex items-center p-4 rounded-xl border-2 ${optionClass} transition-all">
+                            <span class="w-8 h-8 rounded-lg flex items-center justify-center mr-3 font-black border bg-white/60 text-sm">${badges[optIdx]}</span>
+                            <span class="flex-grow text-base">${opt}</span>
                             ${icon}
                         </div>
                     `;
                 });
 
-                html += `</div></div>`;
+                // [CẬP NHẬT] Phần Ghi nhớ với giải thích chi tiết
+                html += `
+                    </div>
+                    <div class="mt-2 p-5 bg-blue-50 rounded-2xl border-l-4 border-blue-400 shadow-inner relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10">
+                            <i class="fa-solid fa-lightbulb text-6xl text-blue-500"></i>
+                        </div>
+                        <p class="text-base font-black text-blue-800 mb-2 flex items-center">
+                            <i class="fa-solid fa-lightbulb text-yellow-400 text-xl mr-2 drop-shadow-sm"></i> Ghi nhớ:
+                        </p>
+                        <p class="text-blue-900 text-base leading-relaxed font-medium">
+                            Đáp án đúng là <strong class="text-blue-700 text-lg">${correctBadge}</strong>. 
+                            <span class="block mt-1 text-slate-700 italic">${smartExplanation}</span>
+                        </p>
+                    </div>
+                </div>`;
+                
                 list.innerHTML += html;
             });
+        }
+
+        function showTheory() {
+            if (!knowledgeData[currentGrade]) { alert("Chưa có kiến thức cho khối này!"); return; }
+            showScreen('screen-theory');
+            document.getElementById('theory-content').innerHTML = knowledgeData[currentGrade].content;
         }
 
         function startPractice() {
