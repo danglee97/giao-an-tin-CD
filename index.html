@@ -4,117 +4,322 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- === [CẬP NHẬT] THẺ SEO CHUẨN === -->
-    <title>Cổng Giáo án Tương tác Tin học - Đăng Lee</title>
-    <meta name="description" content="Tổng hợp giáo án, bài tập tương tác và công cụ học tập môn Tin học từ lớp 3 đến lớp 9. Dự án giáo dục của giáo viên Đăng Lee.">
-    <meta name="keywords" content="giáo án tin học, bài tập tin học, học tin học online, luyện gõ 10 ngón, lập trình scratch, Đăng Lee, cổng giáo dục, giáo án điện tử, tin học lớp 3, tin học lớp 4, tin học lớp 5, tin học thcs">
-    <meta name="author" content="Đăng Lee">
-    <meta name="robots" content="index, follow"> <!-- [MỚI] Thẻ chỉ dẫn cho robot của công cụ tìm kiếm -->
-    <link rel="canonical" href="https://tinhoc.leminhdang.com/"> <!-- [CẬP NHẬT] URL chính thức -->
-
-    <!-- Thẻ Open Graph (dành cho chia sẻ trên mạng xã hội như Facebook, Zalo) -->
-    <meta property="og:title" content="Cổng Giáo án Tương tác Tin học - Đăng Lee">
-    <meta property="og:description" content="Tổng hợp giáo án, bài tập tương tác và công cụ học tập môn Tin học từ lớp 3 đến lớp 9.">
-    <meta property="og:image" content="https://tinhoc.leminhdang.com/logo.png"> <!-- [CẬP NHẬT] Đường dẫn đầy đủ tới ảnh logo -->
-    <meta property="og:url" content="https://tinhoc.leminhdang.com/"> <!-- [CẬP NHẬT] URL chính thức -->
-    <meta property="og:type" content="website">
-
-    <!-- Icon cho trang web -->
+    <!-- === SEO & META TAGS === -->
+    <title>E- learning Tin học cùng thầy Đăng</title>
+    <meta name="description" content="Hệ thống bài giảng, bài tập tương tác Tin học từ lớp 3-9 và chia sẻ thủ thuật IT cùng Thầy Minh Đăng.">
+    <meta name="keywords" content="tin học, giáo án điện tử, học tin học online, Minh Đăng, tiktok ongthaycaiwin, luyện gõ 10 ngón">
+    <meta name="author" content="Minh Đăng">
+    <link rel="canonical" href="https://tinhoc.leminhdang.com/">
     <link rel="icon" type="image/png" href="favicon.png">
     
-    <!-- Thư viện & Fonts -->
+    <!-- === THƯ VIỆN === -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css"> <!-- [QUAN TRỌNG] Đảm bảo đã link file CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
+    <!-- === CSS TÙY CHỈNH === -->
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        #particles-container { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
+        /* --- CÀI ĐẶT MÀU SẮC --- */
         :root {
             --theme-blue: #002060;
             --theme-red: #C00000;
+            --bg-gradient: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
         }
-        .bg-theme-blue { background-color: var(--theme-blue); }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
+            color: #334155;
+            overflow-x: hidden;
+        }
+
+        /* --- FOOTER VỚI HIỆU ỨNG GRID CHẠY --- */
+        footer {
+            background-color: #001233;
+            color: white;
+            position: relative;
+            z-index: 50;
+            overflow: hidden;
+            box-shadow: 0 -10px 30px rgba(0, 32, 96, 0.3);
+        }
+
+        .footer-grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(56, 189, 248, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56, 189, 248, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            transform: perspective(500px) rotateX(60deg);
+            transform-origin: top center;
+            animation: grid-move 20s linear infinite;
+            z-index: 0;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .footer-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, #001233 0%, transparent 40%, #001233 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes grid-move {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(40px); }
+        }
+
+        .footer-content { position: relative; z-index: 10; }
+        #particles-container { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; pointer-events: none; }
         .text-theme-blue { color: var(--theme-blue); }
         .text-theme-red { color: var(--theme-red); }
+
+        /* --- HIỆU ỨNG TIKTOK --- */
+        @keyframes tiktok-pulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
+            50% { transform: scale(1.1); filter: drop-shadow(2px 2px 0px #25F4EE) drop-shadow(-2px -2px 0px #FE2C55); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
+        }
+        .tiktok-effect { animation: tiktok-pulse 2s infinite; }
+
+        /* --- ANIMATION LOAD TRANG --- */
+        .fade-in-up {
+            animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* --- THẺ HỌC TẬP (LIGHT GLASS) --- */
+        .grade-card-container { perspective: 1000px; height: 100%; }
+
+        .grade-card-new {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .grade-card-new:hover {
+            transform: translateY(-8px) scale(1.02);
+            background: #ffffff;
+            border-color: var(--theme-blue);
+            box-shadow: 0 20px 25px -5px rgba(0, 32, 96, 0.15);
+        }
+
+        .grade-card-new:hover .grade-icon {
+            transform: scale(1.15) rotate(-8deg);
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        .grade-icon { transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+        .grade-card-new::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.8), transparent);
+            transform: skewX(-25deg);
+            transition: 0.5s;
+            pointer-events: none;
+        }
+        .grade-card-new:hover::after { left: 125%; transition: 0.7s ease-in-out; }
+
+        /* --- BADGE HOT --- */
+        .badge-hot-new {
+            background: linear-gradient(45deg, #FF416C, #FF4B2B);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            box-shadow: 0 2px 5px rgba(255, 75, 43, 0.4);
+            animation: pulse-badge 1.5s infinite;
+            z-index: 10;
+            text-transform: uppercase;
+        }
+        @keyframes pulse-badge {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
-<body class="flex flex-col min-h-screen bg-slate-50">
+<body class="flex flex-col min-h-screen">
 
+    <!-- Container hiệu ứng hạt -->
     <div id="particles-container"></div>
 
-    <!-- PHẦN NỘI DUNG CHÍNH -->
-    <main class="max-w-6xl w-full mx-auto text-center p-4 sm:p-8 z-10 flex-grow">
-        <a href="index.html" title="Trở về trang chủ">
-            <img src="logo.png" alt="Minh Đăng IT Logo" class="h-24 sm:h-28 w-auto mx-auto mb-6 transition-transform duration-300 hover:scale-105" onerror="this.src='https://placehold.co/200x100/002060/FFFFFF?text=Logo'; this.onerror=null;">
+    <!-- === PHẦN NỘI DUNG CHÍNH === -->
+    <main class="max-w-7xl w-full mx-auto text-center p-4 sm:p-6 z-10 flex-grow">
+        
+        <!-- Logo & Header -->
+        <a href="index.html" class="inline-block hover:opacity-80 transition-opacity">
+            <img src="logo.png" alt="Minh Đăng IT Logo" class="h-24 sm:h-32 w-auto mx-auto mb-4 drop-shadow-md" onerror="this.src='https://placehold.co/200x100/002060/FFFFFF?text=Dang+Lee+IT'; this.onerror=null;">
         </a>
-        <h1 class="text-4xl sm:text-5xl font-bold text-theme-blue">Cổng Giáo án Tương tác</h1>
-        <p class="text-lg text-gray-500 mt-2">Môn <span class="font-bold text-theme-red">Tin học</span></p>
-
-        <!-- LƯỚI ĐIỀU HƯỚNG CHÍNH -->
-        <div id="grade-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8 mt-12">
-            <!-- JavaScript will populate this section -->
+        
+        <div class="relative inline-block mb-10">
+            <h1 class="text-4xl sm:text-6xl font-extrabold text-theme-blue tracking-tight">
+                E-Learning cùng <span class="text-theme-red relative">Thầy Đăng
+                <!-- Gạch chân -->
+                <svg class="absolute w-full h-3 -bottom-1 left-0 text-yellow-400 opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M0 5 Q 50 10 100 5" stroke="currentColor" stroke-width="8" fill="none" /></svg>
+                </span>
+            </h1>
+            <p class="text-lg sm:text-xl text-slate-600 mt-4 font-medium">Học vui - Hiểu nhanh - Thực hành giỏi</p>
         </div>
 
-        <!-- KHU VỰC THÔNG TIN BỔ SUNG -->
-        <section class="mt-16 text-left">
+        <!-- === LƯỚI DANH MỤC === -->
+        <div id="grade-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 px-2 sm:px-0">
+            <!-- JS Render -->
+        </div>
+
+        <!-- === KHU VỰC LIÊN HỆ & ỦNG HỘ === -->
+        <section class="mt-20 text-left">
             <div class="grid md:grid-cols-2 gap-8">
-                <!-- Cột Thông tin liên hệ -->
-                <div class="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-slate-200">
-                    <h2 class="text-2xl font-bold text-theme-blue mb-6 text-center">Thông tin Liên hệ</h2>
-                    <div class="space-y-4 text-slate-700">
-                        <div class="flex items-center"><i class="fas fa-map-marker-alt fa-fw text-xl text-theme-blue mr-4"></i><span>Càng Long, Vĩnh Long</span></div>
-                        <div class="flex items-center"><i class="fas fa-phone fa-fw text-xl text-theme-blue mr-4"></i><a href="tel:0899977870" class="hover:text-theme-red hover:underline transition-colors">089 99 77 870</a></div>
-                        <div class="flex items-center"><i class="fas fa-envelope fa-fw text-xl text-theme-blue mr-4"></i><a href="mailto:danglee@leminhdang.com" class="hover:text-theme-red hover:underline transition-colors">danglee@leminhdang.com</a></div>
-                        <div class="flex items-center"><i class="fab fa-facebook fa-fw text-xl text-theme-blue mr-4"></i><a href="https://www.facebook.com/danglee97" target="_blank" rel="noopener noreferrer" class="hover:text-theme-red hover:underline transition-colors">Đăng Lee</a></div>
+                <!-- Box Thông tin -->
+                <div class="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 hover:shadow-xl transition-shadow duration-300">
+                    <h2 class="text-2xl font-bold text-theme-blue mb-6 border-b pb-2 flex items-center gap-3">
+                        <i class="fas fa-address-card"></i> Liên Hệ Thầy Đăng
+                    </h2>
+                    <div class="space-y-5 text-slate-700 font-medium">
+                        <div class="flex items-center group">
+                            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center mr-4 group-hover:bg-blue-600 transition-colors">
+                                <i class="fas fa-map-marker-alt text-blue-600 group-hover:text-white transition-colors"></i>
+                            </div>
+                            <span>Càng Long, Vĩnh Long</span>
+                        </div>
+                        <div class="flex items-center group">
+                            <div class="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center mr-4 group-hover:bg-green-600 transition-colors">
+                                <i class="fas fa-phone text-green-600 group-hover:text-white transition-colors"></i>
+                            </div>
+                            <a href="tel:0899977870" class="hover:text-theme-red hover:underline decoration-2 underline-offset-2">089 99 77 870</a>
+                        </div>
+                        <div class="flex items-center group">
+                            <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center mr-4 group-hover:bg-red-600 transition-colors">
+                                <i class="fas fa-envelope text-red-600 group-hover:text-white transition-colors"></i>
+                            </div>
+                            <a href="mailto:danglee@leminhdang.com" class="hover:text-theme-red hover:underline decoration-2 underline-offset-2">danglee@leminhdang.com</a>
+                        </div>
                     </div>
                 </div>
-                <!-- Cột Ủng hộ dự án -->
-                <div class="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-slate-200 flex flex-col items-center justify-center text-center">
-                    <h2 class="text-2xl font-bold text-theme-blue mb-4">Ủng hộ Dự án</h2>
-                    <p class="text-slate-600 mb-6">Sự ủng hộ của bạn là động lực để dự án phát triển và duy trì miễn phí cho học sinh.</p>
-                    <img src="https://dichvu.leminhdang.com/img/qr.jpg" alt="Mã QR ủng hộ dự án" class="w-40 h-40 rounded-lg shadow-md transition-transform duration-300 hover:scale-110" onerror="this.onerror=null;this.src='https://placehold.co/160x160/e5e7eb/374151?text=QR+Code';">
+
+                <!-- Box Ủng hộ -->
+                <div class="bg-gradient-to-br from-white to-blue-50 p-8 rounded-3xl shadow-lg border border-slate-100 flex flex-col items-center justify-center text-center hover:shadow-xl transition-shadow duration-300">
+                    <h2 class="text-2xl font-bold text-theme-blue mb-3">Ủng hộ Dự án ❤️</h2>
+                    <p class="text-slate-600 mb-6 text-sm px-4">Mọi sự ủng hộ giúp Thầy duy trì server và phát triển thêm nhiều bài học thú vị miễn phí.</p>
+                    <div class="relative group">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-red-600 to-blue-600 rounded-xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                        <img src="https://dichvu.leminhdang.com/img/qr.jpg" alt="Mã QR MoMo/Bank" class="relative w-40 h-40 rounded-lg shadow-lg transform transition-transform duration-300 group-hover:scale-105" onerror="this.onerror=null;this.src='https://placehold.co/160x160/e5e7eb/374151?text=QR+Code';">
+                    </div>
                 </div>
             </div>
         </section>
     </main>
     
-    <!-- FOOTER -->
-    <footer class="w-full text-white mt-16 z-10 bg-theme-blue">
-        <div class="max-w-6xl mx-auto px-8 py-10">
-            <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
-                <div class="space-y-4"><h3 class="font-bold text-xl">Cổng Giáo án Tương tác</h3><p class="text-slate-300 text-sm">Xây dựng tương lai số cho thế hệ trẻ Việt Nam.</p></div>
-                <div class="space-y-4"><h3 class="font-bold text-xl">Điều hướng</h3><ul class="space-y-2 text-sm"><li><a href="#grade-grid" class="text-slate-300 hover:text-white hover:underline">Các khối lớp</a></li><li><a href="https://dichvu.leminhdang.com/" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white hover:underline">Dịch vụ IT</a></li></ul></div>
-                <div class="space-y-4"><h3 class="font-bold text-xl">Kết nối</h3><div class="flex justify-center md:justify-start space-x-5">
-<a href="https://www.facebook.com/danglee97" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white transition-transform duration-200 hover:scale-125"><i class="fab fa-facebook-f text-2xl"></i></a>
-<a href="https://zaloapp.com/qr/p/xzyx8g0gmokv?src=qr" target="_blank" rel="noopener noreferrer" class="text-slate-300 hover:text-white transition-transform duration-200 hover:scale-125">
-<svg class="w-7 h-7" id="svg_zalo_icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 614.501 613.667">
-<path fill="#FFFFFF" d="M464.721,301.399c-13.984-0.014-23.707,11.478-23.944,28.312c-0.251,17.771,9.168,29.208,24.037,29.202 c14.287-0.007,23.799-11.095,24.01-27.995C489.028,313.536,479.127,301.399,464.721,301.399z"></path>
-<path fill="#FFFFFF" d="M291.83,301.392c-14.473-0.316-24.578,11.603-24.604,29.024c-0.02,16.959,9.294,28.259,23.496,28.502 c15.072,0.251,24.592-10.87,24.539-28.707C315.214,313.318,305.769,301.696,291.83,301.392z"></path>
-<path fill="#FFFFFF" d="M310.518,3.158C143.102,3.158,7.375,138.884,7.375,306.3s135.727,303.142,303.143,303.142 c167.415,0,303.143-135.727,303.143-303.142S477.933,3.158,310.518,3.158z M217.858,391.083 c-33.364,0.818-66.828,1.353-100.133-0.343c-21.326-1.095-27.652-18.647-14.248-36.583c21.55-28.826,43.886-57.065,65.792-85.621 c2.546-3.305,6.214-5.996,7.15-12.705c-16.609,0-32.784,0.04-48.958-0.013c-19.195-0.066-28.278-5.805-28.14-17.652 c0.132-11.768,9.175-17.329,28.397-17.348c25.159-0.026,50.324-0.06,75.476,0.026c9.637,0.033,19.604,0.105,25.304,9.789 c6.22,10.561,0.284,19.512-5.646,27.454c-21.26,28.497-43.015,56.624-64.559,84.902c-2.599,3.41-5.119,6.88-9.453,12.725 c23.424,0,44.123-0.053,64.816,0.026c8.674,0.026,16.662,1.873,19.941,11.267C237.892,379.329,231.368,390.752,217.858,391.083z M350.854,330.211c0,13.417-0.093,26.841,0.039,40.265c0.073,7.599-2.599,13.647-9.512,17.084 c-7.296,3.642-14.71,3.028-20.304-2.968c-3.997-4.281-6.214-3.213-10.488-0.422c-17.955,11.728-39.908,9.96-56.597-3.866 c-29.928-24.789-30.026-74.803-0.211-99.776c16.194-13.562,39.592-15.462,56.709-4.143c3.951,2.619,6.201,4.815,10.396-0.053 c5.39-6.267,13.055-6.761,20.271-3.357c7.454,3.509,9.935,10.165,9.776,18.265C350.67,304.222,350.86,317.217,350.854,330.211z M395.617,369.579c-0.118,12.837-6.398,19.783-17.196,19.908c-10.779,0.132-17.593-6.966-17.646-19.512 c-0.179-43.352-0.185-86.696,0.007-130.041c0.059-12.256,7.302-19.921,17.896-19.222c11.425,0.752,16.992,7.448,16.992,18.833 c0,22.104,0,44.216,0,66.327C395.677,327.105,395.828,348.345,395.617,369.579z M463.981,391.868 c-34.399-0.336-59.037-26.444-58.786-62.289c0.251-35.66,25.304-60.713,60.383-60.396c34.631,0.304,59.374,26.306,58.998,61.986 C524.207,366.492,498.534,392.205,463.981,391.868z"></path>
-</svg>
-</a>
-</div></div>
+    <!-- === FOOTER (HIỆU ỨNG GRID CHẠY) === -->
+    <footer class="w-full text-white mt-20">
+        <!-- Background Grid Animation -->
+        <div class="footer-grid-bg"></div>
+        <div class="footer-overlay"></div>
+        
+        <!-- Nội dung chính nằm trên Grid -->
+        <div class="max-w-7xl mx-auto px-6 py-12 footer-content">
+            <div class="grid md:grid-cols-3 gap-10 text-center md:text-left">
+                <!-- Cột 1 -->
+                <div class="space-y-5">
+                    <!-- [CẬP NHẬT] Logo được đặt cạnh tiêu đề Minh Đăng IT -->
+                    <a href="https://dichvu.leminhdang.com/" target="_blank" class="group inline-flex items-center justify-center md:justify-start gap-4">
+                        <!-- Hộp chứa Logo (Glass Effect) -->
+                        <div class="h-14 w-14 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/20 shadow-lg group-hover:bg-white/20 group-hover:scale-110 transition-all duration-300">
+                            <img src="logo.png" alt="Logo Minh Đăng IT" class="h-10 w-auto object-contain" onerror="this.src='https://placehold.co/40x40/ffffff/000000?text=Logo'">
+                        </div>
+                        
+                        <!-- Tiêu đề -->
+                        <h3 class="font-bold text-2xl text-yellow-300 group-hover:text-yellow-100 transition-colors relative">
+                            Minh Đăng IT
+                            <!-- Gạch chân trang trí -->
+                            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-300 group-hover:w-full transition-all duration-300"></span>
+                        </h3>
+                    </a>
+
+                    <p class="text-blue-100 text-sm leading-relaxed">
+                        Nơi chia sẻ kiến thức Tin học và những thủ thuật công nghệ hữu ích cho mọi lứa tuổi.
+                    </p>
+                    
+                    <a href="https://www.tiktok.com/@ongthaycaiwin" target="_blank" class="inline-flex items-center gap-3 bg-black hover:bg-gray-900 text-white px-5 py-3 rounded-xl transition-all transform hover:-translate-y-1 hover:shadow-lg border border-gray-700 group mt-2">
+                        <i class="fa-brands fa-tiktok text-2xl tiktok-effect group-hover:text-pink-500"></i>
+                        <div class="text-left">
+                            <div class="text-[10px] text-gray-400 uppercase tracking-wider font-bold">Follow ngay</div>
+                            <div class="font-bold text-sm">@ongthaycaiwin</div>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Cột 2 -->
+                <div class="space-y-4">
+                    <h3 class="font-bold text-xl text-yellow-300">Lối Tắt</h3>
+                    <ul class="space-y-3 text-sm font-medium">
+                        <li><a href="#grade-grid" class="text-blue-100 hover:text-white hover:pl-2 transition-all block"><i class="fas fa-chevron-right text-xs mr-2"></i>Chọn Khối Lớp</a></li>
+                        <li><a href="https://dichvu.leminhdang.com/" target="_blank" class="text-blue-100 hover:text-white hover:pl-2 transition-all block"><i class="fas fa-chevron-right text-xs mr-2"></i>Dịch Vụ Sửa Máy Tính</a></li>
+                        <li><a href="https://leminhdang.com/" target="_blank" class="text-blue-100 hover:text-white hover:pl-2 transition-all block"><i class="fas fa-chevron-right text-xs mr-2"></i>Kiến Thức IT</a></li>
+                    </ul>
+                </div>
+
+                <!-- Cột 3 -->
+                <div class="space-y-4">
+                    <h3 class="font-bold text-xl text-yellow-300">Kết Nối</h3>
+                    <div class="flex justify-center md:justify-start space-x-4">
+                        <a href="https://www.facebook.com/danglee97" class="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-blue-600 transition-all transform hover:scale-110 shadow-lg border border-white/20">
+                            <i class="fab fa-facebook-f text-lg"></i>
+                        </a>
+                        <a href="https://www.tiktok.com/@ongthaycaiwin" class="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center hover:bg-white hover:text-black transition-all transform hover:scale-110 shadow-lg border border-white/20">
+                            <i class="fa-brands fa-tiktok text-lg"></i>
+                        </a>
+                        <a href="https://zaloapp.com/qr/p/xzyx8g0gmokv?src=qr" class="w-11 h-11 rounded-full bg-blue-500/20 flex items-center justify-center hover:bg-white hover:text-blue-500 transition-all transform hover:scale-110 shadow-lg border border-white/20">
+                            <svg class="w-6 h-6 fill-current" viewBox="0 0 614.501 613.667"><path d="M464.721,301.399c-13.984-0.014-23.707,11.478-23.944,28.312c-0.251,17.771,9.168,29.208,24.037,29.202 c14.287-0.007,23.799-11.095,24.01-27.995C489.028,313.536,479.127,301.399,464.721,301.399z"/><path d="M291.83,301.392c-14.473-0.316-24.578,11.603-24.604,29.024c-0.02,16.959,9.294,28.259,23.496,28.502 c15.072,0.251,24.592-10.87,24.539-28.707C315.214,313.318,305.769,301.696,291.83,301.392z"/><path d="M310.518,3.158C143.102,3.158,7.375,138.884,7.375,306.3s135.727,303.142,303.143,303.142 c167.415,0,303.143-135.727,303.143-303.142S477.933,3.158,310.518,3.158z M217.858,391.083 c-33.364,0.818-66.828,1.353-100.133-0.343c-21.326-1.095-27.652-18.647-14.248-36.583c21.55-28.826,43.886-57.065,65.792-85.621 c2.546-3.305,6.214-5.996,7.15-12.705c-16.609,0-32.784,0.04-48.958-0.013c-19.195-0.066-28.278-5.805-28.14-17.652 c0.132-11.768,9.175-17.329,28.397-17.348c25.159-0.026,50.324-0.06,75.476,0.026c9.637,0.033,19.604,0.105,25.304,9.789 c6.22,10.561,0.284,19.512-5.646,27.454c-21.26,28.497-43.015,56.624-64.559,84.902c-2.599,3.41-5.119,6.88-9.453,12.725 c23.424,0,44.123-0.053,64.816,0.026c8.674,0.026,16.662,1.873,19.941,11.267C237.892,379.329,231.368,390.752,217.858,391.083z M350.854,330.211c0,13.417-0.093,26.841,0.039,40.265c0.073,7.599-2.599,13.647-9.512,17.084 c-7.296,3.642-14.71,3.028-20.304-2.968c-3.997-4.281-6.214-3.213-10.488-0.422c-17.955,11.728-39.908,9.96-56.597-3.866 c-29.928-24.789-30.026-74.803-0.211-99.776c16.194-13.562,39.592-15.462,56.709-4.143c3.951,2.619,6.201,4.815,10.396-0.053 c5.39-6.267,13.055-6.761,20.271-3.357c7.454,3.509,9.935,10.165,9.776,18.265C350.67,304.222,350.86,317.217,350.854,330.211z M395.617,369.579c-0.118,12.837-6.398,19.783-17.196,19.908c-10.779,0.132-17.593-6.966-17.646-19.512 c-0.179-43.352-0.185-86.696,0.007-130.041c0.059-12.256,7.302-19.921,17.896-19.222c11.425,0.752,16.992,7.448,16.992,18.833 c0,22.104,0,44.216,0,66.327C395.677,327.105,395.828,348.345,395.617,369.579z M463.981,391.868 c-34.399-0.336-59.037-26.444-58.786-62.289c0.251-35.66,25.304-60.713,60.383-60.396c34.631,0.304,59.374,26.306,58.998,61.986 C524.207,366.492,498.534,392.205,463.981,391.868z"/></svg>
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="border-t border-slate-600 mt-8 pt-6 text-center text-sm text-slate-400">&copy; 2025 Bản quyền thuộc về Đăng Lee.</div>
+            
+            <!-- [LIÊN KẾT] Bản quyền -->
+            <div class="border-t border-white/20 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-center gap-4 text-center text-sm text-blue-200">
+                <span>&copy; 2025 <a href="https://dichvu.leminhdang.com/" target="_blank" class="font-bold text-yellow-300 hover:text-white hover:underline">Minh Đăng</a>. Website phục vụ giáo dục phi lợi nhuận.</span>
+            </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
     <script>
         const cardData = [
-            { type: 'icon', icon: 'fas fa-keyboard', title: 'Luyện gõ chữ', href: 'luyen-go-chu/index.html' },
-            // --- [CẬP NHẬT] MỤC ÔN THI ĐƯỢC LÀM NỔI BẬT ---
-            { 
-                type: 'icon', 
-                icon: 'fas fa-graduation-cap', 
-                title: 'Ôn thi HK1', 
-                href: 'onthi/hki.html', 
-                description: 'Trắc nghiệm & Thực hành',
-                highlight: true, // Đánh dấu nổi bật
-                badge: 'MỚI'     // Nội dung nhãn dán
-            },
+            { type: 'icon', icon: 'fas fa-keyboard', title: 'Luyện gõ chữ', href: 'luyen-go-chu/index.html', description: 'Rèn kỹ năng 10 ngón'},
+            { type: 'image', icon: 'canva.png', title: 'Tài liệu Canva', href: 'canva/index.html', badge: 'MỚI', description: 'Thiết kế sáng tạo', highlight: true },
             { type: 'icon', icon: 'fas fa-child', title: 'Lớp 3', href: 'khoi3/index.html' },
             { type: 'icon', icon: 'fas fa-child-reaching', title: 'Lớp 4', href: 'khoi4/index.html' },
             { type: 'icon', icon: 'fa-solid fa-people-pulling', title: 'Lớp 5', href: 'khoi5/index.html' },
@@ -122,32 +327,48 @@
             { type: 'icon', icon: 'fas fa-user-graduate', title: 'Lớp 7', href: 'khoi7/index.html' },
             { type: 'icon', icon: 'fas fa-brain', title: 'Lớp 8', href: 'khoi8/index.html' },
             { type: 'icon', icon: 'fas fa-user-tie', title: 'Lớp 9', href: 'khoi9/index.html' },
-            { type: 'image', icon: 'scratch.png', title: 'Tài liệu Scratch', href: 'tai-lieu-scratch/index.html' },
-            { type: 'icon', icon: 'fas fa-tools', title: 'Dịch vụ IT', href: 'https://dichvu.leminhdang.com/', target: '_blank', description: 'Hỗ trợ kỹ thuật & sửa chữa.' },
+            { type: 'image', icon: 'scratch.png', title: 'Tài liệu Scratch', href: 'tai-lieu-scratch/index.html', description: 'Lập trình kéo thả' },
+            { 
+                type: 'icon', 
+                icon: 'fas fa-graduation-cap', 
+                title: 'Ôn thi HK1', 
+                href: 'onthi/hki.html', 
+                description: 'Trắc nghiệm & Thực hành'
+            },
+            { type: 'icon', icon: 'fas fa-tools', title: 'Dịch vụ IT', href: 'https://dichvu.leminhdang.com/', target: '_blank', description: 'Sửa chữa & Cài đặt', colorClass: 'text-red-600' },
         ];
 
         function renderCards() {
             const grid = document.getElementById('grade-grid');
             if (!grid) return;
-            grid.innerHTML = cardData.map(card => {
-                let iconHTML = '';
-                if (card.type === 'icon') iconHTML = `<i class="${card.icon} text-5xl sm:text-6xl text-blue-800 group-hover:text-red-500 group-hover:scale-110 transition-all duration-300 ease-in-out mb-4"></i>`;
-                else if (card.type === 'image') iconHTML = `<img src="${card.icon}" alt="${card.title} icon" class="h-14 sm:h-16 mb-4 group-hover:scale-110 transition-transform duration-300">`;
+            
+            let delay = 0;
+
+            grid.innerHTML = cardData.map((card, index) => {
+                delay += 50; 
                 
-                // [CẬP NHẬT] Xử lý lớp CSS nổi bật và nhãn dán
-                const isHighlight = card.highlight ? 'card-highlighted' : '';
-                const badgeHTML = card.badge ? `<span class="badge-hot">${card.badge}</span>` : '';
+                let iconHTML = '';
+                const iconColorClass = card.colorClass || 'text-theme-blue';
+                
+                if (card.type === 'icon') {
+                    iconHTML = `<i class="${card.icon} text-5xl sm:text-6xl ${iconColorClass} mb-4 grade-icon transition-colors"></i>`;
+                } else if (card.type === 'image') {
+                    iconHTML = `<img src="${card.icon}" alt="${card.title}" class="h-16 sm:h-20 mb-4 grade-icon object-contain" onerror="this.style.display='none'; this.parentElement.innerHTML+='<i class=\\'fas fa-image text-4xl text-gray-500\\'></i>'">`;
+                }
+                
+                const isHighlight = card.highlight ? 'ring-2 ring-red-500 shadow-red-200' : '';
+                const badgeHTML = card.badge ? `<span class="badge-hot-new">${card.badge}</span>` : '';
 
                 return `
-                    <a href="${card.href}" ${card.target ? `target="${card.target}" rel="noopener noreferrer"`:''} class="group relative flex flex-col items-center justify-center p-6 sm:p-8 text-center bg-white/70 backdrop-blur-sm border border-slate-200 rounded-2xl shadow-md hover:shadow-xl transform hover:-translate-y-2 transition-all duration-300 ease-in-out overflow-visible ${isHighlight}">
-                        ${badgeHTML}
-                        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-cyan-100 to-blue-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0 rounded-2xl overflow-hidden"></div>
-                        <div class="relative z-10 flex flex-col items-center justify-center h-full">
+                    <div class="grade-card-container fade-in-up" style="animation-delay: ${delay}ms">
+                        <a href="${card.href}" ${card.target ? `target="${card.target}"`:''} class="grade-card-new group p-6 text-center ${isHighlight}">
+                            ${badgeHTML}
+                            <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                             ${iconHTML}
-                            <h2 class="text-lg sm:text-xl font-bold text-slate-800">${card.title}</h2>
-                            ${card.description ? `<p class="text-sm text-gray-600 mt-2">${card.description}</p>` : ''}
-                        </div>
-                    </a>
+                            <h2 class="text-lg sm:text-xl font-bold text-slate-700 group-hover:text-theme-blue transition-colors">${card.title}</h2>
+                            <p class="text-xs font-semibold text-slate-500 mt-2 group-hover:text-slate-700">${card.description || ''}</p>
+                        </a>
+                    </div>
                 `;
             }).join('');
         }
@@ -155,29 +376,22 @@
         window.addEventListener('load', () => {
             renderCards(); 
             
-            // === [KHÔI PHỤC] CẤU HÌNH CHI TIẾT CHO HIỆU ỨNG HẠT ===
+            // Hạt màu xanh đậm bay trên nền sáng
             tsParticles.load("particles-container", {
                 fpsLimit: 60,
-                background: { color: "#f8fafc" },
+                background: { color: "transparent" },
                 particles: {
                     number: { value: 60, density: { enable: true, value_area: 800 } },
                     color: { value: "#002060" },
                     shape: { type: "circle" },
-                    opacity: { value: 0.4, random: true },
+                    opacity: { value: 0.2, random: true },
                     size: { value: 3, random: true },
-                    links: { enable: true, distance: 150, color: "#6b7280", opacity: 0.3, width: 1 },
-                    move: { enable: true, speed: 1.5, direction: "none", out_mode: "out" }
+                    links: { enable: true, distance: 150, color: "#cbd5e1", opacity: 0.3, width: 1 },
+                    move: { enable: true, speed: 1, direction: "none", out_mode: "out" }
                 },
                 interactivity: {
-                    events: { 
-                        onhover: { enable: true, mode: "grab" },
-                        onclick: { enable: true, mode: "push"},
-                        resize: true 
-                    },
-                    modes: { 
-                        grab: { distance: 150, line_linked: { opacity: 0.8 } },
-                        push: { particles_nb: 4 }
-                     }
+                    events: { onhover: { enable: true, mode: "bubble" }, onclick: { enable: true, mode: "push"}, resize: true },
+                    modes: { bubble: { distance: 200, size: 5, duration: 2, opacity: 0.5 }, push: { particles_nb: 4 } }
                 },
                 detectRetina: true
             });
