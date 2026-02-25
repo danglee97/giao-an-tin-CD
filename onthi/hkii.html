@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tin Học Vui - Ôn Tập Giữa HK2</title>
+    <link rel="icon" type="image/png" href="../favicon.png">
+    <!-- Font ngộ nghĩnh, hiện đại -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { font-family: 'Nunito', sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; overflow-x: hidden; }
+        h1, h2, h3, .fun-title { font-family: 'Quicksand', sans-serif; }
+        
+        /* Nút bấm 3D phong cách Game */
+        .btn-3d { 
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); 
+            cursor: pointer; 
+            transform: translateY(0);
+        }
+        .btn-3d:active { 
+            transform: translateY(6px); 
+            border-bottom-width: 2px !important; 
+            margin-top: 4px; 
+        }
+        
+        /* Screen Management */
+        .screen { display: none !important; opacity: 0; transition: opacity 0.4s ease-in-out; }
+        .screen.active { display: flex !important; opacity: 1; }
+        
+        /* Animations */
+        @keyframes pulse-fast { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        .timer-warning { color: #ef4444; animation: pulse-fast 0.8s infinite; }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+        .popup-enter { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        
+        /* Nền không gian trò chơi */
+        .game-bg {
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
+        }
+        
+        /* Các đám mây / hành tinh trôi lơ lửng */
+        .floating-element {
+            position: absolute; border-radius: 50%; background: rgba(255,255,255,0.4);
+            filter: blur(2px); animation: float-up infinite linear; z-index: -1;
+        }
+        @keyframes float-up {
+            0% { transform: translateY(110vh) translateX(0) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(-20vh) translateX(50px) rotate(360deg); opacity: 0; }
+        }
+        
+        /* Utilities */
+        select { appearance: none; -webkit-appearance: none; -moz-appearance: none; }
+        
+        /* Text lấp lánh */
+        .text-glow { text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.5); }
+        .title-3d {
+            color: #fff;
+            text-shadow: 0px 4px 0px #3b82f6, 0px 8px 15px rgba(0,0,0,0.2);
+            -webkit-text-stroke: 2px #1e40af;
+        }
+
+        /* Hình ảnh tự động thu phóng (Câu hỏi/Đáp án) */
+        #question-text img, #review-list h3 img, .question-img { display: inline-block; height: 4rem; max-width: 100%; object-fit: contain; vertical-align: middle; margin: 0 0.5rem; border-radius: 0.75rem; box-shadow: 0 4px 0px rgba(0,0,0,0.1); background: white; padding: 6px; border: 2px solid #e2e8f0; }
+        #answers-container button img, #review-list .flex-grow img, .answer-img { display: inline-block; max-height: 5rem; max-width: 100%; object-fit: contain; vertical-align: middle; border-radius: 0.75rem; background: white; padding: 4px; margin: 0.25rem 0.5rem 0.25rem 0; pointer-events: none;}
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.5); border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.8); border: 2px solid transparent; background-clip: padding-box;}
+
+        .knowledge-content h3 { color: #4338ca; font-weight: 900; font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.5rem; text-transform: uppercase; background: #e0e7ff; padding: 0.5rem 1rem; border-radius: 1rem; display: inline-block; border-bottom: 4px solid #c7d2fe; }
+        .knowledge-content ul { padding-left: 0.5rem; margin-top: 0.5rem; }
+        .knowledge-content li { margin-bottom: 0.75rem; font-weight: 700; color: #4b5563; background: #f8fafc; padding: 0.75rem 1rem; border-radius: 1rem; border: 2px solid #e2e8f0; list-style: none; position: relative; padding-left: 2.5rem; }
+        .knowledge-content li::before { content: '⭐'; position: absolute; left: 0.75rem; top: 0.75rem; font-size: 1rem; }
+        .knowledge-content strong { color: #d946ef; font-weight: 900; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-nunito text-slate-800">
+
+    <!-- Nền Game Động -->
+    <div class="game-bg"></div>
+    <div id="bubbles-container"></div>
+
+    <!-- NÚT BẬT/TẮT ÂM THANH NỔI LÊN -->
+    <button id="btn-sound" onclick="toggleSound()" class="fixed bottom-14 right-4 w-14 h-14 bg-white text-blue-500 rounded-full shadow-lg border-4 border-blue-200 z-[1000] flex items-center justify-center text-2xl btn-3d hover:bg-blue-50 transition-colors">
+        <i class="fa-solid fa-music"></i>
+    </button>
+
+    <!-- MÀN HÌNH CLICK ĐỂ MỞ KHÓA ÂM THANH (Chống Autoplay Block của Chrome/Safari) -->
+    <div id="screen-start" class="fixed inset-0 bg-slate-900/90 backdrop-blur-lg z-[2000] flex flex-col items-center justify-center cursor-pointer transition-opacity duration-500 overflow-hidden" onclick="startApp()">
+        <!-- Các icon lơ lửng trang trí xung quanh -->
+        <div class="absolute inset-0 pointer-events-none opacity-40">
+            <i class="fa-solid fa-rocket absolute top-20 left-10 md:left-32 text-6xl text-orange-500 animate-bounce" style="animation-duration: 3s;"></i>
+            <i class="fa-solid fa-star absolute bottom-32 right-10 md:right-32 text-5xl text-yellow-400 animate-spin-slow"></i>
+            <i class="fa-solid fa-brain absolute top-32 right-16 md:right-40 text-6xl text-pink-400 animate-pulse"></i>
+            <i class="fa-solid fa-lightbulb absolute bottom-20 left-16 md:left-40 text-6xl text-yellow-300 animate-bounce" style="animation-duration: 4s;"></i>
+        </div>
+
+        <!-- Khung trung tâm -->
+        <div class="relative bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-600 p-2 md:p-3 rounded-[3.5rem] shadow-[0_0_50px_rgba(59,130,246,0.5)] transform hover:scale-[1.02] transition-transform animate-pulse mx-4 max-w-lg w-[95%]" style="animation-duration: 2s;">
+            <div class="bg-white p-8 md:p-12 rounded-[3rem] border-4 border-white text-center relative overflow-hidden h-full w-full">
+                <!-- Dải màu trên cùng -->
+                <div class="absolute top-0 left-0 w-full h-4 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500"></div>
+
+                <!-- Huy hiệu Nhiệm vụ -->
+                <div class="inline-block bg-orange-100 text-orange-600 font-black px-4 md:px-6 py-2 rounded-full mb-6 border-2 border-orange-200 shadow-sm transform -rotate-3 text-xs md:text-sm tracking-wide">
+                    <i class="fa-solid fa-flag-checkered mr-1 md:mr-2"></i> NHIỆM VỤ ÔN TẬP GIỮA HK2
+                </div>
+
+                <!-- Icon Play Game -->
+                <div class="flex justify-center mb-6">
+                    <div class="w-28 h-28 md:w-32 md:h-32 bg-yellow-400 rounded-full flex items-center justify-center border-8 border-yellow-100 shadow-xl relative">
+                        <i class="fa-solid fa-play text-6xl md:text-7xl text-white ml-2 drop-shadow-md"></i>
+                        <i class="fa-solid fa-sparkles text-yellow-500 text-3xl absolute -top-2 -right-4 animate-spin-slow"></i>
+                    </div>
+                </div>
+
+                <h2 class="text-4xl md:text-5xl font-black text-slate-800 mb-3 tracking-tight drop-shadow-sm">SẴN SÀNG CHƯA?</h2>
+                <p class="text-base md:text-lg font-bold text-slate-500 mb-8 px-2">Cùng thầy Đăng khởi động hệ thống và chuẩn bị rinh điểm 10 nhé!</p>
+
+                <!-- Lời nhắc Click -->
+                <div class="bg-blue-50 text-blue-600 font-black py-4 px-6 rounded-2xl border-b-4 border-blue-200 flex items-center justify-center gap-3 animate-bounce">
+                    <i class="fa-solid fa-hand-pointer text-2xl"></i>
+                    NHẤP VÀO ĐÂY ĐỂ BẮT ĐẦU
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 0. LOADING SCREEN -->
+    <div id="screen-loading" class="screen min-h-screen flex-col items-center justify-center p-4 z-[100] relative">
+        <div class="bg-white/95 backdrop-blur-md rounded-[2.5rem] p-8 md:p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.15)] max-w-lg w-full border-4 border-white border-b-[12px] border-b-blue-300 relative z-10">
+            
+            <div class="mb-8 mt-2 relative inline-block">
+                <div class="w-32 h-32 mx-auto bg-blue-500 rounded-[2rem] shadow-inner border-8 border-white flex items-center justify-center animate-bounce" style="animation-duration: 2s;">
+                    <i class="fa-solid fa-gamepad text-6xl text-white drop-shadow-md"></i>
+                </div>
+                <i class="fa-solid fa-sparkles text-yellow-400 text-3xl absolute -top-4 -right-4 animate-spin-slow"></i>
+                <i class="fa-solid fa-star text-pink-400 text-2xl absolute bottom-0 -left-6 animate-pulse"></i>
+            </div>
+            
+            <h2 class="text-3xl font-black text-blue-800 mb-2" id="loading-title">Đang kết nối...</h2>
+            
+            <div class="bg-blue-50 rounded-3xl p-6 border-4 border-blue-100 relative mb-8 mt-8">
+                <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-yellow-900 px-6 py-2 rounded-full text-sm font-black uppercase shadow-md border-2 border-white whitespace-nowrap">
+                    <i class="fa-solid fa-lightbulb"></i> BÍ MẬT CÔNG NGHỆ
+                </div>
+                <p id="loading-fact" class="text-blue-900 font-bold text-base mt-2 min-h-[4rem] flex items-center justify-center text-center transition-opacity duration-500">Đang tìm kiếm thông tin thú vị...</p>
+            </div>
+            
+            <!-- Thanh Progress -->
+            <div class="relative w-full bg-slate-100 rounded-full h-6 border-4 border-slate-200 overflow-hidden shadow-inner">
+                <div id="loading-progress" class="bg-gradient-to-r from-green-400 to-green-500 h-full rounded-full transition-all duration-200 ease-out relative" style="width: 5%">
+                    <div class="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,255,255,0.2)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.2)_50%,rgba(255,255,255,0.2)_75%,transparent_75%,transparent)] bg-[length:20px_20px] animate-[slide_1s_linear_infinite]"></div>
+                </div>
+            </div>
+            <style>@keyframes slide { from { background-position: 20px 0; } to { background-position: 0 0; } }</style>
+            
+            <p id="loading-percent" class="text-xl font-black text-slate-400 mt-2">0%</p>
+            <div id="loading-error" class="hidden mt-4 text-red-500 font-bold text-sm bg-red-50 p-3 rounded-2xl border-2 border-red-200"></div>
+            <button onclick="window.location.reload()" id="btn-reload" class="hidden mt-4 w-full bg-blue-500 text-white px-4 py-4 rounded-2xl font-black hover:bg-blue-600 btn-3d border-b-8 border-blue-700">Tải lại trò chơi</button>
+        </div>
+    </div>
+
+    <div class="flex-grow pb-24 relative z-10"> 
+        <!-- 1. LOGIN SCREEN -->
+        <div id="screen-login" class="screen min-h-screen flex-col items-center justify-center p-4">
+            <div class="bg-white/95 backdrop-blur-md rounded-[3rem] shadow-2xl border-4 border-white border-b-[16px] border-b-blue-200 p-8 md:p-10 w-full max-w-md text-center transform transition-all relative">
+                
+                <div class="mb-4 flex justify-center relative">
+                    <a href="../index.html" class="relative z-10 block transform hover:scale-105 transition-transform">
+                        <div class="bg-gradient-to-b from-blue-100 to-white w-32 h-32 rounded-full mx-auto flex items-center justify-center border-8 border-white shadow-lg overflow-hidden">
+                            <img src="../logo.png" alt="Logo" class="w-full h-full object-contain p-2" onerror="this.outerHTML='<i class=\'fa-solid fa-computer text-6xl text-blue-500\'></i>'">
+                        </div>
+                    </a>
+                </div>
+                
+                <h1 class="text-5xl md:text-6xl mb-2 uppercase tracking-tight font-black title-3d pb-2">Tin Học Vui</h1>
+                <div class="inline-block bg-yellow-100 text-yellow-700 font-extrabold text-sm px-4 py-2 rounded-full mb-8 border-2 border-yellow-300">
+                    <i class="fa-solid fa-star text-yellow-500"></i> Ôn tập Giữa Học Kì 2
+                </div>
+                
+                <div class="space-y-6 text-left relative">
+                    <!-- Form Nhập Tên -->
+                    <div>
+                        <label class="block text-slate-500 font-extrabold mb-2 pl-2 text-sm uppercase tracking-wider">Tên của người chơi</label>
+                        <input type="text" id="input-name" placeholder="Nhập họ và tên..." class="w-full px-6 py-5 rounded-[2rem] border-4 border-slate-100 focus:border-blue-400 focus:bg-blue-50 focus:outline-none bg-slate-50 text-xl font-black text-slate-700 shadow-inner placeholder-slate-300 transition-colors">
+                    </div>
+                    
+                    <!-- Form Chọn Lớp -->
+                    <div class="relative">
+                        <label class="block text-slate-500 font-extrabold mb-2 pl-2 text-sm uppercase tracking-wider">Chọn Lớp</label>
+                        <div class="relative">
+                            <select id="input-class" class="w-full px-6 py-5 rounded-[2rem] border-4 border-slate-100 focus:border-purple-400 focus:bg-purple-50 focus:outline-none bg-slate-50 text-xl font-black text-slate-700 cursor-pointer shadow-inner appearance-none transition-colors">
+                                <option value="" disabled selected>-- Bấm để chọn --</option>
+                                <optgroup label="Khối 2"><option value="2A1">2A1</option><option value="2A2">2A2</option><option value="2A3">2A3</option><option value="2A4">2A4</option></optgroup>
+                                <optgroup label="Khối 3"><option value="3A1">3A1</option><option value="3A2">3A2</option><option value="3A3">3A3</option></optgroup>
+                                <optgroup label="Khối 4"><option value="4A1">4A1</option><option value="4A2">4A2</option><option value="4A3">4A3</option></optgroup>
+                                <optgroup label="Khối 5"><option value="5A1">5A1</option><option value="5A2">5A2</option></optgroup>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 pr-6 flex items-center pointer-events-none">
+                                <i class="fa-solid fa-caret-down text-slate-400 text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Nút Bắt Đầu Khổng Lồ -->
+                    <button onclick="handleLogin()" class="btn-3d w-full bg-green-500 border-b-[8px] border-green-700 text-white font-black py-5 rounded-[2rem] text-3xl mt-8 shadow-lg hover:bg-green-400 flex items-center justify-center gap-3">
+                        BẮT ĐẦU <i class="fa-solid fa-play"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. MENU SCREEN -->
+        <div id="screen-menu" class="screen min-h-screen p-4 flex-col justify-center items-center pt-8 md:pt-16">
+            <div class="max-w-4xl w-full relative z-10">
+                
+                <!-- Header Người chơi -->
+                <div class="flex justify-between items-center mb-8 bg-white/80 backdrop-blur-md p-4 rounded-3xl border-2 border-white shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl font-black border-2 border-blue-200">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div>
+                            <div id="menu-student-name" class="font-black text-xl text-slate-800 leading-none">...</div>
+                            <div id="menu-student-class" class="font-bold text-sm text-slate-500">Lớp ...</div>
+                        </div>
+                    </div>
+                    <button onclick="handleLogout()" class="bg-slate-100 text-slate-500 hover:bg-slate-200 px-4 py-2 rounded-2xl font-bold btn-3d border-b-4 border-slate-300 text-sm">
+                        <i class="fa-solid fa-right-from-bracket"></i> Thoát
+                    </button>
+                </div>
+
+                <div class="text-center mb-8 relative">
+                    <h1 id="menu-title" class="text-4xl md:text-6xl font-black text-white drop-shadow-lg uppercase tracking-wider mb-2">KHỐI LỚP ...</h1>
+                    <span class="inline-block bg-white/20 text-white backdrop-blur-sm border-2 border-white/40 px-6 py-2 rounded-full font-bold shadow-sm">CHỌN NHIỆM VỤ ĐỂ BẮT ĐẦU</span>
+                </div>
+
+                <div class="flex flex-col gap-6 pb-12">
+                    
+                    <!-- NÚT TRẮC NGHIỆM -->
+                    <div onclick="startQuiz()" class="btn-3d relative overflow-hidden bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 rounded-[3rem] border-b-[12px] border-blue-800 p-8 md:p-12 text-white text-center shadow-[0_15px_40px_rgba(59,130,246,0.4)] group w-full">
+                        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xNSIvPjwvc3ZnPg==')] opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="absolute top-0 -left-[100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg] group-hover:animate-[shimmer_1s_forwards]"></div>
+                        <style>@keyframes shimmer { 100% { left: 200%; } }</style>
+                        
+                        <div class="relative z-10 flex flex-col md:flex-row items-center justify-center gap-6">
+                            <div class="w-24 h-24 md:w-32 md:h-32 bg-white/20 rounded-full flex items-center justify-center border-4 border-white/30 backdrop-blur-sm group-hover:scale-110 group-hover:rotate-12 transition-transform duration-300">
+                                <i class="fa-solid fa-gamepad text-6xl md:text-7xl text-white drop-shadow-md"></i>
+                            </div>
+                            <div class="text-center md:text-left">
+                                <h2 class="text-4xl md:text-5xl font-black mb-2 drop-shadow-md">TRẮC NGHIỆM</h2>
+                                <p class="text-blue-100 font-bold text-lg md:text-xl bg-black/20 px-4 py-2 rounded-xl inline-block">Chinh phục điểm 10 ngay! ⭐</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3 Nút phụ xếp hàng ngang -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div onclick="startPractice()" class="btn-3d bg-white rounded-[2.5rem] border-4 border-slate-100 border-b-[8px] border-b-green-200 p-6 flex flex-col items-center justify-center text-center group hover:border-green-400 transition-colors shadow-lg">
+                            <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center text-green-500 mb-4 group-hover:-translate-y-2 transition-transform"><i class="fa-solid fa-keyboard text-3xl"></i></div>
+                            <h2 class="text-2xl font-black text-slate-700">Thực Hành</h2>
+                        </div>
+                        
+                        <div onclick="showTheory()" class="btn-3d bg-white rounded-[2.5rem] border-4 border-slate-100 border-b-[8px] border-b-purple-200 p-6 flex flex-col items-center justify-center text-center group hover:border-purple-400 transition-colors shadow-lg">
+                            <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-500 mb-4 group-hover:-translate-y-2 transition-transform"><i class="fa-solid fa-book-open text-3xl"></i></div>
+                            <h2 class="text-2xl font-black text-slate-700">Kiến Thức</h2>
+                        </div>
+                        
+                        <div onclick="startReviewMode()" class="btn-3d bg-white rounded-[2.5rem] border-4 border-slate-100 border-b-[8px] border-b-orange-200 p-6 flex flex-col items-center justify-center text-center group hover:border-orange-400 transition-colors shadow-lg">
+                            <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-500 mb-4 group-hover:-translate-y-2 transition-transform"><i class="fa-solid fa-check-double text-3xl"></i></div>
+                            <h2 class="text-2xl font-black text-slate-700">Xem Đáp Án</h2>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. QUIZ SCREEN -->
+        <div id="screen-quiz" class="screen min-h-screen p-4 flex-col items-center justify-start pt-8">
+            <div class="max-w-3xl w-full relative z-10 flex flex-col h-[90vh]">
+                
+                <div class="flex justify-between items-center mb-4 gap-3">
+                    <button onclick="exitToMenu()" class="bg-white/90 text-slate-400 hover:text-red-500 px-4 py-3 rounded-2xl font-black btn-3d border-b-4 border-slate-200 text-xl w-14 h-14 flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    
+                    <!-- Progress Bar Câu hỏi -->
+                    <div class="flex-grow bg-white/90 rounded-2xl h-14 p-2 flex items-center border-b-4 border-slate-200 shadow-sm relative">
+                        <div class="absolute w-full text-center font-black text-slate-400 z-10 text-sm">Câu <span id="quiz-current">1</span>/<span id="quiz-total">10</span></div>
+                        <div class="w-full bg-slate-100 rounded-xl h-full overflow-hidden relative">
+                            <div id="quiz-progress-bar" class="bg-green-400 h-full rounded-xl transition-all duration-300 w-0"></div>
+                        </div>
+                    </div>
+
+                    <!-- Timer Pill -->
+                    <div class="bg-white/90 px-4 py-3 rounded-2xl flex items-center justify-center font-black btn-3d border-b-4 border-blue-200 w-24 h-14 shrink-0 shadow-sm">
+                        <i class="fa-solid fa-clock text-blue-300 mr-2 text-lg"></i>
+                        <span id="timer-display" class="text-2xl text-blue-500 font-mono">60</span>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-[2.5rem] shadow-xl border-4 border-white border-b-[8px] border-b-blue-100 p-6 md:p-8 mb-6 relative shrink-0 flex items-center min-h-[160px]">
+                    <div class="absolute -top-6 -left-4 bg-yellow-400 w-14 h-14 rounded-full border-4 border-white flex items-center justify-center shadow-md transform -rotate-12 z-20">
+                        <i class="fa-solid fa-question text-white text-2xl font-black"></i>
+                    </div>
+                    <div id="question-text" class="text-xl md:text-3xl font-black text-slate-700 leading-snug w-full text-center">Đang tải câu hỏi...</div>
+                </div>
+
+                <div id="answers-container" class="grid grid-cols-1 gap-4 flex-grow overflow-y-auto pb-4 scroll-smooth"></div>
+            </div>
+
+            <!-- Popup Feedback Đúng/Sai -->
+            <div id="feedback-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[999] hidden flex items-center justify-center" onclick="/*Chặn click*/">
+                <div id="feedback-msg" class="bg-white p-8 rounded-[3rem] shadow-2xl border-b-[16px] transform scale-50 opacity-0 transition-all duration-300 max-w-sm w-[90%] text-center relative border-4 border-white">
+                    <div id="feedback-icon" class="w-24 h-24 rounded-full mx-auto flex items-center justify-center -mt-16 mb-4 border-8 border-white shadow-lg bg-white"></div>
+                    <h3 id="feedback-title" class="text-4xl font-black mb-2 uppercase"></h3>
+                    <p id="feedback-text" class="text-slate-500 font-bold text-lg"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. RESULT SCREEN -->
+        <div id="screen-result" class="screen min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white/95 backdrop-blur-md rounded-[3rem] shadow-2xl border-4 border-white border-b-[16px] border-b-yellow-400 p-8 md:p-10 w-full max-w-lg text-center relative overflow-hidden z-10">
+                <div id="sending-status" class="hidden sending-overlay bg-white/90 backdrop-blur-sm rounded-[3rem] z-50">
+                    <i class="fa-solid fa-spinner fa-spin text-5xl text-blue-500 mb-4"></i>
+                    <p class="text-blue-600 font-black text-2xl">Đang lưu kỷ lục...</p>
+                </div>
+                
+                <div class="absolute inset-0 pointer-events-none opacity-30 bg-[url('https://www.transparenttextures.com/patterns/confetti.png')]"></div>
+                
+                <div class="flex justify-center mb-4 relative z-10">
+                    <div class="w-40 h-40 bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-full flex items-center justify-center border-8 border-white shadow-xl animate-bounce" style="animation-duration: 2s;">
+                        <i class="fa-solid fa-trophy text-7xl text-yellow-600 drop-shadow-md"></i>
+                    </div>
+                </div>
+                
+                <h2 class="text-4xl font-black text-slate-800 mb-1 relative z-10">HOÀN THÀNH!</h2>
+                <div class="text-base font-bold text-slate-400 mb-6 uppercase tracking-widest relative z-10 bg-slate-100 inline-block px-4 py-1 rounded-full"><span id="result-name">Tên</span> • <span id="result-class">Lớp</span></div>
+                
+                <div class="bg-slate-50 rounded-[2rem] p-6 mb-8 relative z-10 border-4 border-slate-100 shadow-inner">
+                    <div class="text-slate-400 font-black text-sm mb-2 uppercase tracking-wide">Số câu trả lời đúng</div>
+                    <div class="text-7xl font-black text-blue-500 leading-none mb-2 drop-shadow-sm">
+                        <span id="result-score">0</span><span class="text-4xl text-slate-300 mx-1">/</span><span id="result-total">0</span>
+                    </div>
+                    <p id="result-message" class="text-xl font-black text-orange-500 mt-2 mb-4 px-2">...</p>
+                    
+                    <!-- Khung hiển thị phần thưởng chơi game -->
+                    <div id="reward-container" class="mt-4 transition-all duration-500">
+                        <div id="reward-message" class="inline-block rounded-2xl px-6 py-3 font-black shadow-md w-full"></div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4 relative z-10">
+                    <button onclick="showScreen('screen-menu')" class="btn-3d flex-1 bg-slate-100 border-b-[8px] border-slate-300 text-slate-500 font-black py-4 rounded-[1.5rem] text-xl hover:bg-slate-200">
+                        <i class="fa-solid fa-house"></i> Menu
+                    </button>
+                    <button onclick="startReviewMode()" class="btn-3d flex-1 bg-blue-500 border-b-[8px] border-blue-700 text-white font-black py-4 rounded-[1.5rem] text-xl shadow-lg hover:bg-blue-400">
+                        <i class="fa-solid fa-eye"></i> Xem Lại
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. REVIEW SCREEN -->
+        <div id="screen-review" class="screen min-h-screen p-4 flex-col justify-start items-center pt-8 pb-32 overflow-y-auto">
+            <div class="max-w-3xl w-full relative z-10">
+                <div class="flex justify-between items-center mb-8 sticky top-0 z-20 bg-white/80 backdrop-blur-md p-3 rounded-[2rem] shadow-sm border-2 border-white">
+                    <button onclick="showScreen('screen-result')" class="btn-3d w-12 h-12 bg-slate-100 text-slate-500 rounded-xl font-black border-b-4 border-slate-300 flex items-center justify-center text-xl hover:text-slate-700"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h1 class="text-2xl font-black text-slate-700 uppercase tracking-wide">Xem lại đáp án</h1>
+                    <div class="w-12"></div>
+                </div>
+                <div id="review-list" class="space-y-6 pb-12"></div>
+            </div>
+        </div>
+
+        <!-- 6. PRACTICE SCREEN -->
+        <div id="screen-practice" class="screen min-h-screen p-4 flex-col justify-start items-center pt-8 pb-32">
+            <div class="max-w-4xl w-full relative z-10">
+                <div class="flex items-center mb-8 bg-white/80 backdrop-blur-md p-3 rounded-[2rem] border-2 border-white shadow-sm inline-flex">
+                    <button onclick="showScreen('screen-menu')" class="btn-3d w-12 h-12 bg-slate-100 text-slate-500 rounded-xl font-black border-b-4 border-slate-300 flex items-center justify-center text-xl hover:text-slate-700 mr-4"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h1 class="text-2xl font-black text-green-600 uppercase tracking-wide pr-4"><i class="fa-solid fa-keyboard mr-2"></i> Bài Thực Hành</h1>
+                </div>
+                <div id="practice-list" class="space-y-8 pb-12"></div>
+            </div>
+        </div>
+
+        <!-- 7. THEORY SCREEN -->
+        <div id="screen-theory" class="screen min-h-screen p-4 flex-col justify-start items-center pt-8 pb-32">
+            <div class="max-w-4xl w-full relative z-10">
+                <div class="flex items-center mb-8 bg-white/80 backdrop-blur-md p-3 rounded-[2rem] border-2 border-white shadow-sm inline-flex">
+                    <button onclick="showScreen('screen-menu')" class="btn-3d w-12 h-12 bg-slate-100 text-slate-500 rounded-xl font-black border-b-4 border-slate-300 flex items-center justify-center text-xl hover:text-slate-700 mr-4"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h1 class="text-2xl font-black text-purple-600 uppercase tracking-wide pr-4"><i class="fa-solid fa-book-open mr-2"></i> Kiến Thức</h1>
+                </div>
+                <div id="theory-content" class="bg-white rounded-[2.5rem] shadow-xl border-4 border-white border-b-[8px] border-b-purple-100 p-6 md:p-10 space-y-6 text-lg text-slate-700 leading-relaxed knowledge-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="fixed bottom-0 left-0 w-full bg-slate-900/80 backdrop-blur-md p-2 text-center z-[999] border-t-2 border-white/10">
+        <span class="text-slate-400 font-bold text-xs md:text-sm">Bản quyền thuộc về <a href="https://dichvu.leminhdang.com/" target="_blank" class="text-blue-400 hover:text-blue-300 transition-colors font-black">Minh Đăng IT</a></span>
+    </div>
+
+    <script>
+        // --- 0. HIỆU ỨNG NỀN BONG BÓNG ---
+        const container = document.getElementById('bubbles-container');
+        for (let i = 0; i < 15; i++) {
+            let el = document.createElement('div');
+            el.className = 'floating-element';
+            el.style.width = Math.random() * 60 + 20 + 'px';
+            el.style.height = el.style.width;
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.animationDuration = Math.random() * 10 + 10 + 's';
+            el.style.animationDelay = Math.random() * 10 + 's';
+            container.appendChild(el);
+        }
+
+        // --- 1. CẤU HÌNH ÂM THANH (Sử dụng Mixkit & Incompetech không bị chặn) ---
+        let isSoundOn = true;
+        // Nhạc nền vui nhộn (Monkeys Spinning Monkeys)
+        const audioBGM = new Audio('https://incompetech.com/music/royalty-free/mp3-royaltyfree/Monkeys%20Spinning%20Monkeys.mp3');
+        audioBGM.loop = true; audioBGM.volume = 0.25;
+        
+        // Hiệu ứng âm thanh khi chơi
+        const audioCorrect = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3'); // Tiếng ăn xu
+        const audioWrong = new Audio('https://assets.mixkit.co/active_storage/sfx/2997/2997-preview.mp3'); // Tiếng tít tít lỗi
+        const audioTick = new Audio('https://cdn.freesound.org/previews/254/254316_4062622-lq.mp3'); // Tiếng tíc tắc
+        const audioWin = new Audio('https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3'); // Tiếng qua màn/lên cấp
+
+        // Hàm phát âm thanh chung (Xử lý mượt lỗi trình duyệt)
+        function playSound(audio) {
+            if (!isSoundOn) return;
+            audio.currentTime = 0;
+            let playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => console.log("Lỗi phát âm thanh: ", error));
+            }
+        }
+
+        // Hàm Bật/Tắt âm thanh toàn cục
+        function toggleSound() {
+            isSoundOn = !isSoundOn;
+            const btn = document.getElementById('btn-sound');
+            if (isSoundOn) {
+                btn.innerHTML = '<i class="fa-solid fa-music"></i>';
+                btn.classList.replace('text-slate-400', 'text-blue-500');
+                btn.classList.replace('border-slate-300', 'border-blue-200');
+                // Nếu đang ở màn hình Menu hoặc Làm bài thì phát nhạc nền lại
+                if(document.getElementById('screen-menu').classList.contains('active') || document.getElementById('screen-quiz').classList.contains('active')) {
+                    audioBGM.play().catch(e => {});
+                }
+            } else {
+                btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
+                btn.classList.replace('text-blue-500', 'text-slate-400');
+                btn.classList.replace('border-blue-200', 'border-slate-300');
+                audioBGM.pause();
+            }
+        }
+
+        // --- 2. CẤU HÌNH GOOGLE SCRIPT & DỮ LIỆU ---
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyAvDSDM5zauB_tQm0DQt6QY3wmWgJVKyKtwO4Pj5Zg5tZgGyst1odZCT9NviIIXseJYA/exec"; 
+        
+        let gradesData = {}; let studentName = "", studentClass = "", currentGrade = null, currentScore = 0, currentQuizIndex = 0, timerInterval = null, timeLeft = 60;
+        let userAnswers = []; 
+        let isDataLoaded = false;
+        let isLoadingAnimFinished = false;
+
+        // --- 3. DỮ LIỆU KIẾN THỨC VÀ TỪ ĐIỂN HK2 ---
+        const knowledgeData = {
+            2: { content: `
+                <h3>CHỦ ĐỀ 1: LÀM QUEN VỚI WORD VÀ BÀN PHÍM</h3>
+                <ul>
+                    <li><strong>Phần mềm Word 🇼:</strong> Có biểu tượng chữ W màu xanh dương, dùng để soạn thảo văn bản.</li>
+                    <li><strong>Các phím quan trọng:</strong>
+                        <br>- <em>Phím Cách ➖:</em> Dài nhất, dùng tạo khoảng cách chữ.
+                        <br>- <em>Phím Enter ↵:</em> Xuống dòng mới.
+                        <br>- <em>Phím Backspace ⬅️:</em> Xóa chữ vừa gõ sai.
+                        <br>- <em>Phím Caps Lock & Shift 💡:</em> Gõ chữ in hoa.
+                    </li>
+                    <li><strong>Tư thế đặt tay:</strong> Hai ngón trỏ đặt lên 2 phím có gờ nổi <strong>F và J</strong>.</li>
+                </ul>
+                <h3>CHỦ ĐỀ 2: CÁC NÚT LỆNH TRANG TRÍ CHỮ</h3>
+                <ul>
+                    <li><strong>Kiểu chữ:</strong> Nút <strong>B</strong> (In đậm), nút <em>I</em> (In nghiêng), nút <u>U</u> (Gạch chân).</li>
+                    <li><strong>Màu chữ & Cỡ chữ:</strong> Nút 🅰️ tô màu. Số 14, 16 là cỡ chữ.</li>
+                    <li><strong>Căn lề:</strong> Biểu tượng căn lề giữa có các đường kẻ nằm ngay ngắn ở chính giữa trang.</li>
+                </ul>
+                <h3>CHỦ ĐỀ 3: THAO TÁC CƠ BẢN</h3>
+                <ul>
+                    <li><strong>Lưu & Đóng:</strong> Nút Đĩa mềm 💾 (Save) để lưu. Dấu ❌ màu đỏ để Đóng.</li>
+                    <li><strong>Sửa lỗi:</strong> Nút mũi tên cong ↩️ (Undo) giúp quay lại thao tác trước.</li>
+                    <li><strong>Gõ tiếng Việt:</strong> Bật phần mềm Unikey chữ <strong>V</strong> màu đỏ.</li>
+                </ul>
+            ` },
+            3: { content: `
+                <h3>CHỦ ĐỀ 1: SỬ DỤNG INTERNET</h3>
+                <ul>
+                    <li><strong>Trình duyệt web:</strong> (Google Chrome 🔴🟡🟢🔵) giúp xem các trang web.</li>
+                    <li><strong>Lệnh cơ bản:</strong> Tải lại (Reload ↻), Trang chủ (Home 🏠).</li>
+                    <li><strong>Máy tìm kiếm:</strong> (Google.com) giúp tìm kiếm chữ, hình ảnh, video.</li>
+                </ul>
+                <h3>CHỦ ĐỀ 2: AN TOÀN TRÊN MẠNG</h3>
+                <ul>
+                    <li><strong>Bảo mật:</strong> Tuyệt đối không chia sẻ địa chỉ nhà, sđt, mật khẩu 🔑 cho người lạ.</li>
+                    <li><strong>Phòng Virus 🦠:</strong> Không bấm vào các link lạ hoặc quảng cáo nhận quà miễn phí.</li>
+                </ul>
+                <h3>CHỦ ĐỀ 3: QUẢN LÝ THƯ MỤC</h3>
+                <ul>
+                    <li><strong>Thư mục 📁:</strong> Chứa các tệp tin và thư mục khác cho gọn gàng.</li>
+                    <li><strong>Tạo mới:</strong> Nhấp phải chuột -> <strong>New -> Folder</strong>.</li>
+                    <li><strong>Đổi tên / Xóa:</strong> Nhấp phải chuột -> <strong>Rename</strong> ✏️ / <strong>Delete</strong> 🗑️.</li>
+                </ul>
+                <h3>CHỦ ĐỀ 4: BÀI TRÌNH CHIẾU</h3>
+                <ul>
+                    <li><strong>PowerPoint 🅿️:</strong> Biểu tượng màu cam, tạo bài thuyết trình sinh động.</li>
+                    <li><strong>Trang chiếu (Slide):</strong> Bấm <strong>New Slide</strong> để thêm trang mới.</li>
+                    <li><strong>Trình chiếu:</strong> Bấm phím <strong>F5</strong> hoặc nút Slide Show 🍷.</li>
+                </ul>
+            ` },
+            4: { content: `
+                <h3>CHỦ ĐỀ 1: TẬP SOẠN THẢO VĂN BẢN (WORD)</h3>
+                <ul>
+                    <li><strong>Mở & Lưu:</strong> Lệnh <strong>Open</strong> 📂 mở tệp cũ. Lệnh <strong>Save As</strong> lưu bản sao tên mới.</li>
+                    <li><strong>Chèn hình:</strong> Thẻ <strong>Insert</strong> -> <strong>Pictures</strong> 🖼️.</li>
+                    <li><strong>Khối văn bản:</strong> 
+                        <br>- <strong>Copy</strong> (Ctrl+C 📄📄): Sao chép.
+                        <br>- <strong>Cut</strong> (Ctrl+X ✂️): Di chuyển (Cắt).
+                        <br>- <strong>Paste</strong> (Ctrl+V 📋): Dán khối chữ.
+                    </li>
+                </ul>
+                <h3>CHỦ ĐỀ 2: TÌM HIỂU THÔNG TIN BẰNG MÁY TÍNH</h3>
+                <ul>
+                    <li><strong>Tìm kiếm:</strong> Mở Chrome 🌐, gõ "Từ khóa" (Ví dụ: Lịch sử Vua Hùng).</li>
+                    <li><strong>Tìm Ảnh:</strong> Bấm sang thẻ <strong>Hình ảnh (Images)</strong> trên Google.</li>
+                </ul>
+                <h3>CHỦ ĐỀ 3: LUYỆN GÕ & PHÍM SHIFT</h3>
+                <ul>
+                    <li><strong>Vị trí:</strong> Bàn phím có <strong>2 phím Shift</strong> ở hai mép.</li>
+                    <li><strong>Tác dụng:</strong> Giữ Shift + Phím chữ = <strong>Chữ in hoa</strong>. Giữ Shift + Phím 2 kí tự = <strong>Kí tự trên</strong> (Ví dụ: !).</li>
+                </ul>
+            ` },
+            5: { content: `
+                <h3>CHỦ ĐỀ 1: VẼ TRANH VỚI PAINT</h3>
+                <ul>
+                    <li><strong>Phần mềm Paint 🎨:</strong> Vẽ và chỉnh sửa ảnh đơn giản.</li>
+                    <li><strong>Công cụ:</strong> Thùng sơn 🪣 (Tô màu khép kín), Cục tẩy 🧼 (Xóa), Hình mẫu 🔺 (Shapes).</li>
+                </ul>
+                <h3>CHỦ ĐỀ 2: YOUTUBE KIDS AN TOÀN</h3>
+                <ul>
+                    <li><strong>YouTube Kids 📺:</strong> Trang xem video an toàn, không có video xấu.</li>
+                    <li><strong>Sử dụng:</strong> Nút Kính lúp 🔍 để tìm kiếm. Nút ⏸️ (Pause) để tạm dừng.</li>
+                </ul>
+                <h3>CHỦ ĐỀ 3: LẬP TRÌNH BÚT VẼ (SCRATCH)</h3>
+                <ul>
+                    <li><strong>Bút vẽ (Pen) 🖊️:</strong> 
+                        <br>- <strong>Pen down ⬇️:</strong> Đặt bút xuống để vẽ.
+                        <br>- <strong>Pen up ⬆️:</strong> Nhấc bút lên.
+                        <br>- <strong>Erase all 🧹:</strong> Xóa sạch hình.
+                    </li>
+                </ul>
+                <h3>CHỦ ĐỀ 4: HOẠT HÌNH & TRANG PHỤC</h3>
+                <ul>
+                    <li><strong>Trang phục (Costumes) 👗:</strong> Các hình dáng khác nhau của nhân vật.</li>
+                    <li><strong>Tạo hoạt hình:</strong> Dùng <strong>Next costume ⏭️</strong> (Trang phục kế tiếp) ghép xen kẽ lệnh <strong>Wait ⏳</strong> (Đợi).</li>
+                </ul>
+            ` }
+        };
+        
+        const explanationDict = { 
+            "Biểu tượng của phần mềm soạn thảo văn bản Word là hình gì?": "Phần mềm Word luôn có biểu tượng chữ W màu xanh dương nhé!",
+            "Phím nào dài nhất trên bàn phím, dùng để tạo khoảng cách giữa các chữ?": "Phím Cách (Spacebar) là phím dài nhất, được gõ bằng ngón cái.",
+            "Để xuống dòng khi đang gõ chữ, em bấm phím nào? ↵": "Phím Enter dùng để báo cho máy tính biết em muốn xuống dòng mới.",
+            "Bạn Tí gõ sai chữ \"A\", bạn ấy bấm phím nào có hình mũi tên ⬅️ để xóa chữ vừa gõ?": "Phím Backspace (mũi tên hướng sang trái) dùng để xóa kí tự vừa gõ sai.",
+            "Để gõ tất cả các chữ in hoa (ví dụ: TIN HỌC), em bật đèn phím nào? 💡": "Khi đèn Caps Lock sáng, mọi chữ cái em gõ đều sẽ biến thành CHỮ HOA.",
+            "Nút lệnh có biểu tượng chiếc đĩa mềm 💾 dùng để làm gì?": "Biểu tượng chiếc đĩa mềm 💾 (Save) luôn dùng để lưu lại bài em vừa làm.",
+            "Nút lệnh có dấu ❌ màu đỏ ở góc trên bên phải màn hình dùng để làm gì?": "Dấu X màu đỏ luôn có ý nghĩa là Đóng (Close) hoặc Thoát chương trình.",
+            "Biểu tượng có chữ \"A\" và vệt màu đỏ ở dưới 🅰️ dùng để làm gì?": "Nút Font Color (Chữ A có màu ở dưới) dùng để tô màu sắc cho chữ.",
+            "Vạch đen cứ nhấp nháy liên tục trên màn hình trắng soạn thảo được gọi là gì?": "Vạch đen nhấp nháy báo cho em biết chữ sẽ xuất hiện ở đâu khi em gõ phím.",
+            "Nút lệnh có chữ **B** in đậm béo tròn dùng để làm gì?": "Chữ B (Bold) sẽ làm cho nét chữ của em đậm lên và rõ hơn.",
+            "Nút lệnh có chữ *I* nằm nghiêng dùng để làm gì?": "Chữ I (Italic) làm cho các chữ cái nghiêng sang một bên trông rất điệu đà.",
+            "Nút lệnh có chữ <u>U</u> có nét gạch ngang ở dưới dùng để làm gì?": "Chữ U (Underline) giúp em kẻ một đường thẳng ngay dưới chân dòng chữ.",
+            "Theo luật gõ máy tính, sau dấu phẩy ( , ) hoặc dấu chấm ( . ) em cần gõ mấy dấu cách?": "Phải luôn gõ 1 dấu cách sau các dấu câu để văn bản đẹp và đúng luật nhé.",
+            "Mũi tên cong cong hướng sang trái ↩️ (Undo) dùng để làm gì?": "Nếu lỡ làm sai, nút Undo ↩️ sẽ giúp em cỗ máy thời gian quay lại 1 bước.",
+            "Số \"14\" nằm ngay cạnh tên chữ (ví dụ: Arial 14) chỉ điều gì?": "Các con số này (Font size) càng lớn thì chữ hiện ra sẽ càng to.",
+            "Để gõ được một chữ hoa ở đầu câu (Ví dụ: chữ M trong \"Mẹ\"), em giữ phím nào kết hợp với chữ M?": "Phím Shift rất kì diệu, cứ giữ nó và bấm 1 chữ cái thì chữ đó sẽ in hoa.",
+            "Khi bắt đầu gõ phím, hai ngón trỏ của em tìm và đặt lên 2 phím có gờ nổi nào?": "Phím F và J là \"ngôi nhà\" của hai ngón trỏ để định vị bàn tay đó!",
+            "Trong Word, muốn chữ nằm ở chính giữa trang giấy, em chọn biểu tượng nào?": "Biểu tượng căn giữa (Center) có các đường kẻ nằm ngay ngắn ở giữa.",
+            "Để gõ được tiếng Việt có dấu, máy tính của em cần bật phần mềm nào có biểu tượng chữ V?": "Phần mềm Unikey có chữ V màu đỏ giúp máy tính hiểu được tiếng Việt.",
+            "Các phím số từ 0 đến 9 nằm ở vị trí nào trên phần phím chính?": "Hàng phím số nằm ở vị trí trên cùng để các ngón tay vươn lên gõ.",
+            
+            "Để xem các trang web trên mạng Internet, em cần sử dụng phần mềm nào dưới đây?": "Trình duyệt web (Web Browser) là cánh cửa để em đi vào thế giới Internet.",
+            "Biểu tượng hình quả bóng tròn có 4 màu (Đỏ, Vàng, Xanh lá, Xanh dương) 🔴🟡🟢🔵 là của phần mềm nào?": "Đây là biểu tượng đặc trưng của Google Chrome, trình duyệt web phổ biến nhất.",
+            "Trên trình duyệt web, nút mũi tên xoay vòng ↻ (Reload) dùng để làm gì?": "Khi trang web bị lỗi hoặc quay vòng vòng, em bấm nút Reload ↻ để máy tính tải lại nhé!",
+            "Khi em muốn tìm kiếm hình ảnh các chú chó đáng yêu 🐶 trên Internet, em thường dùng trang web nào?": "Google.com là cỗ máy tìm kiếm lớn nhất thế giới, giúp em tìm chữ, ảnh và video.",
+            "Biểu tượng Ngôi nhà 🏠 (Home) trên phần mềm lướt web có ý nghĩa gì?": "Giống như khi đi chơi, bấm nút Home 🏠 sẽ đưa em về ngay \"nhà\" (trang chủ mặc định).",
+            "Khi đang chơi game trên mạng, một người lạ nhắn tin xin mật khẩu tài khoản của em 🔑. Em sẽ làm gì?": "Tuyệt đối giữ bí mật mật khẩu. Nếu người lạ hỏi, em hãy nói ngay cho ba mẹ hoặc thầy cô!",
+            "Em thấy một dòng chữ nhấp nháy 🎁 \"Bấm vào đây để trúng điện thoại miễn phí!\". Em nên làm gì?": "Trên mạng không có quà miễn phí dễ dàng đâu! Bấm vào các link lạ sẽ làm máy tính nhiễm virus.",
+            "Kẻ xấu trên mạng (Hacker) có thể dùng thông tin nào dưới đây để làm hại em và gia đình?": "Địa chỉ nhà và số điện thoại là \"thông tin cá nhân\", tuyệt đối không đăng công khai trên mạng nhé!",
+            "Nếu máy tính của em bị nhiễm Virus 🦠, máy tính sẽ có biểu hiện gì?": "Virus máy tính là những phần mềm độc hại làm hỏng máy và ăn cắp thông tin.",
+            "Khi xem video trên YouTube, nếu em thấy video có hình ảnh đáng sợ, bạo lực 👻, em nên làm gì?": "Hãy bảo vệ đôi mắt và tâm trí của mình, tránh xa các nội dung xấu trên Internet nhé.",
+            "Biểu tượng hình chiếc kẹp giấy màu vàng 📁 trên máy tính được gọi là gì?": "Thư mục (Folder) màu vàng dùng để phân loại và chứa dữ liệu giúp máy tính gọn gàng.",
+            "Thư mục (Folder) 📁 trên máy tính có công dụng giống như vật dụng nào trong thực tế?": "Giống như cặp sách chứa vở, Thư mục giúp chứa các tệp tin (File) và thư mục con.",
+            "Để tạo một thư mục mới tinh (New Folder), em nhấp NÚT PHẢI chuột và chọn dòng chữ nào?": "Lệnh New -> Folder là cách nhanh nhất để tạo một thư mục mới.",
+            "Bạn Tèo muốn đổi tên thư mục \"Hinh Anh\" thành \"Ki Niem\". Bạn ấy nhấp phải chuột vào thư mục và chọn lệnh nào? ✏️": "Lệnh Rename (Re: Đặt lại, Name: Tên) giúp em dễ dàng thay tên cho tệp hoặc thư mục.",
+            "Thùng rác (Recycle Bin) 🗑️ trên máy tính có nhiệm vụ gì?": "Tệp tin khi bị xóa sẽ bay vào Thùng rác, em có thể khôi phục lại (Restore) nếu lỡ xóa nhầm.",
+            "Biểu tượng phần mềm tạo Bài Trình Chiếu (PowerPoint) thường có màu gì và chữ cái gì?": "PowerPoint luôn có biểu tượng màu cam đỏ rực rỡ và mang chữ P đại diện.",
+            "Trong phần mềm PowerPoint, mỗi một trang giấy trắng để em thiết kế được gọi là gì?": "Bài trình chiếu được tạo thành từ nhiều Trang chiếu (Slide) nối tiếp nhau.",
+            "Để thêm một trang chiếu mới tinh ➕ vào bài trình diễn, em bấm vào nút lệnh nào?": "Lệnh New Slide (Trang chiếu mới) nằm ngay thẻ Home để em dễ dàng bấm vào.",
+            "Nút lệnh hình chiếc cốc nhỏ 🍷 (Slide Show) nằm ở góc dưới màn hình dùng để làm gì?": "Bấm vào nút Slide Show (hoặc phím F5), bài của em sẽ phóng to rực rỡ trên toàn bộ màn hình!",
+            "Để bài trình chiếu (PowerPoint) của em thêm sinh động và hấp dẫn, em có thể chèn thêm những gì? 🖼️🎵": "PowerPoint rất mạnh mẽ, em có thể chèn ảnh 🖼️, nhạc 🎵 và cả video 🎬 để bài thuyết trình hay hơn!",
+
+            "Biểu tượng phần mềm soạn thảo văn bản Word là gì?": "Biểu tượng của Word là chữ W màu xanh dương đặc trưng 🇼.",
+            "Để gõ tiếng Việt có dấu, máy tính cần phần mềm nào?": "Phần mềm Unikey có biểu tượng chữ V màu đỏ giúp máy tính hiểu được bộ gõ tiếng Việt.",
+            "Em đã lưu bài với tên \"BaiTap1\". Giờ em muốn lưu thêm một bản sao với tên \"BaiTap2\", em chọn lệnh nào?": "Lệnh Save As giúp em lưu lại một bản sao mới với một tên hoàn toàn khác mà không làm mất bài cũ.",
+            "Thẻ (Ribbon) nào chứa nút lệnh \"Pictures\" 🖼️ để chèn hình ảnh vào văn bản?": "Thẻ Insert (nghĩa là Chèn) chứa các lệnh giúp em chèn ảnh, chèn bảng, chèn khung chữ...",
+            "Sau khi chèn hình ảnh vào Word, làm sao để thu nhỏ bức ảnh lại?": "Chỉ cần nhấp chuột vào ảnh, các chấm tròn nhỏ sẽ hiện ra ở các góc để em kéo thu nhỏ lại an toàn.",
+            "\"Khối văn bản\" là gì?": "Khối văn bản là phần chữ được em dùng chuột quét bôi đen (chọn) để chuẩn bị định dạng hoặc sao chép.",
+            "Nút lệnh hình cái kéo ✂️ (Cut) dùng để làm gì?": "Lệnh Cut giống như việc em dùng kéo cắt bông hoa trên tạp chí để dán sang cuốn vở khác vậy.",
+            "Nút lệnh hình 2 tờ giấy 📄📄 (Copy) dùng để làm gì?": "Lệnh Copy giúp tạo ra một bản sao y hệt giống như dùng máy photocopy.",
+            "Lệnh Paste (Hình cái kẹp giấy/bảng kẹp) 📋 dùng để làm gì?": "Lệnh Paste (Dán) luôn đi chung với Copy hoặc Cut để lấy chữ/ảnh dán ra chỗ mới.",
+            "Phím tắt trên bàn phím nào có tác dụng giống nút Copy 📄📄?": "Phím tắt Ctrl + C (C là chữ cái đầu của từ Copy).",
+            "Khi dùng Google để tìm hiểu về Lịch sử Việt Nam (ví dụ: Chiến thắng Bạch Đằng), em nên gõ gì vào ô tìm kiếm?": "Từ khóa tìm kiếm càng chính xác thì Google càng tìm ra nhiều bài học hay cho em.",
+            "Phần mềm luyện gõ bàn phím giúp em điều gì?": "Luyện gõ giúp em thuộc mặt phím và tự động gõ nhanh bằng 10 ngón tay mà không cần nhìn.",
+            "Phím Shift trên bàn phím có mấy phím và nằm ở đâu?": "Có 2 phím Shift hai bên để tay trái hay tay phải đều có thể ấn được dễ dàng.",
+            "Nhấn giữ phím Shift và gõ một phím chữ cái (ví dụ phím H), em sẽ nhận được kết quả gì?": "Giữ Shift khi gõ là cách nhanh nhất để viết hoa chữ cái đầu câu.",
+            "Trên bàn phím có những phím có 2 kí tự (ví dụ phím số 1 có dấu ! ở trên). Làm sao để gõ được dấu !?": "Luôn nhớ: Phím Shift là chìa khóa để gõ được các kí hiệu nằm ở TẦNG TRÊN của bàn phím.",
+            "Để tìm thông tin về các quốc gia (ví dụ: Nước Nhật Bản), em dùng phần mềm nào?": "Trình duyệt Web (Chrome, Cốc Cốc) là cánh cửa kết nối Internet để em tìm kiếm mọi thứ trên thế giới.",
+            "Trong Word, để xóa một khối văn bản đã được bôi đen, em nhấn phím nào?": "Chỉ cần bôi đen khối văn bản và nhấn Delete (hoặc Backspace) 1 lần, tất cả sẽ biến mất.",
+            "Lệnh \"Open\" 📂 trong phần mềm Word dùng để làm gì?": "Open có hình thư mục mở ra, giúp em lấy lại bài cũ đã lưu trên máy tính để làm tiếp.",
+            "Tổ hợp phím Ctrl + V dùng để làm gì?": "Ctrl + V là phím tắt của lệnh Paste (Dán). Hãy nhớ bộ 3: Ctrl+C (Copy), Ctrl+X (Cut), Ctrl+V (Paste) nhé!",
+            "Để tìm kiếm hình ảnh Quốc kỳ Việt Nam trên mạng, em chọn thẻ (mục) nào trên trang Google?": "Bấm sang thẻ Hình ảnh (Images) trên Google, em sẽ thấy ngay hàng nghìn bức ảnh!",
+
+            "Biểu tượng của phần mềm vẽ Paint trên máy tính là hình gì?": "Phần mềm Paint luôn có biểu tượng chiếc bảng pha màu và cây cọ vẽ quen thuộc.",
+            "Trong phần mềm Paint, công cụ hình chiếc thùng sơn đang đổ màu 🪣 dùng để làm gì?": "Thùng sơn (Fill with color) giúp em đổ màu nhanh chóng vào các hình không bị hở.",
+            "Để vẽ các hình có sẵn như hình vuông, hình tròn, ngôi sao trong Paint, em chọn nhóm công cụ nào?": "Nhóm Shapes chứa rất nhiều hình mẫu có sẵn giúp em vẽ hình học cực kỳ nhanh và chuẩn.",
+            "Nút lệnh có biểu tượng Cục tẩy (Eraser) 🧼 trong Paint dùng để làm gì?": "Cục tẩy giúp em xóa đi những chi tiết vẽ chưa ưng ý trên bức tranh.",
+            "Phần mềm hay trang web nào dưới đây được thiết kế đặc biệt để em xem các video an toàn, phù hợp với lứa tuổi thiếu nhi?": "YouTube Kids có bộ lọc thông minh, chỉ giữ lại các video giáo dục và giải trí an toàn cho trẻ em.",
+            "Khi muốn tìm video hướng dẫn \"cách gấp hạc giấy\" trên YouTube Kids, em sẽ bấm vào biểu tượng hình gì để gõ chữ?": "Biểu tượng Kính lúp (Search) luôn được dùng để tìm kiếm thông tin, video hoặc hình ảnh.",
+            "Trong lúc xem video hướng dẫn làm thủ công, nếu em làm chưa kịp và muốn video đứng yên lại, em bấm nút nào?": "Nút Pause (2 vạch dọc) giúp tạm dừng video để em có thời gian làm theo hướng dẫn.",
+            "Trong Scratch, nhóm lệnh Bút vẽ (Pen) 🖊️ có tác dụng gì?": "Nhóm Pen (Bút vẽ) biến nhân vật thành một cây bút, đi đến đâu sẽ để lại nét vẽ đến đó.",
+            "Để nhân vật Scratch **bắt đầu đặt bút xuống** và vẽ ra nét đường đi, em dùng khối lệnh nào?": "Phải có lệnh Pen down (Đặt bút xuống giấy) thì nhân vật mới có thể vẽ ra nét được.",
+            "Lệnh **Pen up** (Nhấc bút) ⬆️ trong Scratch dùng để làm gì?": "Khi nhấc bút lên, nhân vật vẫn đi nhưng không làm bẩn trang giấy nữa.",
+            "Khối lệnh có hình chiếc chổi **\"Erase all\"** 🧹 dùng để làm gì?": "Lệnh Erase all sẽ dọn dẹp sạch sẽ toàn bộ các nét vẽ trên sân khấu.",
+            "Khối lệnh **\"Set pen color to...\"** (Đặt màu bút vẽ) 🎨 dùng để làm gì?": "Lệnh này giúp em chọn nét vẽ màu đỏ, màu xanh hay bất cứ màu nào em thích.",
+            "Để vẽ được một hình vuông, em cần lặp lại (Repeat) bao nhiêu lần vòng lặp [Di chuyển - Xoay 90 độ]?": "Hình vuông có 4 cạnh và 4 góc bằng nhau, nên em cần lặp lại 4 lần!",
+            "Thẻ **Costumes** (Trang phục) 👗 của nhân vật trong Scratch chứa những gì?": "Mỗi trang phục (Costume) là một bức vẽ nhân vật ở một tư thế hoặc nét mặt khác.",
+            "Để tạo hiệu ứng nhân vật đang nhấc chân bước đi, em sử dụng khối lệnh nào trong nhóm Looks (Hiển thị)?": "Khi liên tục chuyển đổi qua lại giữa các trang phục (Next costume), mắt ta sẽ thấy nhân vật như đang cử động!",
+            "Khối lệnh **\"Wait 0.5 seconds\"** (Đợi 0.5 giây) ⏳ thường được ghép xen kẽ giữa các khối lệnh đổi trang phục để làm gì?": "Nếu không có lệnh Đợi (Wait), nhân vật sẽ đổi trang phục chớp nhoáng khiến em không nhìn rõ được.",
+            "Em dùng lệnh lặp **Forever** (Liên tục) 🔄 bọc ngoài lệnh [Next costume]. Điều gì sẽ xảy ra?": "Vòng lặp Forever sẽ bắt máy tính lặp đi lặp lại hành động mãi mãi cho đến khi em bấm Nút Đỏ (Stop).",
+            "Để làm một đoạn phim hoạt hình Chú chó đang sủa 🐶, em kết hợp thẻ Costumes và thẻ nào nữa?": "Kết hợp thay đổi trang phục mỏ chó há ra và phát âm thanh sủa ở thẻ Sounds là em có hoạt hình tuyệt vời!",
+            "Muốn xoay nhân vật Scratch sang một hướng khác (ví dụ quay đầu lại), em đổi thông số ở ô nào trên khu vực nhân vật?": "Ô Direction (có chiếc đồng hồ xoay) giúp em điều chỉnh hướng mặt của nhân vật.",
+            "Khu vực \"Sân khấu\" (Stage) 🎭 trong Scratch là nơi để làm gì?": "Sân khấu là nơi em xem kết quả trực tiếp của đoạn hoạt hình hay đường vẽ mình vừa lập trình."
+        };
+
+        const funFacts = [
+            "Máy tính đầu tiên nặng tới 27 tấn, bằng khoảng 5 con voi! 🐘",
+            "Chuột máy tính đầu tiên trên thế giới được làm bằng gỗ! 🪵",
+            "Mỗi giây trôi qua có hơn 90.000 lượt tìm kiếm trên Google! 🔍",
+            "Virus máy tính đầu tiên được tạo ra chỉ để trêu chọc bạn bè! 🦠",
+            "Bàn phím QWERTY được thiết kế để gõ chậm lại cho máy khỏi kẹt! ⌨️",
+            "Robot đầu tiên trên thế giới được chế tạo từ năm 1928! 🤖",
+            "Chữ 'Google' bắt nguồn từ 'Googol' - nghĩa là số 1 kèm 100 số 0! 💯",
+            "Lập trình viên đầu tiên trên thế giới là một phụ nữ - Ada Lovelace! 👩‍💻",
+            "Mật khẩu phổ biến nhất thế giới vẫn là '123456'. Đừng dùng nhé! 🔓",
+            "Ký hiệu '@' thường được gọi là 'A còng' vì giống con ốc sên! 🐌"
+        ];
+
+        // KHỞI ĐỘNG HỆ THỐNG
+        window.onload = function() {
+            if(GOOGLE_SCRIPT_URL.includes("HÃY_DÁN_LINK")) { showError("Lỗi: Thầy Đăng chưa dán link Web App!"); return; }
+            fetchQuestions(); // Tải dữ liệu ngầm lúc người dùng chưa bấm
+        };
+
+        // KHI NGƯỜI DÙNG BẤM VÀO MÀN HÌNH "SẴN SÀNG"
+        function startApp() {
+            document.getElementById('screen-start').style.opacity = '0';
+            setTimeout(() => document.getElementById('screen-start').style.display = 'none', 500);
+            
+            // Kích hoạt Âm Thanh ngay lập tức
+            if(isSoundOn) {
+                audioBGM.play().catch(e => console.log("Không thể tự động phát nhạc: " + e));
+            }
+            
+            document.getElementById('screen-loading').classList.add('active');
+            startLoadingEffects();
+        }
+
+        function startLoadingEffects() {
+            const factEl = document.getElementById('loading-fact');
+            const updateFact = () => {
+                factEl.style.opacity = 0;
+                setTimeout(() => {
+                    factEl.innerText = funFacts[Math.floor(Math.random() * funFacts.length)];
+                    factEl.style.opacity = 1;
+                }, 500);
+            };
+            updateFact();
+            setInterval(updateFact, 3500);
+
+            const bar = document.getElementById('loading-progress');
+            const percentEl = document.getElementById('loading-percent');
+            let width = 0;
+
+            window.progressInterval = setInterval(() => {
+                if (width >= 95) { 
+                    clearInterval(window.progressInterval); 
+                    isLoadingAnimFinished = true;
+                    checkEnterLogin(); // Chuyển trang nếu dữ liệu đã tải xong
+                } else {
+                    width += Math.random() * 8; 
+                    if(width > 95) width = 95;
+                    bar.style.width = width + '%';
+                    percentEl.innerText = Math.floor(width) + '%';
+                }
+            }, 250);
+        }
+
+        function fetchQuestions() {
+            fetch(GOOGLE_SCRIPT_URL).then(r => r.json()).then(res => {
+                if(res.status === 'success') { 
+                    processSheetData(res.data); 
+                    isDataLoaded = true;
+                    checkEnterLogin();
+                } else { showError("Lỗi dữ liệu: " + res.message); }
+            }).catch(err => { console.error(err); showError("Không thể kết nối đến máy chủ."); });
+        }
+
+        // KIỂM TRA ĐIỀU KIỆN ĐỂ VÀO MÀN HÌNH ĐĂNG NHẬP
+        function checkEnterLogin() {
+            if (isDataLoaded && isLoadingAnimFinished) {
+                const bar = document.getElementById('loading-progress');
+                const percentEl = document.getElementById('loading-percent');
+                bar.style.width = '100%';
+                percentEl.innerText = '100%';
+                setTimeout(() => {
+                    showScreen('screen-login');
+                }, 800);
+            }
+        }
+
+        function showError(msg) {
+            document.getElementById('loading-error').innerText = msg; document.getElementById('loading-error').classList.remove('hidden'); document.getElementById('btn-reload').classList.remove('hidden');
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function processSheetData(rows) {
+            [2, 3, 4, 5].forEach(g => { gradesData[g] = { title: "KHỐI LỚP " + g, quiz: [], practice: [] }; });
+            rows.forEach(row => {
+                const g = parseInt(row.grade);
+                if (gradesData[g]) {
+                    if (row.type === 'quiz') {
+                        gradesData[g].quiz.push({ q: row.content, options: row.options, a: parseInt(row.correct), steps: row.steps }); 
+                    } else if (row.type === 'practice') { 
+                        gradesData[g].practice.push({ title: row.content, content: row.options[0], steps: row.steps }); 
+                    }
+                }
+            });
+            [2, 3, 4, 5].forEach(g => { if (gradesData[g].quiz.length > 0) gradesData[g].quiz = shuffleArray(gradesData[g].quiz); });
+        }
+
+        function handleLogin() {
+            const name = document.getElementById('input-name').value.trim(); const cls = document.getElementById('input-class').value;
+            if (!name || !cls) { alert("Em nhớ nhập đủ Tên và Lớp nhé!"); return; }
+            studentName = name; studentClass = cls; const grade = parseInt(cls.charAt(0));
+            if (gradesData[grade]) {
+                document.getElementById('menu-student-name').innerText = studentName; document.getElementById('menu-student-class').innerText = studentClass; selectGrade(grade);
+                // Phát nhạc nền nếu đang tắt
+                if (isSoundOn && audioBGM.paused) audioBGM.play().catch(e => {});
+            } else { alert("Lỗi: Không tìm thấy dữ liệu khối " + grade); }
+        }
+
+        function handleLogout() { if(confirm("Em muốn đổi tên khác?")) { showScreen('screen-login'); document.getElementById('input-name').value = ""; } }
+        function selectGrade(g) { currentGrade = g; if (gradesData[g].quiz.length == 0 && gradesData[g].practice.length == 0) alert("Chưa có bài cho khối này!"); document.getElementById('menu-title').innerText = gradesData[g].title; showScreen('screen-menu'); }
+        
+        function startQuiz() { 
+            if (gradesData[currentGrade].quiz.length == 0) return; 
+            currentScore = 0; currentQuizIndex = 0; userAnswers = []; 
+            showScreen('screen-quiz'); renderQuestion(); 
+        }
+
+        function renderQuestion() {
+            const qData = gradesData[currentGrade].quiz[currentQuizIndex];
+            document.getElementById('quiz-current').innerText = currentQuizIndex + 1;
+            document.getElementById('quiz-total').innerText = gradesData[currentGrade].quiz.length;
+            
+            let progressPercent = ((currentQuizIndex) / gradesData[currentGrade].quiz.length) * 100;
+            if(progressPercent == 0) progressPercent = 5; 
+            document.getElementById('quiz-progress-bar').style.width = progressPercent + '%';
+
+            document.getElementById('question-text').innerHTML = qData.q;
+            hideFeedback();
+            
+            const container = document.getElementById('answers-container'); container.innerHTML = '';
+            
+            const btnStyles = [
+                "bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100 hover:border-blue-300 border-b-[6px]",
+                "bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100 hover:border-purple-300 border-b-[6px]",
+                "bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-100 hover:border-orange-300 border-b-[6px]",
+                "bg-teal-50 border-teal-200 text-teal-700 hover:bg-teal-100 hover:border-teal-300 border-b-[6px]"
+            ];
+            const badges = ["A", "B", "C", "D"];
+            
+            qData.options.forEach((opt, idx) => {
+                if(!opt && opt !== 0) return;
+                const styleClass = btnStyles[idx % 4];
+                const btn = document.createElement('button');
+                btn.className = `btn-3d w-full text-left text-lg md:text-xl font-black p-4 md:p-5 rounded-2xl border-4 flex items-center group transition-colors shadow-sm ${styleClass}`;
+                
+                const iconColor = styleClass.split(' ')[0].replace('bg-', 'text-').replace('-50', '-500');
+
+                btn.innerHTML = `
+                    <span class="w-12 h-12 rounded-xl flex items-center justify-center mr-4 font-black text-2xl shrink-0 bg-white shadow-sm border-2 border-white/50 group-hover:scale-110 transition-transform ${iconColor}">${badges[idx]}</span>
+                    <span class="leading-snug">${opt}</span>
+                `;
+                btn.onclick = () => checkAnswer(idx, btn);
+                container.appendChild(btn);
+            });
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval); timeLeft = 60; updateTimerDisplay();
+            timerInterval = setInterval(() => { timeLeft--; updateTimerDisplay(); if (timeLeft <= 0) { clearInterval(timerInterval); timeOut(); } }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const el = document.getElementById('timer-display'); el.innerText = timeLeft;
+            if (timeLeft <= 5 && timeLeft > 0) { 
+                el.parentElement.classList.add('timer-warning', 'border-red-400'); 
+                el.classList.replace('text-blue-500', 'text-red-500'); 
+                playSound(audioTick); // Kêu tíc tắc 5 giây cuối
+            }
+            else { 
+                el.parentElement.classList.remove('timer-warning', 'border-red-400'); 
+                el.classList.replace('text-red-500', 'text-blue-500'); 
+            }
+        }
+
+        function timeOut() { 
+            recordAnswer(-1);
+            playSound(audioWrong);
+            showFeedbackPopup(false, "HẾT GIỜ RỒI!", "bg-red-500"); 
+            setTimeout(nextQuestion, 2000); 
+        }
+
+        function checkAnswer(idx, btn) {
+            clearInterval(timerInterval);
+            const btns = document.querySelectorAll('#answers-container button'); btns.forEach(b => b.disabled = true);
+            const correctIdx = gradesData[currentGrade].quiz[currentQuizIndex].a;
+            
+            recordAnswer(idx);
+
+            if (idx === correctIdx) {
+                currentScore++;
+                playSound(audioCorrect);
+                btn.className = `btn-3d w-full text-left text-lg md:text-xl font-black p-4 md:p-5 rounded-2xl border-4 flex items-center shadow-sm bg-green-400 border-green-600 text-white border-b-[6px] transform scale-[1.02]`;
+                btn.querySelector('span').className = `w-12 h-12 rounded-xl flex items-center justify-center mr-4 font-black text-2xl shrink-0 bg-white text-green-600 shadow-sm border-2 border-white/50`;
+                showFeedbackPopup(true, "Tuyệt vời! Chính xác rồi!");
+            } else {
+                playSound(audioWrong);
+                btn.className = `btn-3d w-full text-left text-lg md:text-xl font-black p-4 md:p-5 rounded-2xl border-4 flex items-center shadow-sm bg-red-400 border-red-600 text-white border-b-[6px] opacity-80`;
+                btn.querySelector('span').className = `w-12 h-12 rounded-xl flex items-center justify-center mr-4 font-black text-2xl shrink-0 bg-white text-red-600 shadow-sm border-2 border-white/50`;
+                
+                if(btns[correctIdx]) {
+                    btns[correctIdx].className = `btn-3d w-full text-left text-lg md:text-xl font-black p-4 md:p-5 rounded-2xl border-4 flex items-center shadow-sm bg-green-100 border-green-400 text-green-700 border-b-[6px] animate-pulse`;
+                }
+                showFeedbackPopup(false, "Ui da! Sai mất rồi!");
+            }
+            setTimeout(nextQuestion, 2000);
+        }
+        
+        function recordAnswer(selectedIdx) {
+            const currentQ = gradesData[currentGrade].quiz[currentQuizIndex];
+            userAnswers.push({ question: currentQ.q, options: currentQ.options, correct: currentQ.a, selected: selectedIdx });
+        }
+
+        function showFeedbackPopup(isCorrect, msg) {
+            const overlay = document.getElementById('feedback-overlay');
+            const box = document.getElementById('feedback-msg');
+            const icon = document.getElementById('feedback-icon');
+            const title = document.getElementById('feedback-title');
+            const text = document.getElementById('feedback-text');
+            
+            box.className = `bg-white p-8 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] transform scale-50 opacity-0 transition-all duration-300 max-w-sm w-[90%] text-center relative border-4 border-white border-b-[16px] popup-enter ${isCorrect ? 'border-b-green-400' : 'border-b-red-400'}`;
+            
+            icon.innerHTML = isCorrect ? '<i class="fa-solid fa-check text-green-500 text-6xl"></i>' : '<i class="fa-solid fa-xmark text-red-500 text-6xl"></i>';
+            icon.className = `w-24 h-24 rounded-full mx-auto flex items-center justify-center -mt-16 mb-4 border-8 border-white shadow-lg ${isCorrect ? 'bg-green-100' : 'bg-red-100'}`;
+            
+            title.innerText = isCorrect ? "ĐÚNG RỒI!" : "SAI RỒI!";
+            title.className = `text-4xl font-black mb-2 uppercase ${isCorrect ? 'text-green-500' : 'text-red-500'}`;
+            text.innerText = msg;
+            
+            overlay.classList.remove('hidden');
+            setTimeout(() => { box.classList.replace('scale-50', 'scale-100'); box.classList.replace('opacity-0', 'opacity-100'); }, 10);
+        }
+
+        function hideFeedback() {
+            document.getElementById('feedback-overlay').classList.add('hidden');
+            document.getElementById('feedback-msg').classList.replace('scale-100', 'scale-50');
+            document.getElementById('feedback-msg').classList.replace('opacity-100', 'opacity-0');
+        }
+
+        function nextQuestion() {
+            currentQuizIndex++;
+            if (currentQuizIndex < gradesData[currentGrade].quiz.length) { renderQuestion(); } 
+            else { 
+                document.getElementById('quiz-progress-bar').style.width = '100%';
+                setTimeout(finishQuiz, 500); 
+            }
+        }
+
+        function finishQuiz() {
+            // Nhạc chiến thắng!
+            audioBGM.pause();
+            playSound(audioWin);
+            
+            showScreen('screen-result');
+            document.getElementById('result-name').innerText = studentName;
+            document.getElementById('result-class').innerText = studentClass;
+            document.getElementById('result-score').innerText = currentScore;
+            document.getElementById('result-total').innerText = gradesData[currentGrade].quiz.length;
+            
+            let percent = (currentScore / gradesData[currentGrade].quiz.length) * 100;
+            let msg = "";
+            if (percent == 100) msg = "XUẤT SẮC! ĐIỂM 10 HOÀN HẢO! 🏆";
+            else if (percent >= 80) msg = "GIỎI QUÁ! CỐ TÝ NỮA THÔI! 🌟";
+            else if (percent >= 50) msg = "KHÁ TỐT! ÔN THÊM CHÚT NHÉ! 💪";
+            else msg = "CẦN CỐ GẮNG HƠN NỮA NHA! 📚";
+            document.getElementById('result-message').innerText = msg;
+            
+            // Xử lý logic phần thưởng chơi game
+            let rewardMsg = "";
+            let rewardClass = "";
+            
+            if (currentScore >= 20) {
+                rewardMsg = "🎁 THƯỞNG 30 PHÚT CHƠI GAME!";
+                rewardClass = "bg-gradient-to-r from-yellow-400 to-orange-500 text-white border-4 border-yellow-200 text-2xl animate-bounce shadow-[0_0_20px_rgba(250,204,21,0.6)]";
+            } else if (currentScore == 19) {
+                rewardMsg = "🎁 THƯỞNG 18 PHÚT CHƠI GAME!";
+                rewardClass = "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border-4 border-yellow-200 text-xl animate-bounce shadow-lg";
+            } else if (currentScore == 18) {
+                rewardMsg = "🎁 THƯỞNG 16 PHÚT CHƠI GAME!";
+                rewardClass = "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border-4 border-yellow-200 text-xl animate-bounce shadow-lg";
+            } else if (currentScore == 17) {
+                rewardMsg = "🎁 THƯỞNG 14 PHÚT CHƠI GAME!";
+                rewardClass = "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border-4 border-yellow-200 text-xl animate-pulse shadow-md";
+            } else if (currentScore == 16) {
+                rewardMsg = "🎁 THƯỞNG 12 PHÚT CHƠI GAME!";
+                rewardClass = "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border-4 border-yellow-200 text-xl animate-pulse shadow-md";
+            } else if (currentScore == 15) {
+                rewardMsg = "🎁 THƯỞNG 10 PHÚT CHƠI GAME!";
+                rewardClass = "bg-yellow-400 text-yellow-900 border-4 border-yellow-200 text-xl shadow-md transform hover:scale-105 transition-transform";
+            } else {
+                rewardMsg = "Cần cố gắng hơn để đạt mức chơi game nhé! 💪";
+                rewardClass = "bg-slate-200 text-slate-500 border-2 border-slate-300 text-base font-bold";
+            }
+
+            const rewardEl = document.getElementById('reward-message');
+            rewardEl.innerText = rewardMsg;
+            rewardEl.className = "inline-block rounded-2xl px-4 py-3 font-black w-full " + rewardClass;
+            
+            sendDataToSheet();
+        }
+
+        function sendDataToSheet() {
+            if(GOOGLE_SCRIPT_URL.includes("HÃY_DÁN_LINK")) return;
+            const status = document.getElementById('sending-status'); status.classList.replace('hidden', 'flex');
+            const data = { name: studentName, className: studentClass, grade: currentGrade, score: currentScore, total: gradesData[currentGrade].quiz.length };
+            fetch(GOOGLE_SCRIPT_URL, { method: 'POST', redirect: 'follow', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) })
+            .then(r => r.json()).then(res => { status.classList.replace('flex', 'hidden'); if(res.status !== 'success') alert("Lỗi lưu: " + res.message); })
+            .catch(e => status.classList.replace('flex', 'hidden'));
+        }
+
+        function startReviewMode() {
+            if (!gradesData[currentGrade].quiz.length) { alert("Chưa có câu hỏi cho khối này!"); return; }
+            showScreen('screen-review');
+            const list = document.getElementById('review-list');
+            list.innerHTML = '';
+            const badges = ["A", "B", "C", "D"];
+
+            gradesData[currentGrade].quiz.forEach((q, idx) => {
+                const correctBadge = badges[q.a];
+                const smartExplanation = explanationDict[q.q] || "Hãy ghi nhớ đáp án này nhé!";
+
+                let html = `
+                <div class="bg-white rounded-[2rem] shadow-sm border-4 border-slate-100 p-6 relative overflow-hidden">
+                    <h3 class="text-xl font-black text-slate-700 mb-4 leading-snug"><span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-xl mr-2">Câu ${idx + 1}</span> ${q.q}</h3>
+                    <div class="space-y-3 mb-6">`;
+
+                q.options.forEach((opt, optIdx) => {
+                    if(!opt && opt !== 0) return;
+                    let optionClass = "bg-slate-50 border-slate-200 text-slate-500";
+                    let icon = "";
+
+                    if (optIdx === q.a) {
+                        optionClass = "bg-green-50 border-green-400 text-green-700 font-bold shadow-sm"; 
+                        icon = '<i class="fa-solid fa-circle-check ml-auto text-green-500 text-2xl"></i>';
+                    }
+
+                    html += `
+                        <div class="flex items-center p-3 rounded-2xl border-4 ${optionClass}">
+                            <span class="w-10 h-10 rounded-xl flex items-center justify-center mr-3 font-black bg-white shadow-sm border-2 border-white/50">${badges[optIdx]}</span>
+                            <span class="flex-grow text-lg">${opt}</span>${icon}
+                        </div>`;
+                });
+
+                html += `
+                    </div>
+                    <div class="p-5 bg-blue-50 rounded-2xl border-4 border-blue-100 relative">
+                        <i class="fa-solid fa-lightbulb text-yellow-400 text-2xl absolute top-5 right-5 animate-pulse"></i>
+                        <p class="text-blue-900 font-black mb-1">GHI NHỚ</p>
+                        <p class="text-blue-800 font-bold text-lg leading-snug">${smartExplanation}</p>
+                    </div>
+                </div>`;
+                list.innerHTML += html;
+            });
+        }
+
+        function showTheory() {
+            if (!knowledgeData[currentGrade]) { alert("Chưa có kiến thức cho khối này!"); return; }
+            showScreen('screen-theory');
+            document.getElementById('theory-content').innerHTML = knowledgeData[currentGrade].content;
+        }
+
+        function startPractice() {
+            if (gradesData[currentGrade].practice.length == 0) { alert("Chưa có bài thực hành!"); return; }
+            showScreen('screen-practice'); const list = document.getElementById('practice-list'); list.innerHTML = '';
+            gradesData[currentGrade].practice.forEach((task, i) => {
+                let formattedContent = task.content
+                    .replace(/(\n)/g, '<br>') 
+                    .replace(/(^|<br>|\s)([a-z]\.|[a-z]\))/g, '$1<br><strong class="text-green-600 bg-green-100 px-2 rounded-lg">$2</strong>') 
+                    .replace(/(^|<br>|\s)(\d+\.)/g, '$1<br><strong class="text-green-600 bg-green-100 px-2 rounded-lg">$2</strong>') 
+                    .replace(/(^|<br>|\s)(\-|\+)/g, '$1<br><strong class="text-green-600 bg-green-100 px-2 rounded-lg">$2</strong>'); 
+                while(formattedContent.startsWith('<br>')) formattedContent = formattedContent.substring(4);
+
+                let contentHTML = task.content ? `<div class="bg-slate-50 text-slate-700 p-6 rounded-2xl font-bold text-lg mb-6 border-4 border-slate-100 leading-relaxed">${formattedContent}</div>` : '';
+                let stepsHTML = task.steps.map((s, idx) => `<div class="flex gap-4 mb-4 items-start bg-white p-4 rounded-2xl border-4 border-blue-50 shadow-sm"><span class="bg-blue-500 text-white font-black w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border-b-4 border-blue-700 mt-1">${idx+1}</span><span class="text-slate-700 font-bold text-lg pt-1">${s}</span></div>`).join('');
+                
+                list.innerHTML += `<div class="bg-white rounded-[2.5rem] shadow-sm border-4 border-slate-100 p-6 md:p-8 mb-8 w-full">
+                    <h3 class="text-2xl md:text-3xl font-black text-slate-800 mb-6 flex items-center"><span class="bg-green-100 text-green-500 w-12 h-12 rounded-2xl flex items-center justify-center mr-4"><i class="fa-solid fa-hammer"></i></span> Bài ${i+1}: ${task.title}</h3>
+                    ${contentHTML}
+                    ${stepsHTML ? `<div class="bg-blue-50/50 rounded-3xl p-6 border-4 border-blue-100"><h4 class="font-black text-blue-800 mb-4 uppercase tracking-wider text-sm"><i class="fa-solid fa-shoe-prints mr-2"></i>Hướng dẫn thực hiện:</h4>${stepsHTML}</div>` : ''}
+                </div>`;
+            });
+        }
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); 
+            setTimeout(() => { document.getElementById(id).classList.add('active'); }, 50);
+            
+            // Phục hồi nhạc nền khi quay lại các màn hình từ màn hình kết quả (Result)
+            if(id === 'screen-menu' || id === 'screen-practice' || id === 'screen-theory' || id === 'screen-review') {
+                if(isSoundOn && audioBGM.paused) audioBGM.play().catch(e=>{});
+            }
+        }
+        
+        function exitToMenu() { 
+            if(confirm("Em muốn dừng làm bài? (Sẽ mất kết quả)")) { 
+                clearInterval(timerInterval); 
+                showScreen('screen-menu'); 
+            } 
+        }
+    </script>
+</body>
+</html>
