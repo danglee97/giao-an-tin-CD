@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tin Học Vui - Ôn Tập Học kì 2</title>
+    <title>Tin Học Vui - Đấu Trường Tin Học</title>
     <link rel="icon" type="image/png" href="../favicon.png">
     <!-- Font ngộ nghĩnh, hiện đại -->
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
@@ -26,6 +26,15 @@
             margin-top: 4px; 
         }
         
+        /* Khung Panel Game */
+        .game-panel {
+            background: linear-gradient(145deg, #ffffff 0%, #f0f4ff 100%);
+            border: 8px solid #1e3a8a;
+            border-bottom-width: 16px;
+            box-shadow: inset 0 -5px 15px rgba(0,0,0,0.1), 0 20px 40px rgba(0,0,0,0.3);
+            border-radius: 3rem;
+        }
+        
         /* Screen Management */
         .screen { display: none !important; opacity: 0; transition: opacity 0.4s ease-in-out; }
         .screen.active { display: flex !important; opacity: 1; }
@@ -33,43 +42,29 @@
         /* Animations cơ bản */
         @keyframes pulse-fast { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         .timer-warning { color: #ef4444; animation: pulse-fast 0.8s infinite; }
-        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
-        .popup-enter { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 70% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+        .popup-enter { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         
         /* Nền không gian trò chơi */
         .game-bg {
-            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            background: linear-gradient(135deg, #1a1c29 0%, #4a1d96 50%, #1e3a8a 100%);
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
         }
         
         /* Các đám mây / hành tinh trôi lơ lửng */
         .floating-element {
-            position: absolute; border-radius: 50%; background: rgba(255,255,255,0.4);
+            position: absolute; border-radius: 50%; background: rgba(255,255,255,0.1);
             filter: blur(2px); animation: float-up infinite linear; z-index: -1;
         }
         @keyframes float-up {
-            0% { transform: translateY(110vh) translateX(0) rotate(0deg); opacity: 0.8; }
+            0% { transform: translateY(110vh) translateX(0) rotate(0deg); opacity: 0.6; }
             100% { transform: translateY(-20vh) translateX(50px) rotate(360deg); opacity: 0; }
         }
 
         /* --- HIỆU ỨNG ĐẤU TRƯỜNG RPG --- */
-        @keyframes attackRight { 
-            0% { transform: translateX(0); } 
-            50% { transform: translateX(60px) scale(1.3) rotate(15deg); } 
-            100% { transform: translateX(0); } 
-        }
-        @keyframes attackLeft { 
-            0% { transform: translateX(0); } 
-            50% { transform: translateX(-60px) scale(1.3) rotate(-15deg); } 
-            100% { transform: translateX(0); } 
-        }
-        @keyframes takeDamage { 
-            0% { filter: brightness(1); transform: translateX(0); } 
-            25% { transform: translateX(-10px); }
-            50% { filter: brightness(2) sepia(1) hue-rotate(-50deg) saturate(5); transform: translateX(10px) scale(0.9); } 
-            75% { transform: translateX(-10px); }
-            100% { filter: brightness(1); transform: translateX(0); } 
-        }
+        @keyframes attackRight { 0% { transform: translateX(0); } 50% { transform: translateX(60px) scale(1.3) rotate(15deg); } 100% { transform: translateX(0); } }
+        @keyframes attackLeft { 0% { transform: translateX(0); } 50% { transform: translateX(-60px) scale(1.3) rotate(-15deg); } 100% { transform: translateX(0); } }
+        @keyframes takeDamage { 0% { filter: brightness(1); transform: translateX(0); } 25% { transform: translateX(-10px); } 50% { filter: brightness(2) sepia(1) hue-rotate(-50deg) saturate(5); transform: translateX(10px) scale(0.9); } 75% { transform: translateX(-10px); } 100% { filter: brightness(1); transform: translateX(0); } }
         .anim-attack-right { animation: attackRight 0.4s ease-in-out; z-index: 50; }
         .anim-attack-left { animation: attackLeft 0.4s ease-in-out; z-index: 50; }
         .anim-damage { animation: takeDamage 0.5s ease-in-out; }
@@ -88,32 +83,97 @@
             100% { transform: translate(1px, -2px) rotate(-1deg); }
         }
         .anim-shake { animation: shake 0.5s; }
-        /* ------------------------------- */
+
+        /* HIỆU ỨNG NHẬN PHẦN THƯỞNG KHI TRẢ LỜI ĐÚNG/SAI */
+        @keyframes floatReward {
+            0% { transform: translate(-50%, 0) scale(0.5); opacity: 0; }
+            20% { transform: translate(-50%, -20px) scale(1.3); opacity: 1; }
+            80% { transform: translate(-50%, -40px) scale(1.1); opacity: 1; }
+            100% { transform: translate(-50%, -60px) scale(1); opacity: 0; }
+        }
+        .anim-reward {
+            animation: floatReward 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            z-index: 60;
+            pointer-events: none;
+        }
+
+        /* HIỆU ỨNG NÚT BOSS (SÓNG ÂM) */
+        @keyframes ring-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 25px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .boss-btn-effect { animation: ring-pulse 2s infinite; }
+
+        /* HIỆU ỨNG LỬA CHẠY VÒNG TÊN DŨNG SĨ */
+        @keyframes spinFire { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+        .fire-border-wrapper {
+            position: relative;
+            display: inline-flex;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            padding: 3px;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
+        }
+        .fire-border-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150vmax;
+            height: 150vmax;
+            background: conic-gradient(from 0deg, transparent 0%, transparent 60%, #ef4444 80%, #facc15 100%);
+            animation: spinFire 1.5s linear infinite;
+            z-index: 0;
+        }
+        .fire-border-wrapper .inner-content {
+            position: relative;
+            background-color: #0f172a;
+            border-radius: 0.5rem;
+            padding: 0.25rem 0.75rem;
+            z-index: 10;
+        }
+        
+        /* HIỆU ỨNG VICTORY MỚI */
+        @keyframes spinRays { 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+        .sunburst {
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 200vmax; height: 200vmax;
+            transform: translate(-50%, -50%) rotate(0deg);
+            background: repeating-conic-gradient(from 0deg, transparent 0deg 15deg, rgba(250, 204, 21, 0.15) 15deg 30deg);
+            animation: spinRays 20s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
         
         /* Utilities */
         select { appearance: none; -webkit-appearance: none; -moz-appearance: none; }
         .text-glow { text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.5); }
         .title-3d {
-            color: #fff;
-            text-shadow: 0px 4px 0px #3b82f6, 0px 8px 15px rgba(0,0,0,0.2);
-            -webkit-text-stroke: 2px #1e40af;
+            color: #fbbf24;
+            text-shadow: 0px 5px 0px #b45309, 0px 10px 20px rgba(0,0,0,0.5);
+            -webkit-text-stroke: 2px #78350f;
         }
 
-        /* Hình ảnh tự động thu phóng (Câu hỏi/Đáp án) */
+        /* Hình ảnh tự động thu phóng */
         #question-text img, #review-list h3 img, .question-img { display: inline-block; height: 4rem; max-width: 100%; object-fit: contain; vertical-align: middle; margin: 0 0.5rem; border-radius: 0.75rem; box-shadow: 0 4px 0px rgba(0,0,0,0.1); background: white; padding: 6px; border: 2px solid #e2e8f0; }
         #answers-container button img, #review-list .flex-grow img, .answer-img { display: inline-block; max-height: 5rem; max-width: 100%; object-fit: contain; vertical-align: middle; border-radius: 0.75rem; background: white; padding: 4px; margin: 0.25rem 0.5rem 0.25rem 0; pointer-events: none;}
         
         /* Scrollbar */
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.5); border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.8); border: 2px solid transparent; background-clip: padding-box;}
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.6); }
 
-        .knowledge-content h3 { color: #4338ca; font-weight: 900; font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 0.5rem; text-transform: uppercase; background: #e0e7ff; padding: 0.5rem 1rem; border-radius: 1rem; display: inline-block; border-bottom: 4px solid #c7d2fe; }
+        .knowledge-content h3 { color: #fff; font-weight: 900; font-size: 1.25rem; margin-top: 1.5rem; margin-bottom: 1rem; text-transform: uppercase; background: #6366f1; padding: 0.5rem 1.5rem; border-radius: 1rem; display: inline-block; border-bottom: 4px solid #4338ca; border-right: 4px solid #4338ca; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .knowledge-content ul { padding-left: 0.5rem; margin-top: 0.5rem; }
-        .knowledge-content li { margin-bottom: 0.75rem; font-weight: 700; color: #4b5563; background: #f8fafc; padding: 0.75rem 1rem; border-radius: 1rem; border: 2px solid #e2e8f0; list-style: none; position: relative; padding-left: 2.5rem; }
-        .knowledge-content li::before { content: '⭐'; position: absolute; left: 0.75rem; top: 0.75rem; font-size: 1rem; }
-        .knowledge-content strong { color: #d946ef; font-weight: 900; }
+        .knowledge-content li { margin-bottom: 0.75rem; font-weight: 700; color: #334155; background: #f8fafc; padding: 1rem 1rem 1rem 3rem; border-radius: 1rem; border: 4px solid #e2e8f0; border-bottom-width: 6px; list-style: none; position: relative; }
+        .knowledge-content li::before { content: '⚔️'; position: absolute; left: 0.75rem; top: 0.85rem; font-size: 1.2rem; }
+        .knowledge-content strong { color: #db2777; font-weight: 900; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col font-nunito text-slate-800">
@@ -122,41 +182,41 @@
     <div class="game-bg"></div>
     <div id="bubbles-container"></div>
 
-    <!-- NÚT BẬT/TẮT ÂM THANH NỔI LÊN -->
-    <button id="btn-sound" onclick="toggleSound()" class="fixed bottom-14 right-4 w-14 h-14 bg-white text-blue-500 rounded-full shadow-lg border-4 border-blue-200 z-[1000] flex items-center justify-center text-2xl btn-3d hover:bg-blue-50 transition-colors">
+    <!-- NÚT BẬT/TẮT ÂM THANH -->
+    <button id="btn-sound" onclick="toggleSound()" class="fixed bottom-14 right-4 w-14 h-14 bg-slate-800 text-yellow-400 rounded-full shadow-lg border-4 border-yellow-500 z-[1000] flex items-center justify-center text-2xl btn-3d hover:bg-slate-700 transition-colors">
         <i class="fa-solid fa-music"></i>
     </button>
 
     <!-- MÀN HÌNH CLICK ĐỂ MỞ KHÓA ÂM THANH -->
-    <div id="screen-start" class="fixed inset-0 bg-slate-900/90 backdrop-blur-lg z-[2000] flex flex-col items-center justify-center cursor-pointer transition-opacity duration-500 overflow-hidden" onclick="startApp()">
+    <div id="screen-start" class="fixed inset-0 bg-slate-900/95 backdrop-blur-lg z-[2000] flex flex-col items-center justify-center cursor-pointer transition-opacity duration-500 overflow-hidden" onclick="startApp()">
         <div class="absolute inset-0 pointer-events-none opacity-40">
             <i class="fa-solid fa-rocket absolute top-20 left-10 md:left-32 text-6xl text-orange-500 animate-bounce" style="animation-duration: 3s;"></i>
             <i class="fa-solid fa-star absolute bottom-32 right-10 md:right-32 text-5xl text-yellow-400 animate-spin-slow"></i>
-            <i class="fa-solid fa-brain absolute top-32 right-16 md:right-40 text-6xl text-pink-400 animate-pulse"></i>
-            <i class="fa-solid fa-lightbulb absolute bottom-20 left-16 md:left-40 text-6xl text-yellow-300 animate-bounce" style="animation-duration: 4s;"></i>
+            <i class="fa-solid fa-dragon absolute top-32 right-16 md:right-40 text-6xl text-red-500 animate-pulse"></i>
+            <i class="fa-solid fa-khanda absolute bottom-20 left-16 md:left-40 text-6xl text-blue-400 animate-bounce" style="animation-duration: 4s;"></i>
         </div>
 
-        <div class="relative bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-600 p-2 md:p-3 rounded-[3.5rem] shadow-[0_0_50px_rgba(59,130,246,0.5)] transform hover:scale-[1.02] transition-transform animate-pulse mx-4 max-w-lg w-[95%]" style="animation-duration: 2s;">
-            <div class="bg-white p-8 md:p-12 rounded-[3rem] border-4 border-white text-center relative overflow-hidden h-full w-full">
+        <div class="relative bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 p-2 md:p-3 rounded-[3.5rem] shadow-[0_0_50px_rgba(236,72,153,0.5)] transform hover:scale-[1.02] transition-transform animate-pulse mx-4 max-w-lg w-[95%]" style="animation-duration: 2s;">
+            <div class="bg-slate-900 p-8 md:p-12 rounded-[3rem] border-4 border-white/20 text-center relative overflow-hidden h-full w-full">
                 <div class="absolute top-0 left-0 w-full h-4 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500"></div>
 
-                <div class="inline-block bg-orange-100 text-orange-600 font-black px-4 md:px-6 py-2 rounded-full mb-6 border-2 border-orange-200 shadow-sm transform -rotate-3 text-xs md:text-sm tracking-wide">
-                    <i class="fa-solid fa-flag-checkered mr-1 md:mr-2"></i> NHIỆM VỤ ÔN TẬP HỌC KÌ 2
+                <div class="inline-block bg-pink-500/20 text-pink-300 font-black px-4 md:px-6 py-2 rounded-full mb-6 border-2 border-pink-500 shadow-sm transform -rotate-3 text-xs md:text-sm tracking-widest uppercase">
+                    <i class="fa-solid fa-gamepad mr-1 md:mr-2"></i> Hệ thống đã sẵn sàng
                 </div>
 
                 <div class="flex justify-center mb-6">
-                    <div class="w-28 h-28 md:w-32 md:h-32 bg-yellow-400 rounded-full flex items-center justify-center border-8 border-yellow-100 shadow-xl relative">
-                        <i class="fa-solid fa-play text-6xl md:text-7xl text-white ml-2 drop-shadow-md"></i>
-                        <i class="fa-solid fa-sparkles text-yellow-500 text-3xl absolute -top-2 -right-4 animate-spin-slow"></i>
+                    <div class="w-28 h-28 md:w-32 md:h-32 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-full flex items-center justify-center border-8 border-yellow-200 shadow-[0_0_30px_rgba(250,204,21,0.6)] relative">
+                        <i class="fa-solid fa-play text-6xl md:text-7xl text-yellow-900 ml-2 drop-shadow-md"></i>
+                        <i class="fa-solid fa-sparkles text-white text-3xl absolute -top-2 -right-4 animate-spin-slow"></i>
                     </div>
                 </div>
 
-                <h2 class="text-4xl md:text-5xl font-black text-slate-800 mb-3 tracking-tight drop-shadow-sm">SẴN SÀNG CHƯA?</h2>
-                <p class="text-base md:text-lg font-bold text-slate-500 mb-8 px-2">Cùng thầy Đăng khởi động hệ thống và chuẩn bị rinh điểm 10 nhé!</p>
+                <h2 class="text-4xl md:text-5xl font-black text-white mb-3 tracking-tight drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">BẮT ĐẦU CHƠI!</h2>
+                <p class="text-base md:text-lg font-bold text-slate-400 mb-8 px-2">Cùng thầy Đăng chinh phục Đấu Trường Tin Học ngay nào!</p>
 
-                <div class="bg-blue-50 text-blue-600 font-black py-4 px-6 rounded-2xl border-b-4 border-blue-200 flex items-center justify-center gap-3 animate-bounce">
+                <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-black py-4 px-6 rounded-2xl border-b-4 border-indigo-900 flex items-center justify-center gap-3 animate-bounce shadow-lg">
                     <i class="fa-solid fa-hand-pointer text-2xl"></i>
-                    NHẤP VÀO ĐÂY ĐỂ BẮT ĐẦU
+                    NHẤP VÀO MÀN HÌNH ĐỂ VÀO GAME
                 </div>
             </div>
         </div>
@@ -164,148 +224,169 @@
 
     <!-- 0. LOADING SCREEN -->
     <div id="screen-loading" class="screen min-h-screen flex-col items-center justify-center p-4 z-[100] relative">
-        <div class="bg-white/95 backdrop-blur-md rounded-[2.5rem] p-8 md:p-10 text-center shadow-[0_20px_50px_rgba(0,0,0,0.15)] max-w-lg w-full border-4 border-white border-b-[12px] border-b-blue-300 relative z-10">
-            
+        <div class="game-panel p-8 md:p-10 text-center max-w-lg w-full relative z-10">
             <div class="mb-8 mt-2 relative inline-block">
-                <div class="w-32 h-32 mx-auto bg-blue-500 rounded-[2rem] shadow-inner border-8 border-white flex items-center justify-center animate-bounce" style="animation-duration: 2s;">
-                    <i class="fa-solid fa-gamepad text-6xl text-white drop-shadow-md"></i>
+                <div class="w-32 h-32 mx-auto bg-indigo-600 rounded-[2rem] shadow-[inset_0_0_20px_rgba(0,0,0,0.5)] border-8 border-indigo-300 flex items-center justify-center animate-bounce" style="animation-duration: 2s;">
+                    <i class="fa-solid fa-hat-wizard text-6xl text-white drop-shadow-md"></i>
                 </div>
                 <i class="fa-solid fa-sparkles text-yellow-400 text-3xl absolute -top-4 -right-4 animate-spin-slow"></i>
-                <i class="fa-solid fa-star text-pink-400 text-2xl absolute bottom-0 -left-6 animate-pulse"></i>
             </div>
             
-            <h2 class="text-3xl font-black text-blue-800 mb-2" id="loading-title">Đang kết nối...</h2>
+            <h2 class="text-3xl font-black text-indigo-900 mb-2 uppercase" id="loading-title">Đang Tải Dữ Liệu...</h2>
             
-            <div class="bg-blue-50 rounded-3xl p-6 border-4 border-blue-100 relative mb-8 mt-8">
+            <div class="bg-indigo-50 rounded-3xl p-6 border-4 border-indigo-200 relative mb-8 mt-8">
                 <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-yellow-900 px-6 py-2 rounded-full text-sm font-black uppercase shadow-md border-2 border-white whitespace-nowrap">
-                    <i class="fa-solid fa-lightbulb"></i> BÍ MẬT CÔNG NGHỆ
+                    <i class="fa-solid fa-scroll"></i> MẸO NHỎ GAME THỦ
                 </div>
-                <p id="loading-fact" class="text-blue-900 font-bold text-base mt-2 min-h-[4rem] flex items-center justify-center text-center transition-opacity duration-500">Đang tìm kiếm thông tin thú vị...</p>
+                <p id="loading-fact" class="text-indigo-800 font-bold text-base mt-2 min-h-[4rem] flex items-center justify-center text-center transition-opacity duration-500">Đang tìm kiếm bí kíp...</p>
             </div>
             
-            <!-- Thanh Progress -->
-            <div class="relative w-full bg-slate-100 rounded-full h-6 border-4 border-slate-200 overflow-hidden shadow-inner">
-                <div id="loading-progress" class="bg-gradient-to-r from-green-400 to-green-500 h-full rounded-full transition-all duration-200 ease-out relative" style="width: 5%">
+            <!-- Thanh Progress RPG -->
+            <div class="relative w-full bg-slate-800 rounded-full h-8 border-4 border-slate-900 overflow-hidden shadow-[inset_0_0_10px_rgba(0,0,0,0.8)]">
+                <div id="loading-progress" class="bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-500 h-full rounded-full transition-all duration-200 ease-out relative" style="width: 5%">
                     <div class="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,255,255,0.2)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.2)_50%,rgba(255,255,255,0.2)_75%,transparent_75%,transparent)] bg-[length:20px_20px] animate-[slide_1s_linear_infinite]"></div>
                 </div>
             </div>
             <style>@keyframes slide { from { background-position: 20px 0; } to { background-position: 0 0; } }</style>
             
-            <p id="loading-percent" class="text-xl font-black text-slate-400 mt-2">0%</p>
+            <p id="loading-percent" class="text-xl font-black text-indigo-400 mt-2 font-mono">0%</p>
             <div id="loading-error" class="hidden mt-4 text-red-500 font-bold text-sm bg-red-50 p-3 rounded-2xl border-2 border-red-200"></div>
-            <button onclick="window.location.reload()" id="btn-reload" class="hidden mt-4 w-full bg-blue-500 text-white px-4 py-4 rounded-2xl font-black hover:bg-blue-600 btn-3d border-b-8 border-blue-700">Tải lại trò chơi</button>
+            <button onclick="window.location.reload()" id="btn-reload" class="hidden mt-4 w-full bg-blue-600 text-white px-4 py-4 rounded-2xl font-black hover:bg-blue-700 btn-3d border-b-8 border-blue-900">Thử kết nối lại</button>
         </div>
     </div>
 
     <div class="flex-grow pb-24 relative z-10"> 
-        <!-- 1. LOGIN SCREEN -->
+        <!-- 1. LOGIN SCREEN (CHARACTER CREATION) -->
         <div id="screen-login" class="screen min-h-screen flex-col items-center justify-center p-4">
-            <div class="bg-white/95 backdrop-blur-md rounded-[3rem] shadow-2xl border-4 border-white border-b-[16px] border-b-blue-200 p-8 md:p-10 w-full max-w-md text-center transform transition-all relative">
-                
+            <div class="game-panel p-8 md:p-10 w-full max-w-md text-center transform transition-all relative overflow-hidden">
+                <!-- Ribbon -->
+                <div class="absolute top-6 -left-12 bg-red-500 text-white font-black py-1 px-12 transform -rotate-45 shadow-lg border-y-2 border-red-300 tracking-widest text-xs z-20">TẠO NHÂN VẬT</div>
+
                 <div class="mb-4 flex justify-center relative">
                     <a href="../index.html" class="relative z-10 block transform hover:scale-105 transition-transform">
-                        <div class="bg-gradient-to-b from-blue-100 to-white w-32 h-32 rounded-full mx-auto flex items-center justify-center border-8 border-white shadow-lg overflow-hidden">
-                            <img src="../logo.png" alt="Logo" class="w-full h-full object-contain p-2" onerror="this.outerHTML='<i class=\'fa-solid fa-computer text-6xl text-blue-500\'></i>'">
+                        <div class="bg-gradient-to-b from-slate-800 to-slate-900 w-32 h-32 rounded-full mx-auto flex items-center justify-center border-8 border-indigo-400 shadow-[0_0_20px_rgba(99,102,241,0.5)] overflow-hidden relative">
+                            <i class="fa-solid fa-dragon text-6xl text-indigo-400 drop-shadow-[0_0_10px_rgba(99,102,241,0.8)]"></i>
                         </div>
                     </a>
                 </div>
                 
-                <h1 class="text-5xl md:text-6xl mb-2 uppercase tracking-tight font-black title-3d pb-2">Tin Học Vui</h1>
-                <div class="inline-block bg-yellow-100 text-yellow-700 font-extrabold text-sm px-4 py-2 rounded-full mb-8 border-2 border-yellow-300">
-                    <i class="fa-solid fa-star text-yellow-500"></i> Ôn tập Học Kì 2
+                <h1 class="text-4xl md:text-5xl mb-2 uppercase tracking-tight font-black title-3d pb-2">ĐẤU TRƯỜNG IT</h1>
+                <div class="inline-block bg-slate-800 text-yellow-400 font-black text-sm px-4 py-2 rounded-full mb-8 border-2 border-yellow-500 shadow-[0_0_10px_rgba(250,204,21,0.3)]">
+                    <i class="fa-solid fa-khanda text-yellow-500"></i> HUẤN LUYỆN HỌC KÌ 2
                 </div>
                 
-                <div class="space-y-6 text-left relative">
+                <div class="space-y-6 text-left relative z-10">
                     <!-- Form Nhập Tên -->
-                    <div>
-                        <label class="block text-slate-500 font-extrabold mb-2 pl-2 text-sm uppercase tracking-wider">Tên của người chơi</label>
-                        <input type="text" id="input-name" placeholder="Nhập họ và tên..." class="w-full px-6 py-5 rounded-[2rem] border-4 border-slate-100 focus:border-blue-400 focus:bg-blue-50 focus:outline-none bg-slate-50 text-xl font-black text-slate-700 shadow-inner placeholder-slate-300 transition-colors">
+                    <div class="bg-indigo-50 p-4 rounded-3xl border-4 border-indigo-100">
+                        <label class="block text-indigo-900 font-black mb-2 pl-2 text-sm uppercase tracking-wider"><i class="fa-solid fa-id-badge mr-2 text-indigo-500"></i>Tên Dũng Sĩ</label>
+                        <input type="text" id="input-name" placeholder="Nhập tên của bạn..." class="w-full px-6 py-4 rounded-[1.5rem] border-4 border-indigo-200 focus:border-indigo-500 focus:bg-white focus:outline-none bg-white text-xl font-black text-indigo-900 shadow-inner placeholder-indigo-300 transition-colors">
                     </div>
                     
                     <!-- Form Chọn Lớp -->
-                    <div class="relative">
-                        <label class="block text-slate-500 font-extrabold mb-2 pl-2 text-sm uppercase tracking-wider">Chọn Lớp</label>
+                    <div class="bg-indigo-50 p-4 rounded-3xl border-4 border-indigo-100 relative">
+                        <label class="block text-indigo-900 font-black mb-2 pl-2 text-sm uppercase tracking-wider"><i class="fa-solid fa-shield-halved mr-2 text-indigo-500"></i>Chọn Gia Tộc (Lớp)</label>
                         <div class="relative">
-                            <select id="input-class" class="w-full px-6 py-5 rounded-[2rem] border-4 border-slate-100 focus:border-purple-400 focus:bg-purple-50 focus:outline-none bg-slate-50 text-xl font-black text-slate-700 cursor-pointer shadow-inner appearance-none transition-colors">
+                            <select id="input-class" class="w-full px-6 py-4 rounded-[1.5rem] border-4 border-indigo-200 focus:border-indigo-500 focus:bg-white focus:outline-none bg-white text-xl font-black text-indigo-900 cursor-pointer shadow-inner appearance-none transition-colors">
                                 <option value="" disabled selected>-- Bấm để chọn --</option>
-                                <optgroup label="Khối 2"><option value="2A1">2A1</option><option value="2A2">2A2</option><option value="2A3">2A3</option><option value="2A4">2A4</option></optgroup>
-                                <optgroup label="Khối 3"><option value="3A1">3A1</option><option value="3A2">3A2</option><option value="3A3">3A3</option></optgroup>
-                                <optgroup label="Khối 4"><option value="4A1">4A1</option><option value="4A2">4A2</option><option value="4A3">4A3</option></optgroup>
-                                <optgroup label="Khối 5"><option value="5A1">5A1</option><option value="5A2">5A2</option></optgroup>
+                                <optgroup label="Khối 2 (Tân Binh)"><option value="2A1">2A1</option><option value="2A2">2A2</option><option value="2A3">2A3</option><option value="2A4">2A4</option></optgroup>
+                                <optgroup label="Khối 3 (Chiến Binh)"><option value="3A1">3A1</option><option value="3A2">3A2</option><option value="3A3">3A3</option></optgroup>
+                                <optgroup label="Khối 4 (Kỵ Sĩ)"><option value="4A1">4A1</option><option value="4A2">4A2</option><option value="4A3">4A3</option></optgroup>
+                                <optgroup label="Khối 5 (Pháp Sư)"><option value="5A1">5A1</option><option value="5A2">5A2</option></optgroup>
                             </select>
                             <div class="absolute inset-y-0 right-0 pr-6 flex items-center pointer-events-none">
-                                <i class="fa-solid fa-caret-down text-slate-400 text-2xl"></i>
+                                <i class="fa-solid fa-caret-down text-indigo-400 text-2xl"></i>
                             </div>
                         </div>
                     </div>
                     
                     <!-- Nút Bắt Đầu -->
-                    <button onclick="handleLogin()" class="btn-3d w-full bg-green-500 border-b-[8px] border-green-700 text-white font-black py-5 rounded-[2rem] text-3xl mt-8 shadow-lg hover:bg-green-400 flex items-center justify-center gap-3">
-                        BẮT ĐẦU <i class="fa-solid fa-play"></i>
+                    <button onclick="handleLogin()" class="btn-3d w-full bg-gradient-to-b from-yellow-400 to-yellow-600 border-b-[8px] border-yellow-700 text-yellow-900 font-black py-5 rounded-[2rem] text-2xl md:text-3xl mt-4 shadow-lg hover:from-yellow-300 hover:to-yellow-500 flex items-center justify-center gap-3">
+                        VÀO GAME <i class="fa-solid fa-right-to-bracket"></i>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- 2. MENU SCREEN -->
+        <!-- 2. MENU SCREEN (WORLD MAP) -->
         <div id="screen-menu" class="screen min-h-screen p-4 flex-col justify-center items-center pt-8 md:pt-16">
             <div class="max-w-4xl w-full relative z-10">
                 
-                <!-- Header Người chơi -->
-                <div class="flex justify-between items-center mb-8 bg-white/80 backdrop-blur-md p-4 rounded-3xl border-2 border-white shadow-sm">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl font-black border-2 border-blue-200">
-                            <i class="fa-solid fa-user"></i>
+                <!-- Player HUD -->
+                <div class="flex justify-between items-center mb-8 bg-slate-900 p-4 rounded-3xl border-4 border-slate-700 shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 text-white rounded-2xl flex items-center justify-center text-2xl font-black border-4 border-blue-300 shadow-inner transform rotate-3">
+                            <i class="fa-solid fa-user-astronaut"></i>
                         </div>
                         <div>
-                            <div id="menu-student-name" class="font-black text-xl text-slate-800 leading-none">...</div>
-                            <div id="menu-student-class" class="font-bold text-sm text-slate-500">Lớp ...</div>
+                            <div class="text-xs font-black text-blue-400 uppercase tracking-widest mb-1">Dũng sĩ</div>
+                            <!-- Áp dụng khung lửa chạy vòng -->
+                            <div class="fire-border-wrapper mb-1">
+                                <div class="inner-content">
+                                    <div id="menu-student-name" class="font-black text-xl md:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-red-500 leading-none drop-shadow-sm tracking-wide">...</div>
+                                </div>
+                            </div>
+                            <div id="menu-student-class" class="font-bold text-sm text-yellow-400"><i class="fa-solid fa-shield-cat"></i> Lớp ...</div>
                         </div>
                     </div>
-                    <button onclick="handleLogout()" class="bg-slate-100 text-slate-500 hover:bg-slate-200 px-4 py-2 rounded-2xl font-bold btn-3d border-b-4 border-slate-300 text-sm">
-                        <i class="fa-solid fa-right-from-bracket"></i> Thoát
+                    <button onclick="handleLogout()" class="bg-red-600 text-white hover:bg-red-500 px-4 py-3 rounded-2xl font-black btn-3d border-b-4 border-red-800 text-sm md:text-base">
+                        <i class="fa-solid fa-power-off"></i> THOÁT
                     </button>
                 </div>
 
-                <div class="text-center mb-8 relative">
-                    <h1 id="menu-title" class="text-4xl md:text-6xl font-black text-white drop-shadow-lg uppercase tracking-wider mb-2">KHỐI LỚP ...</h1>
-                    <span class="inline-block bg-white/20 text-white backdrop-blur-sm border-2 border-white/40 px-6 py-2 rounded-full font-bold shadow-sm">CHỌN NHIỆM VỤ ĐỂ BẮT ĐẦU</span>
+                <div class="text-center mb-10 relative">
+                    <h1 id="menu-title" class="text-4xl md:text-6xl font-black text-white drop-shadow-[0_5px_10px_rgba(0,0,0,0.8)] uppercase tracking-wider mb-3 title-3d">BẢN ĐỒ ...</h1>
+                    <span class="inline-block bg-slate-800/80 text-yellow-400 border-2 border-yellow-500/50 px-6 py-2 rounded-full font-black shadow-lg uppercase tracking-widest text-sm">CHỌN PHÓ BẢN ĐỂ KHIÊU CHIẾN</span>
                 </div>
 
                 <div class="flex flex-col gap-6 pb-12">
                     
-                    <!-- NÚT TRẮC NGHIỆM -->
-                    <div onclick="startQuiz()" class="btn-3d relative overflow-hidden bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 rounded-[3rem] border-b-[12px] border-blue-800 p-8 md:p-12 text-white text-center shadow-[0_15px_40px_rgba(59,130,246,0.4)] group w-full">
-                        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4xNSIvPjwvc3ZnPg==')] opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                    <!-- NÚT TRẮC NGHIỆM (KHIÊU CHIẾN BOSS) -->
+                    <div onclick="startQuiz()" class="boss-btn-effect btn-3d relative overflow-hidden bg-gradient-to-b from-red-500 to-red-700 rounded-[3rem] border-4 border-red-400 border-b-[12px] border-b-red-900 p-8 md:p-12 text-white text-center group w-full mt-2">
+                        <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
                         <div class="absolute top-0 -left-[100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg] group-hover:animate-[shimmer_1s_forwards]"></div>
-                        <style>@keyframes shimmer { 100% { left: 200%; } }</style>
                         
-                        <div class="relative z-10 flex flex-col md:flex-row items-center justify-center gap-6">
-                            <div class="w-24 h-24 md:w-32 md:h-32 bg-white/20 rounded-full flex items-center justify-center border-4 border-white/30 backdrop-blur-sm group-hover:scale-110 group-hover:rotate-12 transition-transform duration-300">
-                                <i class="fa-solid fa-gamepad text-6xl md:text-7xl text-white drop-shadow-md"></i>
+                        <div class="relative z-10 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10">
+                            <div class="relative">
+                                <!-- Nhãn HOT nhún nhảy -->
+                                <div class="absolute -top-4 -right-4 md:-top-6 md:-right-8 bg-yellow-400 text-yellow-900 font-black text-xs md:text-sm px-4 py-1.5 rounded-full border-2 border-white shadow-lg animate-bounce z-20 transform rotate-12 flex items-center gap-1">
+                                    <i class="fa-solid fa-fire"></i> HOT
+                                </div>
+                                <div class="w-28 h-28 md:w-36 md:h-36 bg-red-900 rounded-[2rem] flex items-center justify-center border-4 border-red-400 shadow-inner group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300">
+                                    <i class="fa-solid fa-dragon text-6xl md:text-8xl text-red-400 drop-shadow-[0_0_15px_rgba(248,113,113,0.8)] animate-pulse"></i>
+                                </div>
                             </div>
-                            <div class="text-center md:text-left">
-                                <h2 class="text-4xl md:text-5xl font-black mb-2 drop-shadow-md">TRẮC NGHIỆM</h2>
-                                <p class="text-blue-100 font-bold text-lg md:text-xl bg-black/20 px-4 py-2 rounded-xl inline-block">Chinh phục điểm 10 ngay! ⭐</p>
+                            <div class="text-center md:text-left pointer-events-none">
+                                <p class="text-red-200 font-black text-sm md:text-base tracking-widest uppercase mb-2 drop-shadow-md flex items-center justify-center md:justify-start gap-2">
+                                    <i class="fa-solid fa-star text-yellow-400 animate-spin-slow"></i> 
+                                    Nhiệm Vụ Chính 
+                                    <i class="fa-solid fa-star text-yellow-400 animate-spin-slow"></i>
+                                </p>
+                                <h2 class="text-4xl md:text-5xl lg:text-6xl font-black mb-4 drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] text-transparent bg-clip-text bg-gradient-to-b from-white to-yellow-200">KHIÊU CHIẾN BOSS</h2>
+                                <p class="text-white font-black text-lg bg-red-900/60 px-6 py-2.5 rounded-xl inline-block border border-red-400/50 shadow-inner">
+                                    Trắc nghiệm rinh điểm 10! <i class="fa-solid fa-swords ml-1"></i>
+                                </p>
                             </div>
                         </div>
                     </div>
 
                     <!-- 3 Nút phụ xếp hàng ngang -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div onclick="startPractice()" class="btn-3d bg-white rounded-[2.5rem] border-4 border-slate-100 border-b-[8px] border-b-green-200 p-6 flex flex-col items-center justify-center text-center group hover:border-green-400 transition-colors shadow-lg">
-                            <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center text-green-500 mb-4 group-hover:-translate-y-2 transition-transform"><i class="fa-solid fa-keyboard text-3xl"></i></div>
-                            <h2 class="text-2xl font-black text-slate-700">Thực Hành</h2>
+                        <div onclick="startPractice()" class="btn-3d bg-slate-800 rounded-[2.5rem] border-4 border-slate-600 border-b-[8px] border-b-slate-900 p-6 flex flex-col items-center justify-center text-center group hover:border-green-400 transition-colors shadow-lg relative overflow-hidden">
+                            <div class="absolute top-0 right-0 bg-green-500 text-white text-[10px] font-black px-3 py-1 rounded-bl-xl z-10 uppercase">Thực Hành</div>
+                            <div class="w-20 h-20 bg-green-900 rounded-[1.5rem] flex items-center justify-center text-green-400 mb-4 group-hover:-translate-y-2 transition-transform border-4 border-green-700"><i class="fa-solid fa-hammer text-4xl"></i></div>
+                            <h2 class="text-2xl font-black text-white">KHU HUẤN LUYỆN</h2>
                         </div>
                         
-                        <div onclick="showTheory()" class="btn-3d bg-white rounded-[2.5rem] border-4 border-slate-100 border-b-[8px] border-b-purple-200 p-6 flex flex-col items-center justify-center text-center group hover:border-purple-400 transition-colors shadow-lg">
-                            <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-500 mb-4 group-hover:-translate-y-2 transition-transform"><i class="fa-solid fa-book-open text-3xl"></i></div>
-                            <h2 class="text-2xl font-black text-slate-700">Kiến Thức</h2>
+                        <div onclick="showTheory()" class="btn-3d bg-slate-800 rounded-[2.5rem] border-4 border-slate-600 border-b-[8px] border-b-slate-900 p-6 flex flex-col items-center justify-center text-center group hover:border-purple-400 transition-colors shadow-lg relative overflow-hidden">
+                            <div class="absolute top-0 right-0 bg-purple-500 text-white text-[10px] font-black px-3 py-1 rounded-bl-xl z-10 uppercase">Kiến Thức</div>
+                            <div class="w-20 h-20 bg-purple-900 rounded-[1.5rem] flex items-center justify-center text-purple-400 mb-4 group-hover:-translate-y-2 transition-transform border-4 border-purple-700"><i class="fa-solid fa-scroll text-4xl"></i></div>
+                            <h2 class="text-2xl font-black text-white">BÍ KÍP VÕ CÔNG</h2>
                         </div>
                         
-                        <div onclick="startReviewMode()" class="btn-3d bg-white rounded-[2.5rem] border-4 border-slate-100 border-b-[8px] border-b-orange-200 p-6 flex flex-col items-center justify-center text-center group hover:border-orange-400 transition-colors shadow-lg">
-                            <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center text-orange-500 mb-4 group-hover:-translate-y-2 transition-transform"><i class="fa-solid fa-check-double text-3xl"></i></div>
-                            <h2 class="text-2xl font-black text-slate-700">Xem Đáp Án</h2>
+                        <div onclick="startReviewMode()" class="btn-3d bg-slate-800 rounded-[2.5rem] border-4 border-slate-600 border-b-[8px] border-b-slate-900 p-6 flex flex-col items-center justify-center text-center group hover:border-yellow-400 transition-colors shadow-lg relative overflow-hidden">
+                            <div class="absolute top-0 right-0 bg-yellow-500 text-yellow-900 text-[10px] font-black px-3 py-1 rounded-bl-xl z-10 uppercase">Đáp Án</div>
+                            <div class="w-20 h-20 bg-yellow-900/50 rounded-[1.5rem] flex items-center justify-center text-yellow-400 mb-4 group-hover:-translate-y-2 transition-transform border-4 border-yellow-700"><i class="fa-solid fa-toolbox text-4xl"></i></div>
+                            <h2 class="text-2xl font-black text-white">CHIẾN LỢI PHẨM</h2>
                         </div>
                     </div>
 
@@ -313,134 +394,153 @@
             </div>
         </div>
 
-        <!-- 3. QUIZ SCREEN (CÓ ĐẤU TRƯỜNG RPG & ĐÁP ÁN 2 CỘT) -->
+        <!-- 3. QUIZ SCREEN (ĐẤU TRƯỜNG RPG & ĐÁP ÁN 2 CỘT) -->
         <div id="screen-quiz" class="screen min-h-screen p-4 flex-col items-center justify-start pt-8">
-            <div class="max-w-3xl w-full relative z-10 flex flex-col h-[90vh]">
+            <div class="max-w-4xl w-full relative z-10 flex flex-col h-[90vh]">
                 
                 <div class="flex justify-between items-center mb-4 gap-3">
-                    <button onclick="exitToMenu()" class="bg-white/90 text-slate-400 hover:text-red-500 px-4 py-3 rounded-2xl font-black btn-3d border-b-4 border-slate-200 text-xl w-14 h-14 flex items-center justify-center shrink-0">
+                    <button onclick="exitToMenu()" class="bg-slate-800 text-slate-400 hover:text-red-500 px-4 py-3 rounded-2xl font-black btn-3d border-4 border-slate-700 border-b-[6px] border-b-slate-900 text-xl w-14 h-14 flex items-center justify-center shrink-0">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                     
                     <!-- Progress Bar Câu hỏi -->
-                    <div class="flex-grow bg-white/90 rounded-2xl h-14 p-2 flex items-center border-b-4 border-slate-200 shadow-sm relative">
-                        <div class="absolute w-full text-center font-black text-slate-400 z-10 text-sm">Câu <span id="quiz-current">1</span>/<span id="quiz-total">10</span></div>
-                        <div class="w-full bg-slate-100 rounded-xl h-full overflow-hidden relative">
-                            <div id="quiz-progress-bar" class="bg-green-400 h-full rounded-xl transition-all duration-300 w-0"></div>
+                    <div class="flex-grow bg-slate-800 rounded-2xl h-14 p-2 flex items-center border-4 border-slate-700 border-b-[6px] border-b-slate-900 shadow-sm relative">
+                        <div class="absolute w-full text-center font-black text-white z-10 text-sm drop-shadow-md">Tầng <span id="quiz-current">1</span>/<span id="quiz-total">10</span></div>
+                        <div class="w-full bg-slate-900 rounded-xl h-full overflow-hidden relative border-2 border-slate-950">
+                            <div id="quiz-progress-bar" class="bg-gradient-to-r from-blue-500 to-indigo-500 h-full rounded-xl transition-all duration-300 w-0"></div>
                         </div>
                     </div>
 
                     <!-- Timer Pill -->
-                    <div class="bg-white/90 px-4 py-3 rounded-2xl flex items-center justify-center font-black btn-3d border-b-4 border-blue-200 w-24 h-14 shrink-0 shadow-sm">
-                        <i class="fa-solid fa-clock text-blue-300 mr-2 text-lg"></i>
-                        <span id="timer-display" class="text-2xl text-blue-500 font-mono">60</span>
+                    <div class="bg-slate-800 px-4 py-3 rounded-2xl flex items-center justify-center font-black btn-3d border-4 border-slate-700 border-b-[6px] border-b-slate-900 w-24 h-14 shrink-0 shadow-sm">
+                        <i class="fa-solid fa-hourglass-half text-yellow-400 mr-2 text-lg animate-pulse"></i>
+                        <span id="timer-display" class="text-2xl text-white font-mono">60</span>
                     </div>
                 </div>
 
-                <!-- ĐẤU TRƯỜNG RPG -->
-                <div id="arena-container" class="bg-slate-900 rounded-[2rem] p-4 mb-4 relative overflow-hidden border-4 border-slate-700 shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] flex justify-between items-end h-40 shrink-0">
+                <!-- ĐẤU TRƯỜNG RPG - CÓ VÒNG TRÒN MA THUẬT VÀ CHỈ SỐ VÀNG -->
+                <div id="arena-container" class="bg-slate-900 rounded-[2rem] p-4 mb-4 relative overflow-hidden border-4 border-slate-700 shadow-[inset_0_0_20px_rgba(0,0,0,0.8),0_10px_20px_rgba(0,0,0,0.5)] flex justify-between items-center h-44 md:h-48 shrink-0 transition-transform">
                     <div class="absolute inset-0 opacity-40 bg-[url('https://img.freepik.com/free-vector/pixel-art-mystical-background_52683-87349.jpg')] bg-cover bg-center"></div>
                     
                     <!-- Dũng sĩ (Học sinh) -->
                     <div class="relative z-10 w-2/5 md:w-1/3 flex flex-col items-center">
-                        <div class="flex justify-between items-center w-full mb-1 px-1">
-                            <span class="text-white font-bold text-[9px] md:text-xs bg-blue-600/90 px-2 py-0.5 rounded-full border border-blue-400 shadow-sm">DŨNG SĨ</span>
-                            <span id="hero-score-badge" class="text-yellow-300 font-black text-[10px] md:text-sm drop-shadow-md bg-black/40 px-2 py-0.5 rounded-md">Đúng: 0</span>
+                        <div class="flex justify-between items-center w-full mb-2 px-1 h-6 md:h-8">
+                            <span class="text-white font-black text-[10px] md:text-xs bg-blue-600 px-2 py-0.5 rounded-full border-2 border-blue-400 shadow-sm hidden md:block">DŨNG SĨ</span>
+                            <div class="flex gap-1 md:gap-2">
+                                <span id="hero-gold-badge" class="text-yellow-400 font-black text-[10px] md:text-sm drop-shadow-md bg-black/60 border border-slate-700 px-2 py-0.5 rounded-md flex items-center gap-1"><i class="fa-solid fa-coins"></i> 0</span>
+                                <span id="hero-score-badge" class="text-green-400 font-black text-[10px] md:text-sm drop-shadow-md bg-black/60 border border-slate-700 px-2 py-0.5 rounded-md">Combo: 0</span>
+                            </div>
                         </div>
-                        <div class="w-full h-3 md:h-4 bg-red-950 rounded-full border-2 border-slate-800 mb-2 overflow-hidden shadow-inner">
+                        <div class="w-full h-4 bg-red-950 rounded-full border-2 border-slate-800 overflow-hidden shadow-inner">
                             <div id="hero-hp" class="bg-gradient-to-r from-green-400 to-green-500 h-full w-full transition-all duration-500" style="width: 100%"></div>
                         </div>
-                        <div id="hero-sprite" class="text-5xl md:text-6xl drop-shadow-[0_0_15px_rgba(59,130,246,0.8)] text-blue-400 transform transition-transform">
-                            <i class="fa-solid fa-user-astronaut"></i>
+                        <div class="w-full h-16 md:h-20 flex items-end justify-center mt-2">
+                            <div id="hero-sprite" class="text-5xl md:text-6xl drop-shadow-[0_0_15px_rgba(59,130,246,0.8)] text-blue-400 transform transition-transform">
+                                <i class="fa-solid fa-user-astronaut"></i>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- VS -->
-                    <div class="relative z-10 text-2xl md:text-3xl font-black text-yellow-400 italic drop-shadow-[0_0_10px_rgba(250,204,21,0.8)] mb-6 animate-pulse px-2">VS</div>
+                    <!-- VS CENTER CÓ HIỆU ỨNG VÒNG TRÒN MA THUẬT -->
+                    <div class="absolute left-1/2 bottom-8 md:bottom-10 transform -translate-x-1/2 z-10 flex flex-col items-center justify-center">
+                        <div class="relative flex items-center justify-center w-16 h-16 md:w-20 md:h-20">
+                            <div class="absolute inset-0 rounded-full border-4 border-yellow-500/40 border-dashed animate-[spin_4s_linear_infinite]"></div>
+                            <div class="absolute inset-1 rounded-full border-4 border-orange-500/40 border-dotted animate-[spin_3s_linear_infinite_reverse]"></div>
+                            <div class="absolute inset-0 rounded-full bg-yellow-500/10 animate-pulse blur-sm"></div>
+                            
+                            <div id="vs-text" class="text-3xl md:text-4xl font-black text-yellow-500 italic drop-shadow-[0_0_10px_rgba(250,204,21,0.8)] z-10 transition-colors" style="-webkit-text-stroke: 1px #78350f;">VS</div>
+                        </div>
+                    </div>
 
                     <!-- Quái vật (Boss) -->
                     <div class="relative z-10 w-2/5 md:w-1/3 flex flex-col items-center">
-                        <span class="text-white font-bold text-[9px] md:text-xs mb-1 bg-red-600/90 px-3 py-0.5 rounded-full border border-red-400 shadow-sm">BOSS BÀI TẬP</span>
-                        <div class="w-full h-3 md:h-4 bg-red-950 rounded-full border-2 border-slate-800 mb-2 overflow-hidden shadow-inner">
+                        <div class="flex justify-center items-center w-full mb-2 px-1 h-6 md:h-8">
+                            <span class="text-white font-black text-[10px] md:text-xs bg-red-600 px-3 py-0.5 rounded-full border-2 border-red-400 shadow-sm">BOSS BÀI TẬP</span>
+                        </div>
+                        <div class="w-full h-4 bg-red-950 rounded-full border-2 border-slate-800 overflow-hidden shadow-inner">
                             <div id="boss-hp" class="bg-gradient-to-r from-red-500 to-orange-500 h-full w-full transition-all duration-500" style="width: 100%"></div>
                         </div>
-                        <div id="boss-sprite" class="text-6xl md:text-7xl drop-shadow-[0_0_20px_rgba(239,68,68,0.8)] text-red-500 transform transition-transform">
-                            <i class="fa-solid fa-dragon"></i>
+                        <div class="w-full h-16 md:h-20 flex items-end justify-center mt-2">
+                            <div id="boss-sprite" class="text-6xl md:text-7xl drop-shadow-[0_0_20px_rgba(239,68,68,0.8)] text-red-500 transform transition-transform">
+                                <i class="fa-solid fa-dragon"></i>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Khung Câu Hỏi -->
-                <div class="bg-white rounded-[2rem] shadow-xl border-4 border-white border-b-[8px] border-b-blue-100 p-4 md:p-6 mb-4 relative shrink-0 flex items-center min-h-[100px]">
-                    <div class="absolute -top-5 -left-4 bg-yellow-400 w-12 h-12 rounded-full border-4 border-white flex items-center justify-center shadow-md transform -rotate-12 z-20">
-                        <i class="fa-solid fa-question text-white text-xl font-black"></i>
+                <div class="game-panel p-5 md:p-6 mb-4 relative shrink-0 flex items-center min-h-[110px]">
+                    <div class="absolute -top-5 -left-4 bg-gradient-to-br from-yellow-300 to-yellow-500 w-14 h-14 rounded-full border-4 border-white flex items-center justify-center shadow-lg transform -rotate-12 z-20">
+                        <i class="fa-solid fa-book-skull text-yellow-900 text-2xl font-black"></i>
                     </div>
-                    <div id="question-text" class="text-lg md:text-2xl font-black text-slate-700 leading-snug w-full text-center">Đang tải câu hỏi...</div>
+                    <div id="question-text" class="text-lg md:text-2xl font-black text-indigo-900 leading-snug w-full text-center px-4">Đang tải câu hỏi...</div>
                 </div>
 
                 <!-- KHUNG ĐÁP ÁN: CHIA 2 CỘT A-B & C-D -->
-                <div id="answers-container" class="grid grid-cols-2 gap-2 md:gap-4 flex-grow overflow-y-auto pb-4 scroll-smooth"></div>
+                <div id="answers-container" class="grid grid-cols-2 gap-3 md:gap-5 flex-grow overflow-y-auto pb-4 scroll-smooth"></div>
             </div>
 
             <!-- Popup Feedback Đúng/Sai (Nổ tung) -->
-            <div id="feedback-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[999] hidden flex items-center justify-center" onclick="/*Chặn click*/">
-                <div id="feedback-msg" class="bg-white p-6 md:p-8 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform scale-50 opacity-0 transition-all duration-300 max-w-sm w-[90%] text-center relative border-4 border-white border-b-[16px] popup-enter">
+            <div id="feedback-overlay" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[999] hidden flex items-center justify-center" onclick="/*Chặn click*/">
+                <div id="feedback-msg" class="bg-slate-800 p-6 md:p-10 rounded-[3rem] shadow-[0_0_50px_rgba(0,0,0,0.8)] transform scale-50 opacity-0 transition-all duration-300 max-w-md w-[90%] text-center relative border-4 border-slate-600 border-b-[16px] popup-enter">
                     <div id="feedback-icon"></div>
-                    <h3 id="feedback-title"></h3>
-                    <p id="feedback-text" class="text-slate-500 font-bold text-lg"></p>
+                    <h3 id="feedback-title" class="drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"></h3>
+                    <p id="feedback-text" class="text-white font-bold text-lg mt-2"></p>
                 </div>
             </div>
         </div>
 
-        <!-- 4. RESULT SCREEN -->
-        <div id="screen-result" class="screen min-h-screen flex items-center justify-center p-4">
-            <div class="bg-white/95 backdrop-blur-md rounded-[3rem] shadow-2xl border-4 border-white border-b-[16px] border-b-yellow-400 p-8 md:p-10 w-full max-w-lg text-center relative overflow-hidden z-10">
-                <div id="sending-status" class="hidden sending-overlay bg-white/90 backdrop-blur-sm rounded-[3rem] z-50">
-                    <i class="fa-solid fa-spinner fa-spin text-5xl text-blue-500 mb-4"></i>
-                    <p class="text-blue-600 font-black text-2xl">Đang lưu kỷ lục...</p>
+        <!-- 4. RESULT SCREEN (VICTORY) -->
+        <div id="screen-result" class="screen min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+            <!-- Hiệu ứng hào quang tia chớp xoay -->
+            <div id="victory-sunburst" class="sunburst hidden"></div>
+            
+            <div class="game-panel p-8 md:p-12 w-full max-w-lg text-center relative overflow-hidden z-10 border-yellow-400 border-b-[16px] border-b-yellow-600">
+                <div id="sending-status" class="hidden sending-overlay bg-slate-900/90 backdrop-blur-md rounded-[3rem] z-50 absolute inset-0 flex-col items-center justify-center">
+                    <i class="fa-solid fa-spinner fa-spin text-6xl text-yellow-400 mb-4"></i>
+                    <p class="text-white font-black text-2xl">Đang lưu thành tích...</p>
                 </div>
                 
-                <div class="absolute inset-0 pointer-events-none opacity-30 bg-[url('https://www.transparenttextures.com/patterns/confetti.png')]"></div>
+                <div class="absolute inset-0 pointer-events-none opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
                 
-                <div class="flex justify-center mb-4 relative z-10">
-                    <div class="w-40 h-40 bg-gradient-to-br from-yellow-200 to-yellow-400 rounded-full flex items-center justify-center border-8 border-white shadow-xl animate-bounce" style="animation-duration: 2s;">
-                        <i class="fa-solid fa-trophy text-7xl text-yellow-600 drop-shadow-md"></i>
-                    </div>
+                <!-- Bảng xếp hạng Sao -->
+                <div id="result-stars" class="flex justify-center gap-4 mb-6 text-6xl md:text-7xl h-20">
+                    <!-- Javascript sẽ nhét sao vào đây -->
                 </div>
                 
-                <h2 class="text-4xl font-black text-slate-800 mb-1 relative z-10">HOÀN THÀNH!</h2>
-                <div class="text-base font-bold text-slate-400 mb-6 uppercase tracking-widest relative z-10 bg-slate-100 inline-block px-4 py-1 rounded-full"><span id="result-name">Tên</span> • <span id="result-class">Lớp</span></div>
+                <h2 class="text-4xl md:text-5xl font-black text-indigo-900 mb-2 relative z-10 uppercase tracking-tighter drop-shadow-sm">VICTORY!</h2>
+                <div class="text-sm font-black text-indigo-600 mb-6 uppercase tracking-widest relative z-10 bg-indigo-100 inline-block px-5 py-2 rounded-full border-2 border-indigo-200"><i class="fa-solid fa-user-astronaut mr-2"></i><span id="result-name">Tên</span> • <span id="result-class">Lớp</span></div>
                 
-                <div class="bg-slate-50 rounded-[2rem] p-6 mb-8 relative z-10 border-4 border-slate-100 shadow-inner">
-                    <div class="text-slate-400 font-black text-sm mb-2 uppercase tracking-wide">Số câu trả lời đúng</div>
-                    <div class="text-7xl font-black text-blue-500 leading-none mb-2 drop-shadow-sm">
-                        <span id="result-score">0</span><span class="text-4xl text-slate-300 mx-1">/</span><span id="result-total">0</span>
+                <div class="bg-indigo-50 rounded-[2rem] p-6 mb-8 relative z-10 border-4 border-indigo-200 shadow-inner">
+                    <div class="text-indigo-500 font-black text-sm mb-2 uppercase tracking-widest">Sát thương gây ra (Số câu đúng)</div>
+                    <div class="text-7xl font-black text-blue-600 leading-none mb-2 drop-shadow-md">
+                        <span id="result-score">0</span><span class="text-4xl text-indigo-300 mx-2">/</span><span id="result-total">0</span>
                     </div>
                     <p id="result-message" class="text-xl font-black text-orange-500 mt-2 mb-4 px-2">...</p>
                     
                     <!-- Khung hiển thị phần thưởng chơi game -->
                     <div id="reward-container" class="mt-4 transition-all duration-500">
-                        <div id="reward-message" class="inline-block rounded-2xl px-6 py-3 font-black shadow-md w-full"></div>
+                        <div id="reward-message" class="inline-block rounded-2xl px-6 py-4 font-black shadow-md w-full uppercase tracking-wider"></div>
                     </div>
                 </div>
                 
                 <div class="flex gap-4 relative z-10">
-                    <button onclick="showScreen('screen-menu')" class="btn-3d flex-1 bg-slate-100 border-b-[8px] border-slate-300 text-slate-500 font-black py-4 rounded-[1.5rem] text-xl hover:bg-slate-200">
-                        <i class="fa-solid fa-house"></i> Menu
+                    <button onclick="showScreen('screen-menu')" class="btn-3d flex-1 bg-slate-200 border-b-[8px] border-slate-400 text-slate-700 font-black py-4 rounded-[1.5rem] text-lg hover:bg-slate-300">
+                        <i class="fa-solid fa-map-location-dot"></i> Bản Đồ
                     </button>
-                    <button onclick="startReviewMode()" class="btn-3d flex-1 bg-blue-500 border-b-[8px] border-blue-700 text-white font-black py-4 rounded-[1.5rem] text-xl shadow-lg hover:bg-blue-400">
-                        <i class="fa-solid fa-eye"></i> Xem Lại
+                    <button onclick="startReviewMode()" class="btn-3d flex-1 bg-gradient-to-b from-blue-500 to-indigo-600 border-b-[8px] border-indigo-800 text-white font-black py-4 rounded-[1.5rem] text-lg shadow-lg hover:from-blue-400 hover:to-indigo-500">
+                        <i class="fa-solid fa-toolbox"></i> Chiến Lợi Phẩm
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- 5. REVIEW SCREEN -->
+        <!-- 5. REVIEW SCREEN (INVENTORY) -->
         <div id="screen-review" class="screen min-h-screen p-4 flex-col justify-start items-center pt-8 pb-32 overflow-y-auto">
-            <div class="max-w-3xl w-full relative z-10">
-                <div class="flex justify-between items-center mb-8 sticky top-0 z-20 bg-white/80 backdrop-blur-md p-3 rounded-[2rem] shadow-sm border-2 border-white">
-                    <button onclick="showScreen('screen-result')" class="btn-3d w-12 h-12 bg-slate-100 text-slate-500 rounded-xl font-black border-b-4 border-slate-300 flex items-center justify-center text-xl hover:text-slate-700"><i class="fa-solid fa-arrow-left"></i></button>
-                    <h1 class="text-2xl font-black text-slate-700 uppercase tracking-wide">Xem lại đáp án</h1>
+            <div class="max-w-4xl w-full relative z-10">
+                <div class="flex justify-between items-center mb-8 sticky top-0 z-20 bg-slate-900/90 backdrop-blur-md p-3 rounded-[2rem] shadow-lg border-4 border-slate-700">
+                    <button onclick="showScreen('screen-result')" class="btn-3d w-12 h-12 bg-slate-800 text-slate-300 rounded-xl font-black border-b-4 border-slate-950 flex items-center justify-center text-xl hover:text-white"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h1 class="text-2xl font-black text-yellow-400 uppercase tracking-widest title-3d text-center flex-grow">CHIẾN LỢI PHẨM</h1>
                     <div class="w-12"></div>
                 </div>
                 <div id="review-list" class="space-y-6 pb-12"></div>
@@ -450,9 +550,10 @@
         <!-- 6. PRACTICE SCREEN -->
         <div id="screen-practice" class="screen min-h-screen p-4 flex-col justify-start items-center pt-8 pb-32">
             <div class="max-w-4xl w-full relative z-10">
-                <div class="flex items-center mb-8 bg-white/80 backdrop-blur-md p-3 rounded-[2rem] border-2 border-white shadow-sm inline-flex">
-                    <button onclick="showScreen('screen-menu')" class="btn-3d w-12 h-12 bg-slate-100 text-slate-500 rounded-xl font-black border-b-4 border-slate-300 flex items-center justify-center text-xl hover:text-slate-700 mr-4"><i class="fa-solid fa-arrow-left"></i></button>
-                    <h1 class="text-2xl font-black text-green-600 uppercase tracking-wide pr-4"><i class="fa-solid fa-keyboard mr-2"></i> Bài Thực Hành</h1>
+                <div class="flex justify-between items-center mb-8 sticky top-0 z-20 bg-slate-900/90 backdrop-blur-md p-3 rounded-[2rem] shadow-lg border-4 border-slate-700">
+                    <button onclick="showScreen('screen-menu')" class="btn-3d w-12 h-12 bg-slate-800 text-slate-300 rounded-xl font-black border-b-4 border-slate-950 flex items-center justify-center text-xl hover:text-white"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h1 class="text-2xl font-black text-green-400 uppercase tracking-widest title-3d text-center flex-grow">KHU HUẤN LUYỆN</h1>
+                    <div class="w-12"></div>
                 </div>
                 <div id="practice-list" class="space-y-8 pb-12"></div>
             </div>
@@ -461,18 +562,20 @@
         <!-- 7. THEORY SCREEN -->
         <div id="screen-theory" class="screen min-h-screen p-4 flex-col justify-start items-center pt-8 pb-32">
             <div class="max-w-4xl w-full relative z-10">
-                <div class="flex items-center mb-8 bg-white/80 backdrop-blur-md p-3 rounded-[2rem] border-2 border-white shadow-sm inline-flex">
-                    <button onclick="showScreen('screen-menu')" class="btn-3d w-12 h-12 bg-slate-100 text-slate-500 rounded-xl font-black border-b-4 border-slate-300 flex items-center justify-center text-xl hover:text-slate-700 mr-4"><i class="fa-solid fa-arrow-left"></i></button>
-                    <h1 class="text-2xl font-black text-purple-600 uppercase tracking-wide pr-4"><i class="fa-solid fa-book-open mr-2"></i> Kiến Thức</h1>
+                <div class="flex justify-between items-center mb-8 sticky top-0 z-20 bg-slate-900/90 backdrop-blur-md p-3 rounded-[2rem] shadow-lg border-4 border-slate-700">
+                    <button onclick="showScreen('screen-menu')" class="btn-3d w-12 h-12 bg-slate-800 text-slate-300 rounded-xl font-black border-b-4 border-slate-950 flex items-center justify-center text-xl hover:text-white"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h1 class="text-2xl font-black text-purple-400 uppercase tracking-widest title-3d text-center flex-grow">BÍ KÍP VÕ CÔNG</h1>
+                    <div class="w-12"></div>
                 </div>
-                <div id="theory-content" class="bg-white rounded-[2.5rem] shadow-xl border-4 border-white border-b-[8px] border-b-purple-100 p-6 md:p-10 space-y-6 text-lg text-slate-700 leading-relaxed knowledge-content"></div>
+                <div id="theory-content" class="game-panel p-6 md:p-10 space-y-6 text-lg text-slate-700 leading-relaxed knowledge-content"></div>
             </div>
         </div>
     </div>
 
     <!-- Copyright -->
-    <div class="fixed bottom-0 left-0 w-full bg-slate-900/80 backdrop-blur-md p-2 text-center z-[999] border-t-2 border-white/10">
-        <span class="text-slate-400 font-bold text-xs md:text-sm">Bản quyền thuộc về <a href="https://dichvu.leminhdang.com/" target="_blank" class="text-blue-400 hover:text-blue-300 transition-colors font-black">Minh Đăng IT</a></span>
+    <div class="fixed bottom-0 left-0 w-full bg-slate-950 p-3 text-center z-[999] border-t-4 border-slate-800 flex justify-center items-center gap-2">
+        <i class="fa-solid fa-shield-cat text-blue-500 text-lg"></i>
+        <span class="text-slate-400 font-bold text-xs md:text-sm">Phát triển bởi <a href="https://dichvu.leminhdang.com/" target="_blank" class="text-yellow-400 hover:text-yellow-300 transition-colors font-black uppercase tracking-wider">Minh Đăng IT</a></span>
     </div>
 
     <script>
@@ -489,12 +592,18 @@
             container.appendChild(el);
         }
 
-        // --- 1. CẤU HÌNH ÂM THANH GAME/BATTLE ---
+        // --- 1. CẤU HÌNH ÂM THANH GAME/BATTLE THRILLING ---
         let isSoundOn = true;
-        const audioBGM = new Audio('https://incompetech.com/music/royalty-free/mp3-royaltyfree/Monkeys%20Spinning%20Monkeys.mp3');
-        audioBGM.loop = true; audioBGM.volume = 0.25;
-        const audioCorrect = new Audio('https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3'); // Tiếng Magic/Hit
-        const audioWrong = new Audio('https://assets.mixkit.co/active_storage/sfx/2997/2997-preview.mp3');  // Tiếng Lỗi/Bị đánh
+        // Đổi sang nhạc nền Volatile Reaction (cực kì gây cấn, phù hợp Boss Fight)
+        const audioBGM = new Audio('https://incompetech.com/music/royalty-free/mp3-royaltyfree/Volatile%20Reaction.mp3');
+        audioBGM.loop = true; audioBGM.volume = 0.3; // Đã tăng âm lượng BGM
+        
+        // Âm thanh đánh trúng (Chém kiếm/Tuyệt chiêu)
+        const audioCorrect = new Audio('https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3'); 
+        
+        // Âm thanh nổ/mất máu mạnh mẽ
+        const audioWrong = new Audio('https://assets.mixkit.co/active_storage/sfx/1701/1701-preview.mp3');  
+        
         const audioTick = new Audio('https://cdn.freesound.org/previews/254/254316_4062622-lq.mp3'); 
         const audioWin = new Audio('https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3'); 
 
@@ -512,15 +621,15 @@
             const btn = document.getElementById('btn-sound');
             if (isSoundOn) {
                 btn.innerHTML = '<i class="fa-solid fa-music"></i>';
-                btn.classList.replace('text-slate-400', 'text-blue-500');
-                btn.classList.replace('border-slate-300', 'border-blue-200');
+                btn.classList.replace('text-slate-500', 'text-yellow-400');
+                btn.classList.replace('border-slate-600', 'border-yellow-500');
                 if(document.getElementById('screen-menu').classList.contains('active') || document.getElementById('screen-quiz').classList.contains('active')) {
                     audioBGM.play().catch(e => {});
                 }
             } else {
                 btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
-                btn.classList.replace('text-blue-500', 'text-slate-400');
-                btn.classList.replace('border-blue-200', 'border-slate-300');
+                btn.classList.replace('text-yellow-400', 'text-slate-500');
+                btn.classList.replace('border-yellow-500', 'border-slate-600');
                 audioBGM.pause();
             }
         }
@@ -616,7 +725,7 @@
 
         // --- 4. TỪ ĐIỂN GIẢI THÍCH ĐÁP ÁN ĐÃ LỌC "CÂU X:" ---
         const explanationDict = { 
-            // KHỐI 2 (Đã bỏ chữ Câu X)
+            // KHỐI 2
             "Để văn bản nằm ở chính giữa trang giấy, em chọn nút lệnh:": "Lệnh Center giúp căn lề văn bản nằm ngay ngắn ở chính giữa trang.",
             "Để thay đổi màu chữ cho văn bản, em sử dụng nút lệnh nào?": "Nút Font Color 🅰️ dùng để thay đổi màu chữ cho đoạn văn bản được chọn.",
             "Chữ nghệ thuật WordArt thường được sử dụng để làm gì?": "WordArt giúp em chèn chữ nghệ thuật có kiểu dáng và màu sắc đẹp mắt.",
@@ -637,7 +746,7 @@
             "Biểu tượng của Thư mục (Folder) trên máy tính thường có màu gì?": "Thư mục (Folder) luôn có biểu tượng hình chiếc kẹp giấy màu vàng 🗂️.",
             "Đâu là biểu tượng đặc trưng của một Tệp hình ảnh? 🖼️": "Tệp hình ảnh thường sẽ hiện thu nhỏ của bức tranh đó hoặc có biểu tượng ngọn núi/mặt trời.",
             "Thao tác nhấn nút PHẢI chuột một lần rồi thả ra gọi là gì?": "Đó là thao tác 'Nháy phải chuột', thường dùng để mở một bảng chọn chứa các lệnh ẩn.",
-            "Thông tin nào sau đây em KHÔNG NÊN chia sẻ cho người lạ trên mạng? 🛑": "Thông tin cá nhân (Họ tên, SĐT, Mật khẩu, Địa chỉ) phải được giữ bí mật để đảm bảo an toàn.",
+            "Thông去 tin nào sau đây em KHÔNG NÊN chia sẻ cho người lạ trên mạng? 🛑": "Thông tin cá nhân (Họ tên, SĐT, Mật khẩu, Địa chỉ) phải được giữ bí mật để đảm bảo an toàn.",
             "Phần mềm nào sau đây dùng để tạo Bài trình chiếu?": "Microsoft PowerPoint 🅿️ là phần mềm chuyên dụng để tạo các bài trình chiếu (thuyết trình).",
             "Để thêm một trang trình chiếu mới trong PowerPoint, em chọn nút lệnh nào?": "Lệnh New Slide ➕ giúp em tạo ra một trang giấy trắng mới để tiếp tục thiết kế.",
             "Khi sử dụng Internet, hành động nào sau đây là AN TOÀN cho em?": "Bất cứ khi nào thấy lo lắng hay thông tin nghi ngờ trên mạng, hãy nói ngay với ba mẹ và thầy cô 🛡️.",
@@ -650,7 +759,7 @@
             "Để bắt đầu trình chiếu bài làm từ trang đầu tiên, em nhấn phím nào trên bàn phím?": "Bấm phím F5, bài trình chiếu của em sẽ lập tức phóng to che kín toàn bộ màn hình 🍷.",
             "Điền vào chỗ trống: \"Nếu trời mưa ... em sẽ mang ô\". ☔": "Cấu trúc điều kiện cơ bản: \"Nếu [Điều kiện xảy ra] Thì [Hành động]\".",
 
-            // KHỐI 4 (Đã bỏ chữ Câu X)
+            // KHỐI 4
             "Tổ hợp phím nào giúp em lưu nhanh tệp văn bản đang soạn thảo?": "Tổ hợp phím Ctrl + S (Save) giúp em lưu nhanh bài làm để không bị mất dữ liệu 💾.",
             "Đâu là biểu tượng của phần mềm soạn thảo văn bản Microsoft Word?": "Phần mềm Microsoft Word luôn có biểu tượng đặc trưng là chữ W màu xanh dương 🇼.",
             "Theo quy tắc soạn thảo, dấu phẩy (,) phải được đặt như thế nào?": "Các dấu ngắt câu luôn phải gõ sát vào từ đứng trước nó, sau đó mới gõ 1 dấu cách.",
@@ -808,16 +917,16 @@
 
         function handleLogin() {
             const name = document.getElementById('input-name').value.trim(); const cls = document.getElementById('input-class').value;
-            if (!name || !cls) { alert("Em nhớ nhập đủ Tên và Lớp nhé!"); return; }
+            if (!name || !cls) { alert("Dũng sĩ nhớ nhập đủ Tên và Gia Tộc nhé!"); return; }
             studentName = name; studentClass = cls; const grade = parseInt(cls.charAt(0));
             if (gradesData[grade]) {
-                document.getElementById('menu-student-name').innerText = studentName; document.getElementById('menu-student-class').innerText = studentClass; selectGrade(grade);
+                document.getElementById('menu-student-name').innerText = studentName; document.getElementById('menu-student-class').innerHTML = `<i class="fa-solid fa-shield-cat"></i> Lớp ${studentClass}`; selectGrade(grade);
                 if (isSoundOn && audioBGM.paused) audioBGM.play().catch(e => {});
             } else { alert("Lỗi: Không tìm thấy dữ liệu khối " + grade); }
         }
 
-        function handleLogout() { if(confirm("Em muốn đổi tên khác?")) { showScreen('screen-login'); document.getElementById('input-name').value = ""; } }
-        function selectGrade(g) { currentGrade = g; if (gradesData[g].quiz.length == 0 && gradesData[g].practice.length == 0) alert("Chưa có bài cho khối này!"); document.getElementById('menu-title').innerText = gradesData[g].title; showScreen('screen-menu'); }
+        function handleLogout() { if(confirm("Bạn muốn đổi nhân vật khác?")) { showScreen('screen-login'); document.getElementById('input-name').value = ""; } }
+        function selectGrade(g) { currentGrade = g; if (gradesData[g].quiz.length == 0 && gradesData[g].practice.length == 0) alert("Chưa có phó bản cho cấp độ này!"); document.getElementById('menu-title').innerText = gradesData[g].title; showScreen('screen-menu'); }
         
         function startQuiz() { 
             if (gradesData[currentGrade].quiz.length == 0) return; 
@@ -827,7 +936,12 @@
             document.getElementById('boss-hp').style.width = '100%';
             document.getElementById('hero-hp').style.width = '100%';
             document.getElementById('hero-sprite').innerHTML = '<i class="fa-solid fa-user-astronaut"></i>';
-            document.getElementById('hero-score-badge').innerText = 'Đúng: 0';
+            
+            const scoreBadge = document.getElementById('hero-score-badge');
+            if(scoreBadge) scoreBadge.innerText = 'Combo: 0';
+            
+            const goldBadge = document.getElementById('hero-gold-badge');
+            if(goldBadge) goldBadge.innerHTML = '<i class="fa-solid fa-coins"></i> 0';
             
             showScreen('screen-quiz'); renderQuestion(); 
         }
@@ -848,10 +962,10 @@
             const container = document.getElementById('answers-container'); container.innerHTML = '';
             
             const btnStyles = [
-                "bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100 hover:border-blue-300 border-b-[6px]",
-                "bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100 hover:border-purple-300 border-b-[6px]",
-                "bg-orange-50 border-orange-200 text-orange-700 hover:bg-orange-100 hover:border-orange-300 border-b-[6px]",
-                "bg-teal-50 border-teal-200 text-teal-700 hover:bg-teal-100 hover:border-teal-300 border-b-[6px]"
+                "bg-blue-50 border-blue-300 text-blue-800 hover:bg-blue-100 border-b-[6px]",
+                "bg-purple-50 border-purple-300 text-purple-800 hover:bg-purple-100 border-b-[6px]",
+                "bg-orange-50 border-orange-300 text-orange-800 hover:bg-orange-100 border-b-[6px]",
+                "bg-teal-50 border-teal-300 text-teal-800 hover:bg-teal-100 border-b-[6px]"
             ];
             const badges = ["A", "B", "C", "D"];
             
@@ -859,12 +973,12 @@
                 if(!opt && opt !== 0) return;
                 const styleClass = btnStyles[idx % 4];
                 const btn = document.createElement('button');
-                btn.className = `btn-3d w-full text-left text-sm md:text-lg font-black p-3 md:p-4 rounded-2xl border-4 flex items-center group transition-colors shadow-sm ${styleClass}`;
+                btn.className = `btn-3d w-full text-left text-sm md:text-lg font-black p-3 md:p-4 rounded-2xl border-4 flex items-center group shadow-sm ${styleClass}`;
                 
-                const iconColor = styleClass.split(' ')[0].replace('bg-', 'text-').replace('-50', '-500');
+                const iconColor = styleClass.split(' ')[0].replace('bg-', 'text-').replace('-50', '-600');
 
                 btn.innerHTML = `
-                    <span class="w-8 h-8 md:w-12 md:h-12 rounded-xl flex items-center justify-center mr-2 md:mr-4 font-black text-lg md:text-2xl shrink-0 bg-white shadow-sm border-2 border-white/50 group-hover:scale-110 transition-transform ${iconColor}">${badges[idx]}</span>
+                    <span class="w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center mr-2 md:mr-3 font-black text-lg md:text-2xl shrink-0 bg-white shadow-sm border-2 border-white/80 group-hover:scale-110 transition-transform ${iconColor}">${badges[idx]}</span>
                     <span class="leading-snug break-words line-clamp-3">${opt}</span>
                 `;
                 btn.onclick = () => checkAnswer(idx, btn);
@@ -882,12 +996,12 @@
             const el = document.getElementById('timer-display'); el.innerText = timeLeft;
             if (timeLeft <= 5 && timeLeft > 0) { 
                 el.parentElement.classList.add('timer-warning', 'border-red-400'); 
-                el.classList.replace('text-blue-500', 'text-red-500'); 
+                el.classList.replace('text-white', 'text-red-400'); 
                 playSound(audioTick);
             }
             else { 
                 el.parentElement.classList.remove('timer-warning', 'border-red-400'); 
-                el.classList.replace('text-red-500', 'text-blue-500'); 
+                el.classList.replace('text-red-400', 'text-white'); 
             }
         }
 
@@ -901,22 +1015,42 @@
             
             const hero = document.getElementById('hero-sprite');
             const boss = document.getElementById('boss-sprite');
+            const vsText = document.getElementById('vs-text');
+            const arenaContainer = document.getElementById('arena-container');
             
+            // HIỆU ỨNG TRỪ MÁU
+            const damageFloat = document.createElement('div');
+            damageFloat.className = 'anim-reward text-3xl md:text-4xl font-black text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,1)] flex items-center gap-2';
+            damageFloat.innerHTML = `-15% <i class="fa-solid fa-droplet"></i>`;
+            if(arenaContainer) arenaContainer.appendChild(damageFloat);
+
+            if(vsText) {
+                vsText.innerText = "TIME!";
+                vsText.classList.remove('text-yellow-500', 'text-green-400');
+                vsText.classList.add('text-red-500');
+            }
+
             boss.classList.add('anim-attack-left');
             setTimeout(() => { 
                 hero.classList.add('anim-damage'); 
-                document.getElementById('arena-container').classList.add('anim-shake');
+                if(arenaContainer) arenaContainer.classList.add('anim-shake');
             }, 150);
 
             let currentHeroHp = parseFloat(document.getElementById('hero-hp').style.width || '100');
             document.getElementById('hero-hp').style.width = Math.max(0, currentHeroHp - 15) + '%';
 
-            showFeedbackPopup(false, "HẾT GIỜ!", "Chậm quá, bị Boss đánh!"); 
+            showFeedbackPopup(false, "HẾT GIỜ!", "Chậm quá, bị Boss đánh trúng rồi!"); 
             
             setTimeout(() => {
+                if(damageFloat) damageFloat.remove();
+                if(vsText) {
+                    vsText.innerText = "VS";
+                    vsText.classList.remove('text-red-500', 'text-green-400');
+                    vsText.classList.add('text-yellow-500');
+                }
                 boss.classList.remove('anim-attack-left');
                 hero.classList.remove('anim-damage');
-                document.getElementById('arena-container').classList.remove('anim-shake');
+                if(arenaContainer) arenaContainer.classList.remove('anim-shake');
                 setTimeout(nextQuestion, 500); 
             }, 1000);
         }
@@ -936,62 +1070,105 @@
 
             const hero = document.getElementById('hero-sprite');
             const boss = document.getElementById('boss-sprite');
+            const vsText = document.getElementById('vs-text');
+            const arenaContainer = document.getElementById('arena-container');
 
             if (idx === correctIdx) {
                 currentScore++;
                 playSound(audioCorrect);
                 
-                document.getElementById('hero-score-badge').innerText = `Đúng: ${currentScore}`;
+                const scoreBadge = document.getElementById('hero-score-badge');
+                if(scoreBadge) scoreBadge.innerText = `Combo: ${currentScore}`;
+                
+                // HIỆU ỨNG NHẬN VÀNG
+                let currentGold = currentScore * 10;
+                const goldBadge = document.getElementById('hero-gold-badge');
+                if(goldBadge) goldBadge.innerHTML = `<i class="fa-solid fa-coins"></i> ${currentGold}`;
+                
+                const rewardFloat = document.createElement('div');
+                rewardFloat.className = 'anim-reward text-3xl md:text-4xl font-black text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,1)] flex items-center gap-2';
+                rewardFloat.innerHTML = `+10 <i class="fa-solid fa-coins"></i>`;
+                if(arenaContainer) arenaContainer.appendChild(rewardFloat);
 
-                btn.className = `btn-3d w-full text-left text-sm md:text-lg font-black p-3 md:p-4 rounded-2xl border-4 flex items-center shadow-sm bg-green-400 border-green-600 text-white border-b-[6px] transform scale-[1.02]`;
-                btn.querySelector('span').className = `w-8 h-8 md:w-12 md:h-12 rounded-xl flex items-center justify-center mr-2 md:mr-4 font-black text-lg md:text-2xl shrink-0 bg-white text-green-600 shadow-sm border-2 border-white/50`;
+                if(vsText) {
+                    vsText.innerText = "HIT!";
+                    vsText.classList.remove('text-yellow-500', 'text-red-500');
+                    vsText.classList.add('text-green-400');
+                }
+
+                btn.className = `btn-3d w-full text-left text-sm md:text-lg font-black p-3 md:p-4 rounded-2xl border-4 flex items-center shadow-sm bg-green-500 border-green-700 text-white border-b-[6px] transform scale-[1.02]`;
+                btn.querySelector('span').className = `w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center mr-2 md:mr-3 font-black text-lg md:text-2xl shrink-0 bg-white text-green-600 shadow-sm border-2 border-green-200`;
                 
                 hero.innerHTML = '<i class="fa-solid fa-khanda"></i>'; 
                 hero.classList.add('anim-attack-right');
                 setTimeout(() => { 
                     boss.classList.add('anim-damage'); 
-                    document.getElementById('arena-container').classList.add('anim-shake');
+                    if(arenaContainer) arenaContainer.classList.add('anim-shake');
                 }, 150); 
                 
                 let damageToBoss = 100 / gradesData[currentGrade].quiz.length;
                 let currentBossHp = parseFloat(document.getElementById('boss-hp').style.width || '100');
                 document.getElementById('boss-hp').style.width = Math.max(0, currentBossHp - damageToBoss) + '%';
 
-                showFeedbackPopup(true, "CHÍ MẠNG!", "Đánh trúng Boss!");
+                showFeedbackPopup(true, "CHÍ MẠNG!", "Đánh trúng Boss rồi, tuyệt vời!");
                 
                 setTimeout(() => {
+                    if(rewardFloat) rewardFloat.remove();
+                    if(vsText) {
+                        vsText.innerText = "VS";
+                        vsText.classList.remove('text-green-400', 'text-red-500');
+                        vsText.classList.add('text-yellow-500');
+                    }
                     hero.classList.remove('anim-attack-right');
                     boss.classList.remove('anim-damage');
-                    document.getElementById('arena-container').classList.remove('anim-shake');
+                    if(arenaContainer) arenaContainer.classList.remove('anim-shake');
                     hero.innerHTML = '<i class="fa-solid fa-user-astronaut"></i>'; 
-                    setTimeout(nextQuestion, 500);
+                    setTimeout(nextQuestion, 600);
                 }, 1000);
 
             } else {
                 playSound(audioWrong);
-                btn.className = `btn-3d w-full text-left text-sm md:text-lg font-black p-3 md:p-4 rounded-2xl border-4 flex items-center shadow-sm bg-red-400 border-red-600 text-white border-b-[6px] opacity-80`;
-                btn.querySelector('span').className = `w-8 h-8 md:w-12 md:h-12 rounded-xl flex items-center justify-center mr-2 md:mr-4 font-black text-lg md:text-2xl shrink-0 bg-white text-red-600 shadow-sm border-2 border-white/50`;
+                btn.className = `btn-3d w-full text-left text-sm md:text-lg font-black p-3 md:p-4 rounded-2xl border-4 flex items-center shadow-sm bg-red-500 border-red-700 text-white border-b-[6px] opacity-80`;
+                btn.querySelector('span').className = `w-10 h-10 md:w-12 md:h-12 rounded-xl flex items-center justify-center mr-2 md:mr-3 font-black text-lg md:text-2xl shrink-0 bg-white text-red-600 shadow-sm border-2 border-red-200`;
                 
                 if(btns[correctIdx]) {
-                    btns[correctIdx].className = `btn-3d w-full text-left text-sm md:text-lg font-black p-3 md:p-4 rounded-2xl border-4 flex items-center shadow-sm bg-green-100 border-green-400 text-green-700 border-b-[6px] animate-pulse`;
+                    btns[correctIdx].className = `btn-3d w-full text-left text-sm md:text-lg font-black p-3 md:p-4 rounded-2xl border-4 flex items-center shadow-sm bg-green-100 border-green-500 text-green-800 border-b-[6px] animate-pulse`;
+                }
+
+                // HIỆU ỨNG TRỪ MÁU
+                const damageFloat = document.createElement('div');
+                damageFloat.className = 'anim-reward text-3xl md:text-4xl font-black text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,1)] flex items-center gap-2';
+                damageFloat.innerHTML = `-15% <i class="fa-solid fa-droplet"></i>`;
+                if(arenaContainer) arenaContainer.appendChild(damageFloat);
+
+                if(vsText) {
+                    vsText.innerText = "MISS!";
+                    vsText.classList.remove('text-yellow-500', 'text-green-400');
+                    vsText.classList.add('text-red-500');
                 }
 
                 boss.classList.add('anim-attack-left');
                 setTimeout(() => { 
                     hero.classList.add('anim-damage'); 
-                    document.getElementById('arena-container').classList.add('anim-shake');
+                    if(arenaContainer) arenaContainer.classList.add('anim-shake');
                 }, 150);
 
                 let currentHeroHp = parseFloat(document.getElementById('hero-hp').style.width || '100');
                 document.getElementById('hero-hp').style.width = Math.max(0, currentHeroHp - 15) + '%';
 
-                showFeedbackPopup(false, "BỊ PHẢN CÔNG!", "Mất máu rồi!");
+                showFeedbackPopup(false, "BỊ PHẢN CÔNG!", "Sai rồi, cẩn thận mất máu!");
                 
                 setTimeout(() => {
+                    if(damageFloat) damageFloat.remove();
+                    if(vsText) {
+                        vsText.innerText = "VS";
+                        vsText.classList.remove('text-red-500', 'text-green-400');
+                        vsText.classList.add('text-yellow-500');
+                    }
                     boss.classList.remove('anim-attack-left');
                     hero.classList.remove('anim-damage');
-                    document.getElementById('arena-container').classList.remove('anim-shake');
-                    setTimeout(nextQuestion, 500);
+                    if(arenaContainer) arenaContainer.classList.remove('anim-shake');
+                    setTimeout(nextQuestion, 600);
                 }, 1000);
             }
         }
@@ -1008,16 +1185,16 @@
             const title = document.getElementById('feedback-title');
             const text = document.getElementById('feedback-text');
             
-            box.className = `bg-white p-6 md:p-8 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform scale-50 opacity-0 transition-all duration-300 max-w-sm w-[90%] text-center relative border-4 border-white border-b-[16px] popup-enter ${isCorrect ? 'border-b-orange-500' : 'border-b-red-600'}`;
+            box.className = `bg-slate-800 p-6 md:p-8 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.8)] transform scale-50 opacity-0 transition-all duration-300 max-w-sm w-[90%] text-center relative border-4 border-slate-600 border-b-[16px] popup-enter ${isCorrect ? 'border-b-yellow-500' : 'border-b-red-600'}`;
             
             if (isCorrect) {
-                icon.innerHTML = '<i class="fa-solid fa-burst text-orange-500 text-6xl animate-bounce"></i>';
-                icon.className = `w-24 h-24 rounded-full mx-auto flex items-center justify-center -mt-14 mb-4 border-8 border-white shadow-lg bg-yellow-100`;
-                title.className = `text-3xl md:text-4xl font-black mb-1 uppercase text-orange-500 drop-shadow-sm`;
+                icon.innerHTML = '<i class="fa-solid fa-burst text-orange-500 text-6xl animate-bounce drop-shadow-md"></i>';
+                icon.className = `w-24 h-24 rounded-full mx-auto flex items-center justify-center -mt-14 mb-4 border-8 border-slate-800 shadow-lg bg-yellow-300`;
+                title.className = `text-3xl md:text-4xl font-black mb-1 uppercase text-yellow-400 drop-shadow-md`;
             } else {
-                icon.innerHTML = '<i class="fa-solid fa-fire text-red-500 text-6xl animate-pulse"></i>';
-                icon.className = `w-24 h-24 rounded-full mx-auto flex items-center justify-center -mt-14 mb-4 border-8 border-white shadow-lg bg-red-100`;
-                title.className = `text-3xl md:text-4xl font-black mb-1 uppercase text-red-600 drop-shadow-sm`;
+                icon.innerHTML = '<i class="fa-solid fa-fire text-red-500 text-6xl animate-pulse drop-shadow-md"></i>';
+                icon.className = `w-24 h-24 rounded-full mx-auto flex items-center justify-center -mt-14 mb-4 border-8 border-slate-800 shadow-lg bg-orange-200`;
+                title.className = `text-3xl md:text-4xl font-black mb-1 uppercase text-red-500 drop-shadow-md`;
             }
             
             title.innerText = titleText;
@@ -1045,6 +1222,36 @@
             }
         }
 
+        // HÀM BẮN PHÁO GIẤY
+        function fireConfetti() {
+            const colors = ['#facc15', '#f87171', '#60a5fa', '#34d399', '#a78bfa'];
+            for(let i = 0; i < 100; i++) {
+                let conf = document.createElement('div');
+                conf.style.position = 'fixed';
+                conf.style.width = Math.random() * 10 + 6 + 'px';
+                conf.style.height = Math.random() * 10 + 6 + 'px';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                conf.style.top = '-20px';
+                conf.style.left = Math.random() * 100 + 'vw';
+                conf.style.zIndex = '9999';
+                conf.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                conf.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                let duration = Math.random() * 3 + 2;
+                conf.style.transition = `top ${duration}s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform ${duration}s linear, opacity ${duration}s ease-in`;
+                
+                document.body.appendChild(conf);
+                
+                requestAnimationFrame(() => {
+                    conf.style.top = '120vh';
+                    conf.style.transform = `rotate(${Math.random() * 720}deg) translateX(${Math.random() * 100 - 50}px)`;
+                    conf.style.opacity = '0';
+                });
+                
+                setTimeout(() => conf.remove(), duration * 1000);
+            }
+        }
+
         function finishQuiz() {
             audioBGM.pause();
             playSound(audioWin);
@@ -1055,44 +1262,68 @@
             document.getElementById('result-score').innerText = currentScore;
             document.getElementById('result-total').innerText = gradesData[currentGrade].quiz.length;
             
+            // Xử lý logic 3 Sao
             let percent = (currentScore / gradesData[currentGrade].quiz.length) * 100;
+            let numStars = 0;
             let msg = "";
-            if (percent == 100) msg = "XUẤT SẮC! ĐIỂM 10 HOÀN HẢO! 🏆";
-            else if (percent >= 80) msg = "GIỎI QUÁ! CỐ TÝ NỮA THÔI! 🌟";
-            else if (percent >= 50) msg = "KHÁ TỐT! ÔN THÊM CHÚT NHÉ! 💪";
-            else msg = "CẦN CỐ GẮNG HƠN NỮA NHA! 📚";
+            
+            if (percent === 100) { numStars = 3; msg = "DIỆT BOSS THÀNH CÔNG! ĐIỂM 10 HOÀN HẢO! 🏆"; }
+            else if (percent >= 80) { numStars = 2; msg = "GIỎI QUÁ! SUÝT NỮA LÀ HOÀN HẢO! 🌟"; }
+            else if (percent >= 50) { numStars = 1; msg = "KHÁ TỐT! CẦN LUYỆN TẬP THÊM CHÚT NHÉ! 💪"; }
+            else { numStars = 0; msg = "BOSS QUÁ MẠNH! CẦN ÔN TẬP LẠI NGAY! 📚"; }
+            
             document.getElementById('result-message').innerText = msg;
             
-            // Xử lý logic phần thưởng chơi game
+            // Render HTML Sao
+            let starsHTML = '';
+            for(let i=0; i<3; i++) {
+                if(i < numStars) {
+                    starsHTML += `<i class="fa-solid fa-star text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.8)] transform scale-0 animate-[popIn_0.5s_forwards]" style="animation-delay: ${i*0.2}s"></i>`;
+                } else {
+                    starsHTML += `<i class="fa-solid fa-star text-slate-300/50 drop-shadow-sm transform scale-0 animate-[popIn_0.5s_forwards]" style="animation-delay: ${i*0.2}s"></i>`;
+                }
+            }
+            document.getElementById('result-stars').innerHTML = starsHTML;
+            
+            // Xử lý logic phần thưởng chơi game dùng Tỉ lệ % (Hỗ trợ Khối 2 có 10 câu)
             let rewardMsg = "";
             let rewardClass = "";
             
-            if (currentScore >= 20) {
+            if (percent === 100) {
                 rewardMsg = "🎁 THƯỞNG 30 PHÚT CHƠI GAME!";
-                rewardClass = "bg-gradient-to-r from-yellow-400 to-orange-500 text-white border-4 border-yellow-200 text-2xl animate-bounce shadow-[0_0_20px_rgba(250,204,21,0.6)]";
-            } else if (currentScore == 19) {
+                rewardClass = "bg-gradient-to-r from-yellow-400 to-orange-500 text-white border-4 border-yellow-200 text-xl md:text-2xl animate-bounce shadow-[0_0_20px_rgba(250,204,21,0.6)]";
+            } else if (percent >= 95) {
                 rewardMsg = "🎁 THƯỞNG 18 PHÚT CHƠI GAME!";
-                rewardClass = "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border-4 border-yellow-200 text-xl animate-bounce shadow-lg";
-            } else if (currentScore == 18) {
+                rewardClass = "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border-4 border-yellow-200 text-lg md:text-xl animate-bounce shadow-lg";
+            } else if (percent >= 90) {
                 rewardMsg = "🎁 THƯỞNG 16 PHÚT CHƠI GAME!";
-                rewardClass = "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border-4 border-yellow-200 text-xl animate-bounce shadow-lg";
-            } else if (currentScore == 17) {
+                rewardClass = "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border-4 border-yellow-200 text-lg md:text-xl animate-bounce shadow-lg";
+            } else if (percent >= 85) {
                 rewardMsg = "🎁 THƯỞNG 14 PHÚT CHƠI GAME!";
-                rewardClass = "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border-4 border-yellow-200 text-xl animate-pulse shadow-md";
-            } else if (currentScore == 16) {
+                rewardClass = "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border-4 border-yellow-200 text-lg md:text-xl animate-pulse shadow-md";
+            } else if (percent >= 80) {
                 rewardMsg = "🎁 THƯỞNG 12 PHÚT CHƠI GAME!";
-                rewardClass = "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border-4 border-yellow-200 text-xl animate-pulse shadow-md";
-            } else if (currentScore == 15) {
+                rewardClass = "bg-gradient-to-r from-yellow-300 to-yellow-500 text-yellow-900 border-4 border-yellow-200 text-lg md:text-xl animate-pulse shadow-md";
+            } else if (percent >= 75) {
                 rewardMsg = "🎁 THƯỞNG 10 PHÚT CHƠI GAME!";
-                rewardClass = "bg-yellow-400 text-yellow-900 border-4 border-yellow-200 text-xl shadow-md transform hover:scale-105 transition-transform";
+                rewardClass = "bg-yellow-400 text-yellow-900 border-4 border-yellow-200 text-lg md:text-xl shadow-md transform hover:scale-105 transition-transform";
             } else {
-                rewardMsg = "Cần cố gắng hơn để đạt mức chơi game nhé! 💪";
-                rewardClass = "bg-slate-200 text-slate-500 border-2 border-slate-300 text-base font-bold";
+                rewardMsg = "Chưa đủ sát thương nhận quà! Cố lên nhé! 💪";
+                rewardClass = "bg-slate-200 text-slate-500 border-2 border-slate-300 text-sm md:text-base font-bold";
             }
 
             const rewardEl = document.getElementById('reward-message');
             rewardEl.innerText = rewardMsg;
-            rewardEl.className = "inline-block rounded-2xl px-4 py-3 font-black w-full " + rewardClass;
+            rewardEl.className = "inline-block rounded-2xl px-6 py-4 font-black w-full uppercase tracking-wider " + rewardClass;
+            
+            // Hiệu ứng Hào quang và Pháo giấy nếu được quà
+            if (percent >= 75) {
+                document.getElementById('victory-sunburst').classList.remove('hidden');
+                fireConfetti();
+                if (percent === 100) setTimeout(fireConfetti, 1500); // 100% điểm bắn pháo 2 lần cho rực rỡ
+            } else {
+                document.getElementById('victory-sunburst').classList.add('hidden');
+            }
             
             sendDataToSheet();
         }
@@ -1118,8 +1349,8 @@
                 const smartExplanation = explanationDict[q.q] || "Hãy ghi nhớ đáp án này nhé!";
 
                 let html = `
-                <div class="bg-white rounded-[2rem] shadow-sm border-4 border-slate-100 p-6 relative overflow-hidden">
-                    <h3 class="text-xl font-black text-slate-700 mb-4 leading-snug"><span class="bg-orange-100 text-orange-600 px-3 py-1 rounded-xl mr-2">Câu ${idx + 1}</span> ${q.q}</h3>
+                <div class="game-panel p-6 relative overflow-hidden mb-6">
+                    <h3 class="text-xl font-black text-indigo-900 mb-4 leading-snug"><span class="bg-indigo-600 text-white px-3 py-1 rounded-xl mr-2 shadow-sm border-b-4 border-indigo-800">Câu ${idx + 1}</span> ${q.q}</h3>
                     <div class="space-y-3 mb-6">`;
 
                 q.options.forEach((opt, optIdx) => {
@@ -1128,7 +1359,7 @@
                     let icon = "";
 
                     if (optIdx === q.a) {
-                        optionClass = "bg-green-50 border-green-400 text-green-700 font-bold shadow-sm"; 
+                        optionClass = "bg-green-50 border-green-400 text-green-700 font-bold shadow-sm border-b-4"; 
                         icon = '<i class="fa-solid fa-circle-check ml-auto text-green-500 text-2xl"></i>';
                     }
 
@@ -1141,10 +1372,10 @@
 
                 html += `
                     </div>
-                    <div class="p-5 bg-blue-50 rounded-2xl border-4 border-blue-100 relative">
-                        <i class="fa-solid fa-lightbulb text-yellow-400 text-2xl absolute top-5 right-5 animate-pulse"></i>
-                        <p class="text-blue-900 font-black mb-1">GHI NHỚ</p>
-                        <p class="text-blue-800 font-bold text-lg leading-snug">${smartExplanation}</p>
+                    <div class="p-5 bg-yellow-50 rounded-2xl border-4 border-yellow-200 relative shadow-inner">
+                        <i class="fa-solid fa-lightbulb text-yellow-500 text-3xl absolute -top-4 -right-2 animate-bounce drop-shadow-md"></i>
+                        <p class="text-yellow-800 font-black mb-1 uppercase tracking-widest text-sm">Lời Giải Thích</p>
+                        <p class="text-indigo-900 font-bold text-lg leading-snug">${smartExplanation}</p>
                     </div>
                 </div>`;
                 list.innerHTML += html;
@@ -1163,18 +1394,18 @@
             gradesData[currentGrade].practice.forEach((task, i) => {
                 let formattedContent = task.content
                     .replace(/(\n)/g, '<br>') 
-                    .replace(/(^|<br>|\s)([a-z]\.|[a-z]\))/g, '$1<br><strong class="text-green-600 bg-green-100 px-2 rounded-lg">$2</strong>') 
-                    .replace(/(^|<br>|\s)(\d+\.)/g, '$1<br><strong class="text-green-600 bg-green-100 px-2 rounded-lg">$2</strong>') 
-                    .replace(/(^|<br>|\s)(\-|\+)/g, '$1<br><strong class="text-green-600 bg-green-100 px-2 rounded-lg">$2</strong>'); 
+                    .replace(/(^|<br>|\s)([a-z]\.|[a-z]\))/g, '$1<br><strong class="text-indigo-600 bg-indigo-100 px-2 rounded-lg">$2</strong>') 
+                    .replace(/(^|<br>|\s)(\d+\.)/g, '$1<br><strong class="text-indigo-600 bg-indigo-100 px-2 rounded-lg">$2</strong>') 
+                    .replace(/(^|<br>|\s)(\-|\+)/g, '$1<br><strong class="text-indigo-600 bg-indigo-100 px-2 rounded-lg">$2</strong>'); 
                 while(formattedContent.startsWith('<br>')) formattedContent = formattedContent.substring(4);
 
-                let contentHTML = task.content ? `<div class="bg-slate-50 text-slate-700 p-6 rounded-2xl font-bold text-lg mb-6 border-4 border-slate-100 leading-relaxed">${formattedContent}</div>` : '';
-                let stepsHTML = task.steps.map((s, idx) => `<div class="flex gap-4 mb-4 items-start bg-white p-4 rounded-2xl border-4 border-blue-50 shadow-sm"><span class="bg-blue-500 text-white font-black w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border-b-4 border-blue-700 mt-1">${idx+1}</span><span class="text-slate-700 font-bold text-lg pt-1">${s}</span></div>`).join('');
+                let contentHTML = task.content ? `<div class="bg-indigo-50 text-indigo-900 p-5 rounded-2xl font-bold text-lg mb-6 border-4 border-indigo-100 leading-relaxed shadow-inner">${formattedContent}</div>` : '';
+                let stepsHTML = task.steps.map((s, idx) => `<div class="flex gap-4 mb-4 items-start bg-white p-4 rounded-2xl border-4 border-blue-100 shadow-sm"><span class="bg-blue-500 text-white font-black w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border-b-4 border-blue-700 mt-1">${idx+1}</span><span class="text-slate-700 font-bold text-lg pt-1">${s}</span></div>`).join('');
                 
-                list.innerHTML += `<div class="bg-white rounded-[2.5rem] shadow-sm border-4 border-slate-100 p-6 md:p-8 mb-8 w-full">
-                    <h3 class="text-2xl md:text-3xl font-black text-slate-800 mb-6 flex items-center"><span class="bg-green-100 text-green-500 w-12 h-12 rounded-2xl flex items-center justify-center mr-4"><i class="fa-solid fa-hammer"></i></span> Bài ${i+1}: ${task.title}</h3>
+                list.innerHTML += `<div class="game-panel p-6 md:p-8 mb-8 w-full">
+                    <h3 class="text-2xl md:text-3xl font-black text-indigo-900 mb-6 flex items-center"><span class="bg-orange-500 text-white w-14 h-14 rounded-2xl flex items-center justify-center mr-4 shadow-md border-b-4 border-orange-700"><i class="fa-solid fa-hammer"></i></span> Nhiệm vụ ${i+1}: ${task.title}</h3>
                     ${contentHTML}
-                    ${stepsHTML ? `<div class="bg-blue-50/50 rounded-3xl p-6 border-4 border-blue-100"><h4 class="font-black text-blue-800 mb-4 uppercase tracking-wider text-sm"><i class="fa-solid fa-shoe-prints mr-2"></i>Hướng dẫn thực hiện:</h4>${stepsHTML}</div>` : ''}
+                    ${stepsHTML ? `<div class="bg-slate-800 rounded-3xl p-6 border-4 border-slate-700 shadow-lg"><h4 class="font-black text-yellow-400 mb-4 uppercase tracking-widest text-sm"><i class="fa-solid fa-shoe-prints mr-2"></i>Hướng dẫn làm nhiệm vụ:</h4>${stepsHTML}</div>` : ''}
                 </div>`;
             });
         }
@@ -1189,7 +1420,7 @@
         }
         
         function exitToMenu() { 
-            if(confirm("Em muốn dừng làm bài? (Sẽ mất kết quả)")) { 
+            if(confirm("Bạn muốn rời khỏi Phó bản? (Sẽ mất kết quả chiến đấu)")) { 
                 clearInterval(timerInterval); 
                 showScreen('screen-menu'); 
             } 
