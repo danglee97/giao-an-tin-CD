@@ -30,7 +30,7 @@
         .screen { display: none !important; opacity: 0; transition: opacity 0.4s ease-in-out; }
         .screen.active { display: flex !important; opacity: 1; }
         
-        /* Animations */
+        /* Animations cơ bản */
         @keyframes pulse-fast { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         .timer-warning { color: #ef4444; animation: pulse-fast 0.8s infinite; }
         @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.05); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
@@ -51,11 +51,47 @@
             0% { transform: translateY(110vh) translateX(0) rotate(0deg); opacity: 0.8; }
             100% { transform: translateY(-20vh) translateX(50px) rotate(360deg); opacity: 0; }
         }
+
+        /* --- HIỆU ỨNG ĐẤU TRƯỜNG RPG --- */
+        @keyframes attackRight { 
+            0% { transform: translateX(0); } 
+            50% { transform: translateX(60px) scale(1.3) rotate(15deg); } 
+            100% { transform: translateX(0); } 
+        }
+        @keyframes attackLeft { 
+            0% { transform: translateX(0); } 
+            50% { transform: translateX(-60px) scale(1.3) rotate(-15deg); } 
+            100% { transform: translateX(0); } 
+        }
+        @keyframes takeDamage { 
+            0% { filter: brightness(1); transform: translateX(0); } 
+            25% { transform: translateX(-10px); }
+            50% { filter: brightness(2) sepia(1) hue-rotate(-50deg) saturate(5); transform: translateX(10px) scale(0.9); } 
+            75% { transform: translateX(-10px); }
+            100% { filter: brightness(1); transform: translateX(0); } 
+        }
+        .anim-attack-right { animation: attackRight 0.4s ease-in-out; z-index: 50; }
+        .anim-attack-left { animation: attackLeft 0.4s ease-in-out; z-index: 50; }
+        .anim-damage { animation: takeDamage 0.5s ease-in-out; }
+        
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+        .anim-shake { animation: shake 0.5s; }
+        /* ------------------------------- */
         
         /* Utilities */
         select { appearance: none; -webkit-appearance: none; -moz-appearance: none; }
-        
-        /* Text lấp lánh */
         .text-glow { text-shadow: 0 0 10px rgba(255,255,255,0.8), 0 0 20px rgba(255,255,255,0.5); }
         .title-3d {
             color: #fff;
@@ -91,9 +127,8 @@
         <i class="fa-solid fa-music"></i>
     </button>
 
-    <!-- MÀN HÌNH CLICK ĐỂ MỞ KHÓA ÂM THANH (Chống Autoplay Block của Chrome/Safari) -->
+    <!-- MÀN HÌNH CLICK ĐỂ MỞ KHÓA ÂM THANH -->
     <div id="screen-start" class="fixed inset-0 bg-slate-900/90 backdrop-blur-lg z-[2000] flex flex-col items-center justify-center cursor-pointer transition-opacity duration-500 overflow-hidden" onclick="startApp()">
-        <!-- Các icon lơ lửng trang trí xung quanh -->
         <div class="absolute inset-0 pointer-events-none opacity-40">
             <i class="fa-solid fa-rocket absolute top-20 left-10 md:left-32 text-6xl text-orange-500 animate-bounce" style="animation-duration: 3s;"></i>
             <i class="fa-solid fa-star absolute bottom-32 right-10 md:right-32 text-5xl text-yellow-400 animate-spin-slow"></i>
@@ -101,19 +136,14 @@
             <i class="fa-solid fa-lightbulb absolute bottom-20 left-16 md:left-40 text-6xl text-yellow-300 animate-bounce" style="animation-duration: 4s;"></i>
         </div>
 
-        <!-- Khung trung tâm -->
         <div class="relative bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-600 p-2 md:p-3 rounded-[3.5rem] shadow-[0_0_50px_rgba(59,130,246,0.5)] transform hover:scale-[1.02] transition-transform animate-pulse mx-4 max-w-lg w-[95%]" style="animation-duration: 2s;">
             <div class="bg-white p-8 md:p-12 rounded-[3rem] border-4 border-white text-center relative overflow-hidden h-full w-full">
-                <!-- Dải màu trên cùng -->
                 <div class="absolute top-0 left-0 w-full h-4 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500"></div>
 
-                <!-- Huy hiệu Nhiệm vụ -->
                 <div class="inline-block bg-orange-100 text-orange-600 font-black px-4 md:px-6 py-2 rounded-full mb-6 border-2 border-orange-200 shadow-sm transform -rotate-3 text-xs md:text-sm tracking-wide">
-                    <i class="fa-solid fa-flag-checkered mr-1 md:mr-2"></i> 
-                    NHIỆM VỤ ÔN TẬP HỌC KÌ 2
+                    <i class="fa-solid fa-flag-checkered mr-1 md:mr-2"></i> NHIỆM VỤ ÔN TẬP HỌC KÌ 2
                 </div>
 
-                <!-- Icon Play Game -->
                 <div class="flex justify-center mb-6">
                     <div class="w-28 h-28 md:w-32 md:h-32 bg-yellow-400 rounded-full flex items-center justify-center border-8 border-yellow-100 shadow-xl relative">
                         <i class="fa-solid fa-play text-6xl md:text-7xl text-white ml-2 drop-shadow-md"></i>
@@ -124,7 +154,6 @@
                 <h2 class="text-4xl md:text-5xl font-black text-slate-800 mb-3 tracking-tight drop-shadow-sm">SẴN SÀNG CHƯA?</h2>
                 <p class="text-base md:text-lg font-bold text-slate-500 mb-8 px-2">Cùng thầy Đăng khởi động hệ thống và chuẩn bị rinh điểm 10 nhé!</p>
 
-                <!-- Lời nhắc Click -->
                 <div class="bg-blue-50 text-blue-600 font-black py-4 px-6 rounded-2xl border-b-4 border-blue-200 flex items-center justify-center gap-3 animate-bounce">
                     <i class="fa-solid fa-hand-pointer text-2xl"></i>
                     NHẤP VÀO ĐÂY ĐỂ BẮT ĐẦU
@@ -210,7 +239,7 @@
                         </div>
                     </div>
                     
-                    <!-- Nút Bắt Đầu Khổng Lồ -->
+                    <!-- Nút Bắt Đầu -->
                     <button onclick="handleLogin()" class="btn-3d w-full bg-green-500 border-b-[8px] border-green-700 text-white font-black py-5 rounded-[2rem] text-3xl mt-8 shadow-lg hover:bg-green-400 flex items-center justify-center gap-3">
                         BẮT ĐẦU <i class="fa-solid fa-play"></i>
                     </button>
@@ -284,7 +313,7 @@
             </div>
         </div>
 
-        <!-- 3. QUIZ SCREEN -->
+        <!-- 3. QUIZ SCREEN (CÓ ĐẤU TRƯỜNG RPG & ĐÁP ÁN 2 CỘT) -->
         <div id="screen-quiz" class="screen min-h-screen p-4 flex-col items-center justify-start pt-8">
             <div class="max-w-3xl w-full relative z-10 flex flex-col h-[90vh]">
                 
@@ -308,21 +337,56 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-[2.5rem] shadow-xl border-4 border-white border-b-[8px] border-b-blue-100 p-6 md:p-8 mb-6 relative shrink-0 flex items-center min-h-[160px]">
-                    <div class="absolute -top-6 -left-4 bg-yellow-400 w-14 h-14 rounded-full border-4 border-white flex items-center justify-center shadow-md transform -rotate-12 z-20">
-                        <i class="fa-solid fa-question text-white text-2xl font-black"></i>
+                <!-- ĐẤU TRƯỜNG RPG -->
+                <div id="arena-container" class="bg-slate-900 rounded-[2rem] p-4 mb-4 relative overflow-hidden border-4 border-slate-700 shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] flex justify-between items-end h-40 shrink-0">
+                    <div class="absolute inset-0 opacity-40 bg-[url('https://img.freepik.com/free-vector/pixel-art-mystical-background_52683-87349.jpg')] bg-cover bg-center"></div>
+                    
+                    <!-- Dũng sĩ (Học sinh) -->
+                    <div class="relative z-10 w-2/5 md:w-1/3 flex flex-col items-center">
+                        <div class="flex justify-between items-center w-full mb-1 px-1">
+                            <span class="text-white font-bold text-[9px] md:text-xs bg-blue-600/90 px-2 py-0.5 rounded-full border border-blue-400 shadow-sm">DŨNG SĨ</span>
+                            <span id="hero-score-badge" class="text-yellow-300 font-black text-[10px] md:text-sm drop-shadow-md bg-black/40 px-2 py-0.5 rounded-md">Đúng: 0</span>
+                        </div>
+                        <div class="w-full h-3 md:h-4 bg-red-950 rounded-full border-2 border-slate-800 mb-2 overflow-hidden shadow-inner">
+                            <div id="hero-hp" class="bg-gradient-to-r from-green-400 to-green-500 h-full w-full transition-all duration-500" style="width: 100%"></div>
+                        </div>
+                        <div id="hero-sprite" class="text-5xl md:text-6xl drop-shadow-[0_0_15px_rgba(59,130,246,0.8)] text-blue-400 transform transition-transform">
+                            <i class="fa-solid fa-user-astronaut"></i>
+                        </div>
                     </div>
-                    <div id="question-text" class="text-xl md:text-3xl font-black text-slate-700 leading-snug w-full text-center">Đang tải câu hỏi...</div>
+
+                    <!-- VS -->
+                    <div class="relative z-10 text-2xl md:text-3xl font-black text-yellow-400 italic drop-shadow-[0_0_10px_rgba(250,204,21,0.8)] mb-6 animate-pulse px-2">VS</div>
+
+                    <!-- Quái vật (Boss) -->
+                    <div class="relative z-10 w-2/5 md:w-1/3 flex flex-col items-center">
+                        <span class="text-white font-bold text-[9px] md:text-xs mb-1 bg-red-600/90 px-3 py-0.5 rounded-full border border-red-400 shadow-sm">BOSS BÀI TẬP</span>
+                        <div class="w-full h-3 md:h-4 bg-red-950 rounded-full border-2 border-slate-800 mb-2 overflow-hidden shadow-inner">
+                            <div id="boss-hp" class="bg-gradient-to-r from-red-500 to-orange-500 h-full w-full transition-all duration-500" style="width: 100%"></div>
+                        </div>
+                        <div id="boss-sprite" class="text-6xl md:text-7xl drop-shadow-[0_0_20px_rgba(239,68,68,0.8)] text-red-500 transform transition-transform">
+                            <i class="fa-solid fa-dragon"></i>
+                        </div>
+                    </div>
                 </div>
 
-                <div id="answers-container" class="grid grid-cols-1 gap-4 flex-grow overflow-y-auto pb-4 scroll-smooth"></div>
+                <!-- Khung Câu Hỏi -->
+                <div class="bg-white rounded-[2rem] shadow-xl border-4 border-white border-b-[8px] border-b-blue-100 p-4 md:p-6 mb-4 relative shrink-0 flex items-center min-h-[100px]">
+                    <div class="absolute -top-5 -left-4 bg-yellow-400 w-12 h-12 rounded-full border-4 border-white flex items-center justify-center shadow-md transform -rotate-12 z-20">
+                        <i class="fa-solid fa-question text-white text-xl font-black"></i>
+                    </div>
+                    <div id="question-text" class="text-lg md:text-2xl font-black text-slate-700 leading-snug w-full text-center">Đang tải câu hỏi...</div>
+                </div>
+
+                <!-- KHUNG ĐÁP ÁN: CHIA 2 CỘT A-B & C-D -->
+                <div id="answers-container" class="grid grid-cols-2 gap-2 md:gap-4 flex-grow overflow-y-auto pb-4 scroll-smooth"></div>
             </div>
 
-            <!-- Popup Feedback Đúng/Sai -->
+            <!-- Popup Feedback Đúng/Sai (Nổ tung) -->
             <div id="feedback-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[999] hidden flex items-center justify-center" onclick="/*Chặn click*/">
-                <div id="feedback-msg" class="bg-white p-8 rounded-[3rem] shadow-2xl border-b-[16px] transform scale-50 opacity-0 transition-all duration-300 max-w-sm w-[90%] text-center relative border-4 border-white">
-                    <div id="feedback-icon" class="w-24 h-24 rounded-full mx-auto flex items-center justify-center -mt-16 mb-4 border-8 border-white shadow-lg bg-white"></div>
-                    <h3 id="feedback-title" class="text-4xl font-black mb-2 uppercase"></h3>
+                <div id="feedback-msg" class="bg-white p-6 md:p-8 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform scale-50 opacity-0 transition-all duration-300 max-w-sm w-[90%] text-center relative border-4 border-white border-b-[16px] popup-enter">
+                    <div id="feedback-icon"></div>
+                    <h3 id="feedback-title"></h3>
                     <p id="feedback-text" class="text-slate-500 font-bold text-lg"></p>
                 </div>
             </div>
@@ -425,15 +489,12 @@
             container.appendChild(el);
         }
 
-        // --- 1. CẤU HÌNH ÂM THANH ---
+        // --- 1. CẤU HÌNH ÂM THANH GAME/BATTLE ---
         let isSoundOn = true;
-        // Nhạc nền vui nhộn
         const audioBGM = new Audio('https://incompetech.com/music/royalty-free/mp3-royaltyfree/Monkeys%20Spinning%20Monkeys.mp3');
         audioBGM.loop = true; audioBGM.volume = 0.25;
-        
-        // Hiệu ứng âm thanh khi chơi
-        const audioCorrect = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3'); 
-        const audioWrong = new Audio('https://assets.mixkit.co/active_storage/sfx/2997/2997-preview.mp3'); 
+        const audioCorrect = new Audio('https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3'); // Tiếng Magic/Hit
+        const audioWrong = new Audio('https://assets.mixkit.co/active_storage/sfx/2997/2997-preview.mp3');  // Tiếng Lỗi/Bị đánh
         const audioTick = new Audio('https://cdn.freesound.org/previews/254/254316_4062622-lq.mp3'); 
         const audioWin = new Audio('https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3'); 
 
@@ -471,6 +532,7 @@
         let userAnswers = []; 
         let isDataLoaded = false;
         let isLoadingAnimFinished = false;
+        let isAnswering = false;
 
         // --- 3. DỮ LIỆU KIẾN THỨC TỔNG HỢP ---
         const knowledgeData = {
@@ -552,9 +614,9 @@
             ` }
         };
 
-        // --- 4. TỪ ĐIỂN GIẢI THÍCH ĐÁP ÁN ---
+        // --- 4. TỪ ĐIỂN GIẢI THÍCH ĐÁP ÁN ĐÃ LỌC "CÂU X:" ---
         const explanationDict = { 
-            // ============ KHỐI 2 (10 câu) ============
+            // KHỐI 2 (Đã bỏ chữ Câu X)
             "Để văn bản nằm ở chính giữa trang giấy, em chọn nút lệnh:": "Lệnh Center giúp căn lề văn bản nằm ngay ngắn ở chính giữa trang.",
             "Để thay đổi màu chữ cho văn bản, em sử dụng nút lệnh nào?": "Nút Font Color 🅰️ dùng để thay đổi màu chữ cho đoạn văn bản được chọn.",
             "Chữ nghệ thuật WordArt thường được sử dụng để làm gì?": "WordArt giúp em chèn chữ nghệ thuật có kiểu dáng và màu sắc đẹp mắt.",
@@ -566,7 +628,7 @@
             "Công cụ Eraser (Tẩy) 🧼 trong Paint dùng để làm gì?": "Cục tẩy (Eraser) dùng để tẩy xóa các nét vẽ sai hoặc chi tiết thừa.",
             "Phím nào giúp em vẽ hình tròn hoặc hình vuông đẹp hơn khi sử dụng công cụ Shapes?": "Giữ phím Shift ⇧ trong khi vẽ để tạo ra hình tròn và hình vuông hoàn hảo.",
 
-            // ============ KHỐI 3 (20 câu) ============
+            // KHỐI 3
             "Việc sắp xếp các tệp dữ liệu trong máy tính một cách khoa học giúp em điều gì?": "Sắp xếp dữ liệu (như tạo Sơ đồ hình cây) giúp em quản lý và tìm kiếm thông tin nhanh chóng hơn.",
             "Đâu là lợi ích chính của việc đặt tên thư mục gợi nhớ?": "Tên gợi nhớ giúp em biết ngay thư mục đó chứa dữ liệu gì mà không cần phải mở ra xem.",
             "Trong sơ đồ hình cây, thư mục nằm bên trong một thư mục khác được gọi là gì?": "Thư mục bao bọc bên ngoài là Thư mục mẹ, thư mục nằm bên trong gọi là Thư mục con 📁.",
@@ -588,7 +650,7 @@
             "Để bắt đầu trình chiếu bài làm từ trang đầu tiên, em nhấn phím nào trên bàn phím?": "Bấm phím F5, bài trình chiếu của em sẽ lập tức phóng to che kín toàn bộ màn hình 🍷.",
             "Điền vào chỗ trống: \"Nếu trời mưa ... em sẽ mang ô\". ☔": "Cấu trúc điều kiện cơ bản: \"Nếu [Điều kiện xảy ra] Thì [Hành động]\".",
 
-            // ============ KHỐI 4 (20 câu) ============
+            // KHỐI 4 (Đã bỏ chữ Câu X)
             "Tổ hợp phím nào giúp em lưu nhanh tệp văn bản đang soạn thảo?": "Tổ hợp phím Ctrl + S (Save) giúp em lưu nhanh bài làm để không bị mất dữ liệu 💾.",
             "Đâu là biểu tượng của phần mềm soạn thảo văn bản Microsoft Word?": "Phần mềm Microsoft Word luôn có biểu tượng đặc trưng là chữ W màu xanh dương 🇼.",
             "Theo quy tắc soạn thảo, dấu phẩy (,) phải được đặt như thế nào?": "Các dấu ngắt câu luôn phải gõ sát vào từ đứng trước nó, sau đó mới gõ 1 dấu cách.",
@@ -610,7 +672,7 @@
             "Khi ghép nhiều khối lệnh lại với nhau, máy tính sẽ thực hiện các lệnh theo thứ tự nào?": "Máy tính sẽ đọc và làm theo các khối lệnh lần lượt từ trên xuống dưới ⬇️.",
             "Để nhân vật hiện ra một bóng nói chứa văn bản \"Chào bạn\", em dùng khối lệnh nào?": "Khối lệnh 'Nói...' 💬 nằm trong nhóm Hiển thị sẽ giúp nhân vật hiện lên một khung chat.",
 
-            // ============ KHỐI 5 (20 câu - Không có chữ "Câu") ============
+            // KHỐI 5
             "Để sử dụng được các lệnh vẽ hình trong Scratch, em cần thêm nhóm lệnh nào?": "Để vẽ được hình, em phải bấm vào nút Thêm Tiện Ích (dấu +) và chọn nhóm lệnh Bút vẽ (Pen) 🖊️.",
             "Để nhân vật bắt đầu để lại nét vẽ khi di chuyển, em dùng lệnh:": "Lệnh 'Đặt bút' (Pen down) ⬇️ giống như việc em cắm ngòi bút xuống mặt giấy để bắt đầu vẽ.",
             "Công thức tổng quát để tính góc quay khi vẽ đa giác đều n cạnh là:": "Đây là công thức bắt buộc phải nhớ: Lấy 360 chia cho số cạnh (n) sẽ ra được góc cần quay ➗.",
@@ -649,7 +711,7 @@
         // KHỞI ĐỘNG HỆ THỐNG
         window.onload = function() {
             if(GOOGLE_SCRIPT_URL.includes("HÃY_DÁN_LINK")) { showError("Lỗi: Thầy Đăng chưa dán link Web App!"); return; }
-            fetchQuestions(); // Tải dữ liệu ngầm lúc người dùng chưa bấm
+            fetchQuestions(); 
         };
 
         // KHI NGƯỜI DÙNG BẤM VÀO MÀN HÌNH "SẴN SÀNG"
@@ -657,7 +719,6 @@
             document.getElementById('screen-start').style.opacity = '0';
             setTimeout(() => document.getElementById('screen-start').style.display = 'none', 500);
             
-            // Kích hoạt Âm Thanh ngay lập tức
             if(isSoundOn) {
                 audioBGM.play().catch(e => console.log("Không thể tự động phát nhạc: " + e));
             }
@@ -686,7 +747,7 @@
                 if (width >= 95) { 
                     clearInterval(window.progressInterval); 
                     isLoadingAnimFinished = true;
-                    checkEnterLogin(); // Chuyển trang nếu dữ liệu đã tải xong
+                    checkEnterLogin(); 
                 } else {
                     width += Math.random() * 8; 
                     if(width > 95) width = 95;
@@ -706,7 +767,6 @@
             }).catch(err => { console.error(err); showError("Không thể kết nối đến máy chủ."); });
         }
 
-        // KIỂM TRA ĐIỀU KIỆN ĐỂ VÀO MÀN HÌNH ĐĂNG NHẬP
         function checkEnterLogin() {
             if (isDataLoaded && isLoadingAnimFinished) {
                 const bar = document.getElementById('loading-progress');
@@ -752,7 +812,6 @@
             studentName = name; studentClass = cls; const grade = parseInt(cls.charAt(0));
             if (gradesData[grade]) {
                 document.getElementById('menu-student-name').innerText = studentName; document.getElementById('menu-student-class').innerText = studentClass; selectGrade(grade);
-                // Phát nhạc nền nếu đang tắt
                 if (isSoundOn && audioBGM.paused) audioBGM.play().catch(e => {});
             } else { alert("Lỗi: Không tìm thấy dữ liệu khối " + grade); }
         }
@@ -763,10 +822,18 @@
         function startQuiz() { 
             if (gradesData[currentGrade].quiz.length == 0) return; 
             currentScore = 0; currentQuizIndex = 0; userAnswers = []; 
+            isAnswering = false; 
+            
+            document.getElementById('boss-hp').style.width = '100%';
+            document.getElementById('hero-hp').style.width = '100%';
+            document.getElementById('hero-sprite').innerHTML = '<i class="fa-solid fa-user-astronaut"></i>';
+            document.getElementById('hero-score-badge').innerText = 'Đúng: 0';
+            
             showScreen('screen-quiz'); renderQuestion(); 
         }
 
         function renderQuestion() {
+            isAnswering = false; 
             const qData = gradesData[currentGrade].quiz[currentQuizIndex];
             document.getElementById('quiz-current').innerText = currentQuizIndex + 1;
             document.getElementById('quiz-total').innerText = gradesData[currentGrade].quiz.length;
@@ -792,13 +859,13 @@
                 if(!opt && opt !== 0) return;
                 const styleClass = btnStyles[idx % 4];
                 const btn = document.createElement('button');
-                btn.className = `btn-3d w-full text-left text-lg md:text-xl font-black p-4 md:p-5 rounded-2xl border-4 flex items-center group transition-colors shadow-sm ${styleClass}`;
+                btn.className = `btn-3d w-full text-left text-sm md:text-lg font-black p-3 md:p-4 rounded-2xl border-4 flex items-center group transition-colors shadow-sm ${styleClass}`;
                 
                 const iconColor = styleClass.split(' ')[0].replace('bg-', 'text-').replace('-50', '-500');
 
                 btn.innerHTML = `
-                    <span class="w-12 h-12 rounded-xl flex items-center justify-center mr-4 font-black text-2xl shrink-0 bg-white shadow-sm border-2 border-white/50 group-hover:scale-110 transition-transform ${iconColor}">${badges[idx]}</span>
-                    <span class="leading-snug">${opt}</span>
+                    <span class="w-8 h-8 md:w-12 md:h-12 rounded-xl flex items-center justify-center mr-2 md:mr-4 font-black text-lg md:text-2xl shrink-0 bg-white shadow-sm border-2 border-white/50 group-hover:scale-110 transition-transform ${iconColor}">${badges[idx]}</span>
+                    <span class="leading-snug break-words line-clamp-3">${opt}</span>
                 `;
                 btn.onclick = () => checkAnswer(idx, btn);
                 container.appendChild(btn);
@@ -816,7 +883,7 @@
             if (timeLeft <= 5 && timeLeft > 0) { 
                 el.parentElement.classList.add('timer-warning', 'border-red-400'); 
                 el.classList.replace('text-blue-500', 'text-red-500'); 
-                playSound(audioTick); // Kêu tíc tắc 5 giây cuối
+                playSound(audioTick);
             }
             else { 
                 el.parentElement.classList.remove('timer-warning', 'border-red-400'); 
@@ -825,36 +892,108 @@
         }
 
         function timeOut() { 
+            if(isAnswering) return; 
+            isAnswering = true; 
+
+            const btns = document.querySelectorAll('#answers-container button'); btns.forEach(b => b.disabled = true);
             recordAnswer(-1);
             playSound(audioWrong);
-            showFeedbackPopup(false, "HẾT GIỜ RỒI!", "bg-red-500"); 
-            setTimeout(nextQuestion, 2000); 
+            
+            const hero = document.getElementById('hero-sprite');
+            const boss = document.getElementById('boss-sprite');
+            
+            boss.classList.add('anim-attack-left');
+            setTimeout(() => { 
+                hero.classList.add('anim-damage'); 
+                document.getElementById('arena-container').classList.add('anim-shake');
+            }, 150);
+
+            let currentHeroHp = parseFloat(document.getElementById('hero-hp').style.width || '100');
+            document.getElementById('hero-hp').style.width = Math.max(0, currentHeroHp - 15) + '%';
+
+            showFeedbackPopup(false, "HẾT GIỜ!", "Chậm quá, bị Boss đánh!"); 
+            
+            setTimeout(() => {
+                boss.classList.remove('anim-attack-left');
+                hero.classList.remove('anim-damage');
+                document.getElementById('arena-container').classList.remove('anim-shake');
+                setTimeout(nextQuestion, 500); 
+            }, 1000);
         }
 
         function checkAnswer(idx, btn) {
+            if(isAnswering) return; 
+            isAnswering = true;     
+
             clearInterval(timerInterval);
             const btns = document.querySelectorAll('#answers-container button'); btns.forEach(b => b.disabled = true);
+            
+            if (currentQuizIndex >= gradesData[currentGrade].quiz.length) return; 
+
             const correctIdx = gradesData[currentGrade].quiz[currentQuizIndex].a;
             
             recordAnswer(idx);
 
+            const hero = document.getElementById('hero-sprite');
+            const boss = document.getElementById('boss-sprite');
+
             if (idx === correctIdx) {
                 currentScore++;
                 playSound(audioCorrect);
-                btn.className = `btn-3d w-full text-left text-lg md:text-xl font-black p-4 md:p-5 rounded-2xl border-4 flex items-center shadow-sm bg-green-400 border-green-600 text-white border-b-[6px] transform scale-[1.02]`;
-                btn.querySelector('span').className = `w-12 h-12 rounded-xl flex items-center justify-center mr-4 font-black text-2xl shrink-0 bg-white text-green-600 shadow-sm border-2 border-white/50`;
-                showFeedbackPopup(true, "Tuyệt vời! Chính xác rồi!");
+                
+                document.getElementById('hero-score-badge').innerText = `Đúng: ${currentScore}`;
+
+                btn.className = `btn-3d w-full text-left text-sm md:text-lg font-black p-3 md:p-4 rounded-2xl border-4 flex items-center shadow-sm bg-green-400 border-green-600 text-white border-b-[6px] transform scale-[1.02]`;
+                btn.querySelector('span').className = `w-8 h-8 md:w-12 md:h-12 rounded-xl flex items-center justify-center mr-2 md:mr-4 font-black text-lg md:text-2xl shrink-0 bg-white text-green-600 shadow-sm border-2 border-white/50`;
+                
+                hero.innerHTML = '<i class="fa-solid fa-khanda"></i>'; 
+                hero.classList.add('anim-attack-right');
+                setTimeout(() => { 
+                    boss.classList.add('anim-damage'); 
+                    document.getElementById('arena-container').classList.add('anim-shake');
+                }, 150); 
+                
+                let damageToBoss = 100 / gradesData[currentGrade].quiz.length;
+                let currentBossHp = parseFloat(document.getElementById('boss-hp').style.width || '100');
+                document.getElementById('boss-hp').style.width = Math.max(0, currentBossHp - damageToBoss) + '%';
+
+                showFeedbackPopup(true, "CHÍ MẠNG!", "Đánh trúng Boss!");
+                
+                setTimeout(() => {
+                    hero.classList.remove('anim-attack-right');
+                    boss.classList.remove('anim-damage');
+                    document.getElementById('arena-container').classList.remove('anim-shake');
+                    hero.innerHTML = '<i class="fa-solid fa-user-astronaut"></i>'; 
+                    setTimeout(nextQuestion, 500);
+                }, 1000);
+
             } else {
                 playSound(audioWrong);
-                btn.className = `btn-3d w-full text-left text-lg md:text-xl font-black p-4 md:p-5 rounded-2xl border-4 flex items-center shadow-sm bg-red-400 border-red-600 text-white border-b-[6px] opacity-80`;
-                btn.querySelector('span').className = `w-12 h-12 rounded-xl flex items-center justify-center mr-4 font-black text-2xl shrink-0 bg-white text-red-600 shadow-sm border-2 border-white/50`;
+                btn.className = `btn-3d w-full text-left text-sm md:text-lg font-black p-3 md:p-4 rounded-2xl border-4 flex items-center shadow-sm bg-red-400 border-red-600 text-white border-b-[6px] opacity-80`;
+                btn.querySelector('span').className = `w-8 h-8 md:w-12 md:h-12 rounded-xl flex items-center justify-center mr-2 md:mr-4 font-black text-lg md:text-2xl shrink-0 bg-white text-red-600 shadow-sm border-2 border-white/50`;
                 
                 if(btns[correctIdx]) {
-                    btns[correctIdx].className = `btn-3d w-full text-left text-lg md:text-xl font-black p-4 md:p-5 rounded-2xl border-4 flex items-center shadow-sm bg-green-100 border-green-400 text-green-700 border-b-[6px] animate-pulse`;
+                    btns[correctIdx].className = `btn-3d w-full text-left text-sm md:text-lg font-black p-3 md:p-4 rounded-2xl border-4 flex items-center shadow-sm bg-green-100 border-green-400 text-green-700 border-b-[6px] animate-pulse`;
                 }
-                showFeedbackPopup(false, "Ui da! Sai mất rồi!");
+
+                boss.classList.add('anim-attack-left');
+                setTimeout(() => { 
+                    hero.classList.add('anim-damage'); 
+                    document.getElementById('arena-container').classList.add('anim-shake');
+                }, 150);
+
+                let currentHeroHp = parseFloat(document.getElementById('hero-hp').style.width || '100');
+                document.getElementById('hero-hp').style.width = Math.max(0, currentHeroHp - 15) + '%';
+
+                showFeedbackPopup(false, "BỊ PHẢN CÔNG!", "Mất máu rồi!");
+                
+                setTimeout(() => {
+                    boss.classList.remove('anim-attack-left');
+                    hero.classList.remove('anim-damage');
+                    document.getElementById('arena-container').classList.remove('anim-shake');
+                    setTimeout(nextQuestion, 500);
+                }, 1000);
             }
-            setTimeout(nextQuestion, 2000);
         }
         
         function recordAnswer(selectedIdx) {
@@ -862,43 +1001,51 @@
             userAnswers.push({ question: currentQ.q, options: currentQ.options, correct: currentQ.a, selected: selectedIdx });
         }
 
-        function showFeedbackPopup(isCorrect, msg) {
+        function showFeedbackPopup(isCorrect, titleText, msgText) {
             const overlay = document.getElementById('feedback-overlay');
             const box = document.getElementById('feedback-msg');
             const icon = document.getElementById('feedback-icon');
             const title = document.getElementById('feedback-title');
             const text = document.getElementById('feedback-text');
             
-            box.className = `bg-white p-8 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] transform scale-50 opacity-0 transition-all duration-300 max-w-sm w-[90%] text-center relative border-4 border-white border-b-[16px] popup-enter ${isCorrect ? 'border-b-green-400' : 'border-b-red-400'}`;
+            box.className = `bg-white p-6 md:p-8 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] transform scale-50 opacity-0 transition-all duration-300 max-w-sm w-[90%] text-center relative border-4 border-white border-b-[16px] popup-enter ${isCorrect ? 'border-b-orange-500' : 'border-b-red-600'}`;
             
-            icon.innerHTML = isCorrect ? '<i class="fa-solid fa-check text-green-500 text-6xl"></i>' : '<i class="fa-solid fa-xmark text-red-500 text-6xl"></i>';
-            icon.className = `w-24 h-24 rounded-full mx-auto flex items-center justify-center -mt-16 mb-4 border-8 border-white shadow-lg ${isCorrect ? 'bg-green-100' : 'bg-red-100'}`;
+            if (isCorrect) {
+                icon.innerHTML = '<i class="fa-solid fa-burst text-orange-500 text-6xl animate-bounce"></i>';
+                icon.className = `w-24 h-24 rounded-full mx-auto flex items-center justify-center -mt-14 mb-4 border-8 border-white shadow-lg bg-yellow-100`;
+                title.className = `text-3xl md:text-4xl font-black mb-1 uppercase text-orange-500 drop-shadow-sm`;
+            } else {
+                icon.innerHTML = '<i class="fa-solid fa-fire text-red-500 text-6xl animate-pulse"></i>';
+                icon.className = `w-24 h-24 rounded-full mx-auto flex items-center justify-center -mt-14 mb-4 border-8 border-white shadow-lg bg-red-100`;
+                title.className = `text-3xl md:text-4xl font-black mb-1 uppercase text-red-600 drop-shadow-sm`;
+            }
             
-            title.innerText = isCorrect ? "ĐÚNG RỒI!" : "SAI RỒI!";
-            title.className = `text-4xl font-black mb-2 uppercase ${isCorrect ? 'text-green-500' : 'text-red-500'}`;
-            text.innerText = msg;
+            title.innerText = titleText;
+            text.innerText = msgText;
             
             overlay.classList.remove('hidden');
             setTimeout(() => { box.classList.replace('scale-50', 'scale-100'); box.classList.replace('opacity-0', 'opacity-100'); }, 10);
         }
 
         function hideFeedback() {
-            document.getElementById('feedback-overlay').classList.add('hidden');
-            document.getElementById('feedback-msg').classList.replace('scale-100', 'scale-50');
-            document.getElementById('feedback-msg').classList.replace('opacity-100', 'opacity-0');
+            const overlay = document.getElementById('feedback-overlay');
+            const box = document.getElementById('feedback-msg');
+            overlay.classList.add('hidden');
+            box.classList.replace('scale-100', 'scale-50');
+            box.classList.replace('opacity-100', 'opacity-0');
         }
 
         function nextQuestion() {
             currentQuizIndex++;
-            if (currentQuizIndex < gradesData[currentGrade].quiz.length) { renderQuestion(); } 
-            else { 
+            if (currentQuizIndex < gradesData[currentGrade].quiz.length) { 
+                renderQuestion(); 
+            } else { 
                 document.getElementById('quiz-progress-bar').style.width = '100%';
                 setTimeout(finishQuiz, 500); 
             }
         }
 
         function finishQuiz() {
-            // Nhạc chiến thắng!
             audioBGM.pause();
             playSound(audioWin);
             
@@ -1036,7 +1183,6 @@
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); 
             setTimeout(() => { document.getElementById(id).classList.add('active'); }, 50);
             
-            // Phục hồi nhạc nền khi quay lại các màn hình từ màn hình kết quả (Result)
             if(id === 'screen-menu' || id === 'screen-practice' || id === 'screen-theory' || id === 'screen-review') {
                 if(isSoundOn && audioBGM.paused) audioBGM.play().catch(e=>{});
             }
@@ -1048,6 +1194,6 @@
                 showScreen('screen-menu'); 
             } 
         }
-    </script>s
+    </script>
 </body>
 </html>

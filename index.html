@@ -169,6 +169,27 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
+        /* HIỆU ỨNG ĐẤU TRƯỜNG RPG */
+        @keyframes attackRight { 
+            0% { transform: translateX(0); } 
+            50% { transform: translateX(60px) scale(1.3) rotate(15deg); } 
+            100% { transform: translateX(0); } 
+        }
+        @keyframes attackLeft { 
+            0% { transform: translateX(0); } 
+            50% { transform: translateX(-60px) scale(1.3) rotate(-15deg); } 
+            100% { transform: translateX(0); } 
+        }
+        @keyframes takeDamage { 
+            0% { filter: brightness(1); transform: translateX(0); } 
+            25% { transform: translateX(-10px); }
+            50% { filter: brightness(2) sepia(1) hue-rotate(-50deg) saturate(5); transform: translateX(10px) scale(0.9); } 
+            75% { transform: translateX(-10px); }
+            100% { filter: brightness(1); transform: translateX(0); } 
+        }
+        .anim-attack-right { animation: attackRight 0.4s ease-in-out; z-index: 50; }
+        .anim-attack-left { animation: attackLeft 0.4s ease-in-out; z-index: 50; }
+        .anim-damage { animation: takeDamage 0.5s ease-in-out; }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
